@@ -1,0 +1,56 @@
+/* Bubble Menu Positioning Fixes */
+
+/* Ensure proper z-index hierarchy for bubble menus */
+.tippy-box[data-theme~='textMenu'] {
+  z-index: 1050 !important;
+}
+
+.tippy-box[data-theme~='aiToolbar'] {
+  z-index: 900 !important;
+}
+
+/* Force proper positioning for AI toolbar */
+.ai-toolbar-bubble .tippy-box {
+  z-index: 900 !important;
+}
+
+/* Ensure text menu stays above */
+.text-menu-bubble .tippy-box {
+  z-index: 1050 !important;
+}
+
+/* Prevent overflow issues */
+.tippy-content {
+  padding: 0;
+  overflow: visible;
+}
+
+/* Fix any pointer events issues */
+.tippy-box {
+  pointer-events: auto;
+}
+
+/* FORCE AI toolbar to always appear below - override all Tippy positioning */
+.tippy-box[data-theme~='aiToolbar'] {
+  /* Force it below regardless of calculated position */
+  transform: translateY(60px) !important;
+}
+
+.tippy-box[data-theme~='aiToolbar'][data-placement^='top'] {
+  /* Extra force for top placements */
+  transform: translateY(80px) !important;
+}
+
+.tippy-box[data-theme~='aiToolbar'][data-placement^='bottom'] {
+  /* Even bottom placements need extra space */
+  transform: translateY(20px) !important;
+}
+
+/* Fix for viewport boundary issues */
+.tippy-box[data-placement^='bottom'] {
+  transform-origin: top center;
+}
+
+.tippy-box[data-placement^='top'] {
+  transform-origin: bottom center;
+}

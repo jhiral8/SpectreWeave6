@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '../styles/theme.css';
+
+@import './editor.css';
+@import '../styles/bubble-menu-fixes.css';
+@import '../styles/layout-safety.css';
+@import '../styles/ai-border-effects.css';
+@import '../styles/futuristic-surface-override.css';
+@import '../styles/floating-action-buttons.css';
+@import '../styles/dashboard-dark-theme.css';
+
+/* Custom Fonts - Inter and Surgena */
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/Inter.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: 'Surgena';
+  src: url('/fonts/Surgena-Bold.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: 'Surgena';
+  src: url('/fonts/Surgena-Regular.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  text-rendering: optimizeLegibility;
+}
+
+@layer base {
+  body {
+    @apply antialiased;
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Ensure minimum touch target sizes on mobile */
+  @media (max-width: 768px) {
+    button, a, input[type="button"], input[type="submit"], [role="button"] {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+}
+
+html, body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Gradient border utilities (portal accent) */
+.gradient-border {
+  position: relative;
+  border-radius: 0.75rem;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px; /* border thickness */
+  border-radius: inherit;
+  background: linear-gradient(90deg, #8ec5ff, #b39fff, #ff9ecf);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.gradient-border-subtle {
+  position: relative;
+  border-radius: 0.75rem;
+}
+.gradient-border-subtle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(90deg, rgba(142,197,255,0.6), rgba(179,159,255,0.5), rgba(255,158,207,0.6));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+input::placeholder,
+textarea::placeholder {
+  @apply text-black/50 dark:text-white/40;
+}
+
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  @apply text-black/50 dark:text-white/40;
+}
+
+input::-moz-placeholder,
+textarea::-moz-placeholder {
+  @apply text-black/40 dark:text-white/40;
+}
+
+.react-colorful {
+  width: 100% !important;
+}
+
+[data-reference-hidden] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+::-webkit-scrollbar {
+  @apply w-1 h-1 bg-neutral-500/20;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-500/50 rounded-full;
+}
+
+input[type='range'] {
+  @apply h-2.5 bg-neutral-200 border-0 rounded appearance-none active:bg-neutral-300 transition-all;
+  @apply dark:bg-neutral-700 dark:active:bg-neutral-600;
+
+  &::-webkit-slider-thumb {
+    @apply appearance-none w-3 h-5 bg-neutral-800 rounded-full active:bg-neutral-900 active:w-4 active:h-6 transition-all;
+    @apply dark:bg-neutral-100 dark:active:bg-white;
+  }
+}
+
+/* Surgena Font Utility */
+.font-surgena {
+  font-family: 'Surgena', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* Scrollbar Hide Utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}

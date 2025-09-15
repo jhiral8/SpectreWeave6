@@ -1,0 +1,5 @@
+export { SurfaceSwitcher } from './SurfaceSwitcher'
+export { FloatingSurfaceDock } from './FloatingSurfaceDock'
+export { DualModeSwitcher } from './DualModeSwitcher'
+export type { Surface } from './SurfaceSwitcher'
+export type { ViewMode } from './DualModeSwitcher'

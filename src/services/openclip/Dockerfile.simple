@@ -1,0 +1,14 @@
+# Simplified Dockerfile for debugging
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Install dependencies
+COPY requirements.production.txt .
+RUN pip install --no-cache-dir fastapi uvicorn pillow numpy sentence-transformers transformers torch torchvision
+
+# Copy server
+COPY production_server.py .
+
+# Direct command - no script
+CMD ["python", "-m", "uvicorn", "production_server:app", "--host", "0.0.0.0", "--port", "5000", "--log-level", "info"]

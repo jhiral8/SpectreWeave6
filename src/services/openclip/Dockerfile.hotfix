@@ -1,0 +1,13 @@
+# Quick hotfix Dockerfile - patches existing image
+FROM openclipspectreweave.azurecr.io/openclip-service:stable
+
+# Copy the corrected production server
+COPY production_server.py /app/production_server.py
+
+# Ensure proper permissions
+USER root
+RUN chown clipuser:clipuser /app/production_server.py
+USER clipuser
+
+# Use the corrected startup script  
+CMD ["./startup.sh"]

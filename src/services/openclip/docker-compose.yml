@@ -1,0 +1,166 @@
+# Docker Compose for OpenCLIP Service Development
+# Includes Redis caching and monitoring stack
+
+version: '3.8'
+
+services:
+  # OpenCLIP Service
+  openclip-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+      args:
+        CLIP_MODEL: ${CLIP_MODEL:-clip-ViT-B-32}
+    container_name: openclip-service
+    ports:
+      - "${CLIP_PORT:-5000}:5000"
+    environment:
+      # Service Configuration
+      PORT: 5000
+      WORKERS: ${WORKERS:-2}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      
+      # Model Configuration
+      CLIP_MODEL: ${CLIP_MODEL:-clip-ViT-B-32}
+      MAX_BATCH_SIZE: ${MAX_BATCH_SIZE:-16}
+      MAX_IMAGE_SIZE: ${MAX_IMAGE_SIZE:-1024}
+      
+      # Caching Configuration
+      ENABLE_CACHE: "true"
+      REDIS_URL: redis://redis:6379
+      CACHE_TTL: ${CACHE_TTL:-3600}
+      MAX_MEMORY_CACHE_SIZE: ${MAX_MEMORY_CACHE_SIZE:-1000}
+      
+      # Performance Configuration
+      TIMEOUT: 120
+      
+      # Monitoring
+      PROMETHEUS_ENABLED: "true"
+      
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - clip_cache:/home/clipuser/.cache
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: '2.0'
+        reservations:
+          memory: 2G
+          cpus: '1.0'
+    networks:
+      - openclip-network
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: redis-cache
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    command: >
+      redis-server
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --save 60 1000
+      --loglevel warning
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/usr/local/etc/redis/redis.conf:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - openclip-network
+
+  # Prometheus (Optional Monitoring)
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    container_name: prometheus
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    restart: unless-stopped
+    networks:
+      - openclip-network
+    profiles:
+      - monitoring
+
+  # Grafana (Optional Monitoring)
+  grafana:
+    image: grafana/grafana:10.1.0
+    container_name: grafana
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_INSTALL_PLUGINS: redis-datasource
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    networks:
+      - openclip-network
+    profiles:
+      - monitoring
+
+  # Load Testing (Optional)
+  load-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.loadtest
+    container_name: load-test
+    environment:
+      TARGET_URL: http://openclip-service:5000
+      CONCURRENT_USERS: ${LOAD_TEST_USERS:-10}
+      DURATION: ${LOAD_TEST_DURATION:-60s}
+    depends_on:
+      - openclip-service
+    volumes:
+      - ./loadtest:/app/loadtest
+    networks:
+      - openclip-network
+    profiles:
+      - testing
+
+networks:
+  openclip-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  clip_cache:
+    driver: local
+  redis_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local

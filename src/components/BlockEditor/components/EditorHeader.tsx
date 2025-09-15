@@ -1,0 +1,4 @@
+// Legacy EditorHeader removed
+export {}
+
+ 

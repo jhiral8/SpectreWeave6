@@ -1,0 +1,312 @@
+/* Futuristic Surface Border Override for Dual Block Editor */
+/* This applies the new futuristic borders to existing AI border classes */
+
+:root {
+  /* Color System for Futuristic Borders */
+  --manuscript-primary: 59, 130, 246; /* #3b82f6 blue-500 */
+  --manuscript-secondary: 96, 165, 250; /* #60a5fa blue-400 */
+  --manuscript-accent: 147, 197, 253; /* #93c5fd blue-300 */
+  
+  --framework-primary: 249, 115, 22; /* #f97316 orange-500 */ 
+  --framework-secondary: 251, 146, 60; /* #fb923c orange-400 */
+  --framework-accent: 253, 186, 116; /* #fdba74 orange-300 */
+}
+
+/* MANUSCRIPT BORDERS - Simple borders */
+.editor-main-container div.ai-manuscript-border,
+.editor-main-container div.ai-neural-border {
+  border: 1px solid rgba(156, 163, 175, 0.4);
+  transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.editor-main-container div.ai-framework-border,
+.editor-main-container div.ai-confidence-border {
+  border: 1px solid rgba(156, 163, 175, 0.4);
+  transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Light mode borders - Dark borders with glow */
+html:not(.dark) .editor-main-container .ai-manuscript-border {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.15),
+    0 0 6px rgba(0, 0, 0, 0.1),
+    0 0 12px rgba(0, 0, 0, 0.08),
+    0 0 18px rgba(0, 0, 0, 0.04);
+  animation: manuscript-border-pulse-light 6s ease-in-out infinite;
+}
+
+html:not(.dark) .editor-main-container .ai-framework-border {
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.15),
+    0 0 6px rgba(0, 0, 0, 0.1),
+    0 0 12px rgba(0, 0, 0, 0.08),
+    0 0 18px rgba(0, 0, 0, 0.04);
+  animation: framework-border-pulse-light 7s ease-in-out infinite;
+}
+
+/* DISABLED - Override existing AI manuscript border with futuristic effects */
+/* .editor-main-container .ai-manuscript-border,
+.editor-main-container .ai-neural-border {
+  border: 1px solid rgba(var(--manuscript-primary), calc(var(--ai-intensity, 0.4) * 0.5));
+  box-shadow: 
+    0 0 0 1px rgba(var(--manuscript-primary), calc(var(--ai-intensity, 0.4) * 0.3)),
+    0 0 16px rgba(var(--manuscript-primary), calc(var(--ai-intensity, 0.4) * 0.2)),
+    inset 0 0 12px rgba(var(--manuscript-accent), calc(var(--ai-intensity, 0.4) * 0.1));
+  transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+} */
+
+/* Disable pseudo-elements - glow is now on the border itself */
+.editor-main-container .ai-manuscript-border::before,
+.editor-main-container .ai-neural-border::before,
+.editor-main-container .ai-manuscript-border::after,
+.editor-main-container .ai-neural-border::after {
+  display: none;
+}
+
+/* DISABLED - Override existing AI framework border with futuristic effects */
+/* .editor-main-container .ai-framework-border,
+.editor-main-container .ai-confidence-border {
+  border: 1px solid rgba(var(--framework-primary), calc(var(--ai-confidence, 0.4) * 0.5));
+  box-shadow: 
+    0 0 0 1px rgba(var(--framework-primary), calc(var(--ai-confidence, 0.4) * 0.3)),
+    0 0 16px rgba(var(--framework-primary), calc(var(--ai-confidence, 0.4) * 0.2)),
+    inset 0 0 12px rgba(var(--framework-accent), calc(var(--ai-confidence, 0.4) * 0.1));
+  transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+} */
+
+/* Disable framework pseudo-elements - glow is now on the border itself */
+.editor-main-container .ai-framework-border::before,
+.editor-main-container .ai-confidence-border::before,
+.editor-main-container .ai-framework-border::after,
+.editor-main-container .ai-confidence-border::after {
+  display: none;
+}
+
+/* Enhanced hover states */
+.editor-main-container .ai-manuscript-border:hover,
+.editor-main-container .ai-neural-border:hover {
+  --ai-intensity: 0.7;
+  transform: translateY(-1px);
+}
+
+.editor-main-container .ai-framework-border:hover,
+.editor-main-container .ai-confidence-border:hover {
+  --ai-confidence: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Active states */
+.editor-main-container .ai-manuscript-border.ai-thinking,
+.editor-main-container .ai-manuscript-border.ai-generating,
+.editor-main-container .ai-neural-border.ai-thinking,
+.editor-main-container .ai-neural-border.ai-generating {
+  --ai-intensity: 0.8;
+}
+
+.editor-main-container .ai-framework-border.high-confidence,
+.editor-main-container .ai-confidence-border.high-confidence {
+  --ai-confidence: 0.9;
+}
+
+/* Ensure content is protected */
+.editor-main-container .ai-manuscript-border .tiptap,
+.editor-main-container .ai-framework-border .tiptap,
+.editor-main-container .ai-neural-border .tiptap,
+.editor-main-container .ai-confidence-border .tiptap,
+.editor-main-container .ai-manuscript-border .ProseMirror,
+.editor-main-container .ai-framework-border .ProseMirror,
+.editor-main-container .ai-neural-border .ProseMirror,
+.editor-main-container .ai-confidence-border .ProseMirror {
+  position: relative;
+  z-index: 10;
+  background: transparent;
+}
+
+/* Make sure editor content containers work properly */
+.editor-main-container .ai-manuscript-border > *:not(.surface-label),
+.editor-main-container .ai-framework-border > *:not(.surface-label),
+.editor-main-container .ai-neural-border > *:not(.surface-label),
+.editor-main-container .ai-confidence-border > *:not(.surface-label) {
+  position: relative;
+  z-index: 5;
+}
+
+/* Dark mode compatibility - Simple borders */
+.dark .editor-main-container .ai-manuscript-border,
+.dark .editor-main-container .ai-neural-border {
+  border: 1px solid rgba(156, 163, 175, 0.4);
+}
+
+.dark .editor-main-container .ai-framework-border,
+.dark .editor-main-container .ai-confidence-border {
+  border: 1px solid rgba(156, 163, 175, 0.4);
+}
+
+/* Animation Keyframes - Copied from futuristic-surface-borders.css */
+
+/* Creative Flow Waves for Manuscript Surface */
+@keyframes creative-flow-waves {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    opacity: var(--ai-intensity, 0.4);
+  }
+  33% { 
+    transform: scale(1.02) rotate(1deg);
+    opacity: calc(var(--ai-intensity, 0.4) * 1.1);
+  }
+  66% { 
+    transform: scale(0.98) rotate(-1deg);
+    opacity: calc(var(--ai-intensity, 0.4) * 0.9);
+  }
+}
+
+/* Floating Particles Animation */
+@keyframes floating-particles {
+  0%, 100% { 
+    transform: translateY(0px);
+    opacity: calc(var(--ai-intensity, 0.4) * 0.7);
+  }
+  25% { 
+    transform: translateY(-2px);
+    opacity: calc(var(--ai-intensity, 0.4) * 0.8);
+  }
+  50% { 
+    transform: translateY(1px);
+    opacity: calc(var(--ai-intensity, 0.4) * 0.6);
+  }
+  75% { 
+    transform: translateY(-1px);
+    opacity: calc(var(--ai-intensity, 0.4) * 0.9);
+  }
+}
+
+/* Structural Grid Pulse for Framework Surface */
+@keyframes structural-grid-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: var(--ai-confidence, 0.4);
+  }
+  50% { 
+    transform: scale(1.01);
+    opacity: calc(var(--ai-confidence, 0.4) * 1.2);
+  }
+}
+
+/* Circuit Flow Animation */
+@keyframes circuit-flow {
+  0% { 
+    background-position: 0% 0%, 0% 0%;
+    opacity: calc(var(--ai-confidence, 0.4) * 0.6);
+  }
+  25% { 
+    background-position: 100% 0%, 0% 100%;
+    opacity: calc(var(--ai-confidence, 0.4) * 0.8);
+  }
+  50% { 
+    background-position: 100% 100%, 100% 100%;
+    opacity: calc(var(--ai-confidence, 0.4) * 0.6);
+  }
+  75% { 
+    background-position: 0% 100%, 100% 0%;
+    opacity: calc(var(--ai-confidence, 0.4) * 0.8);
+  }
+  100% { 
+    background-position: 0% 0%, 0% 0%;
+    opacity: calc(var(--ai-confidence, 0.4) * 0.6);
+  }
+}
+
+/* Border pulse animations for subtle glow effects */
+@keyframes manuscript-border-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 1px rgba(var(--manuscript-primary), 0.2),
+      0 0 6px rgba(var(--manuscript-primary), 0.15),
+      0 0 12px rgba(var(--manuscript-primary), 0.1),
+      0 0 18px rgba(var(--manuscript-primary), 0.06);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 1px rgba(var(--manuscript-primary), 0.25),
+      0 0 8px rgba(var(--manuscript-primary), 0.2),
+      0 0 14px rgba(var(--manuscript-primary), 0.15),
+      0 0 20px rgba(var(--manuscript-primary), 0.08);
+  }
+}
+
+@keyframes framework-border-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 1px rgba(var(--framework-primary), 0.2),
+      0 0 6px rgba(var(--framework-primary), 0.15),
+      0 0 12px rgba(var(--framework-primary), 0.1),
+      0 0 18px rgba(var(--framework-primary), 0.06);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 1px rgba(var(--framework-primary), 0.3),
+      0 0 8px rgba(var(--framework-primary), 0.2),
+      0 0 14px rgba(var(--framework-primary), 0.12),
+      0 0 20px rgba(var(--framework-primary), 0.07);
+  }
+}
+
+/* Surface Switcher Border Styles */
+.dual-mode-switcher > div {
+  border: 1px solid rgba(156, 163, 175, 0.4);
+  box-shadow: 
+    0 0 0 1px rgba(156, 163, 175, 0.1),
+    0 0 8px rgba(156, 163, 175, 0.1),
+    0 0 16px rgba(156, 163, 175, 0.05);
+  transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Light mode switcher border */
+html:not(.dark) .dual-mode-switcher > div {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.1),
+    0 0 8px rgba(0, 0, 0, 0.08),
+    0 0 16px rgba(0, 0, 0, 0.04);
+}
+
+/* Light mode animations */
+@keyframes manuscript-border-pulse-light {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.15),
+      0 0 6px rgba(0, 0, 0, 0.1),
+      0 0 12px rgba(0, 0, 0, 0.08),
+      0 0 18px rgba(0, 0, 0, 0.04);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.2),
+      0 0 8px rgba(0, 0, 0, 0.15),
+      0 0 14px rgba(0, 0, 0, 0.12),
+      0 0 20px rgba(0, 0, 0, 0.06);
+  }
+}
+
+@keyframes framework-border-pulse-light {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.15),
+      0 0 6px rgba(0, 0, 0, 0.1),
+      0 0 12px rgba(0, 0, 0, 0.08),
+      0 0 18px rgba(0, 0, 0, 0.04);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 1px rgba(0, 0, 0, 0.25),
+      0 0 8px rgba(0, 0, 0, 0.15),
+      0 0 14px rgba(0, 0, 0, 0.1),
+      0 0 20px rgba(0, 0, 0, 0.05);
+  }
+}

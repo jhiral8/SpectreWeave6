@@ -1,0 +1,444 @@
+/* Futuristic Writing Surface Borders for SpectreWeave5 */
+/* Based on UI/UX analysis for enhanced writing experience */
+
+:root {
+  /* Enhanced Color System - Following UI/UX recommendations */
+  --manuscript-primary: 59 130 246; /* #3b82f6 */
+  --manuscript-secondary: 96 165 250; /* lighter blue */
+  --manuscript-accent: 147 197 253; /* even lighter */
+  
+  --framework-primary: 249 115 22; /* #f97316 */
+  --framework-secondary: 251 146 60; /* lighter orange */
+  --framework-accent: 253 186 116; /* even lighter */
+  
+  /* Dynamic Properties for Professional Feel */
+  --border-intensity: 0.4; /* Reduced for non-intrusive design */
+  --border-animation-speed: 1;
+  --border-glow-size: 16px; /* Optimized for focus enhancement */
+  --surface-transition-duration: 400ms; /* Smooth morphing */
+}
+
+/* Base Futuristic Border Effect */
+.futuristic-surface-border {
+  position: relative;
+  border-radius: 12px;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  will-change: box-shadow, transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  overflow: hidden;
+}
+
+/* Manuscript Surface Border - "Creative Flow" Design */
+.futuristic-manuscript-border {
+  /* Organic, flowing energy border for creative writing */
+  border: 1px solid rgba(var(--manuscript-primary), calc(var(--border-intensity) * 0.5));
+  box-shadow: 
+    0 0 0 1px rgba(var(--manuscript-primary), calc(var(--border-intensity) * 0.3)),
+    0 0 var(--border-glow-size) rgba(var(--manuscript-primary), calc(var(--border-intensity) * 0.2)),
+    inset 0 0 calc(var(--border-glow-size) * 0.8) rgba(var(--manuscript-accent), calc(var(--border-intensity) * 0.1));
+  transition: all var(--surface-transition-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Creative Flow Energy Waves */
+.futuristic-manuscript-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: 
+    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(var(--manuscript-accent), 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 70% at 80% 50%, rgba(var(--manuscript-secondary), 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 60% at 0% 100%, rgba(var(--manuscript-accent), 0.2) 0%, transparent 50%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  z-index: -1;
+  pointer-events: none;
+  animation: creative-flow-waves 6s ease-in-out infinite;
+  opacity: var(--border-intensity);
+}
+
+/* Floating particles effect for creativity */
+.futuristic-manuscript-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: 
+    radial-gradient(circle 2px at 25% 30%, rgba(var(--manuscript-accent), 0.6) 0%, transparent 4px),
+    radial-gradient(circle 1px at 75% 20%, rgba(var(--manuscript-primary), 0.5) 0%, transparent 2px),
+    radial-gradient(circle 1.5px at 60% 80%, rgba(var(--manuscript-secondary), 0.4) 0%, transparent 3px),
+    radial-gradient(circle 1px at 30% 70%, rgba(var(--manuscript-accent), 0.3) 0%, transparent 2px);
+  animation: floating-particles 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  opacity: calc(var(--border-intensity) * 0.7);
+}
+
+/* Framework Surface Border - "Structural Grid" Design */
+.futuristic-framework-border {
+  /* Geometric, structured border for planning and organization */
+  border: 1px solid rgba(var(--framework-primary), calc(var(--border-intensity) * 0.5));
+  box-shadow: 
+    0 0 0 1px rgba(var(--framework-primary), calc(var(--border-intensity) * 0.3)),
+    0 0 var(--border-glow-size) rgba(var(--framework-primary), calc(var(--border-intensity) * 0.2)),
+    inset 0 0 calc(var(--border-glow-size) * 0.8) rgba(var(--framework-accent), calc(var(--border-intensity) * 0.1));
+  transition: all var(--surface-transition-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Geometric Grid Pattern */
+.futuristic-framework-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: 
+    linear-gradient(45deg, rgba(var(--framework-primary), 0.3) 0%, transparent 30%),
+    linear-gradient(-45deg, rgba(var(--framework-secondary), 0.2) 0%, transparent 30%),
+    conic-gradient(from 0deg at 50% 50%, 
+      rgba(var(--framework-primary), 0.4) 0deg,
+      transparent 90deg,
+      rgba(var(--framework-accent), 0.3) 180deg,
+      transparent 270deg,
+      rgba(var(--framework-primary), 0.4) 360deg
+    );
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  z-index: -1;
+  pointer-events: none;
+  animation: structural-grid-pulse 5s ease-in-out infinite;
+  opacity: var(--border-intensity);
+}
+
+/* Circuit-like data flow patterns */
+.futuristic-framework-border::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: 
+    linear-gradient(0deg, transparent 48%, rgba(var(--framework-primary), 0.4) 49%, rgba(var(--framework-primary), 0.4) 51%, transparent 52%),
+    linear-gradient(90deg, transparent 48%, rgba(var(--framework-secondary), 0.3) 49%, rgba(var(--framework-secondary), 0.3) 51%, transparent 52%);
+  animation: circuit-flow 4s linear infinite;
+  pointer-events: none;
+  z-index: 1;
+  opacity: calc(var(--border-intensity) * 0.6);
+}
+
+/* Scanning Line Effect for Active Surface */
+.futuristic-surface-border.active {
+  --border-intensity: 0.8;
+}
+
+.futuristic-surface-border.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--surface-manuscript), 0.8) 50%,
+    transparent 100%
+  );
+  animation: scanning-line 3s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.futuristic-framework-border.active::after {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--surface-framework), 0.8) 50%,
+    transparent 100%
+  );
+}
+
+/* Data Flow Lines for Enhanced Effect */
+.futuristic-surface-border.with-data-flow {
+  overflow: hidden;
+}
+
+.futuristic-surface-border.with-data-flow .data-flow-line {
+  position: absolute;
+  top: 50%;
+  left: -100%;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--surface-manuscript), 0.6) 30%,
+    rgba(var(--surface-accent), 0.8) 50%,
+    rgba(var(--surface-manuscript), 0.6) 70%,
+    transparent 100%
+  );
+  animation: data-flow-horizontal 4s ease-in-out infinite;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.futuristic-framework-border .data-flow-line {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--surface-framework), 0.6) 30%,
+    rgba(var(--surface-accent), 0.8) 50%,
+    rgba(var(--surface-framework), 0.6) 70%,
+    transparent 100%
+  );
+}
+
+/* Corner Accent Effects */
+.futuristic-surface-border .corner-accent {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 2px solid transparent;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.futuristic-surface-border .corner-accent.top-left {
+  top: -1px;
+  left: -1px;
+  border-top-color: rgba(var(--surface-manuscript), 0.6);
+  border-left-color: rgba(var(--surface-manuscript), 0.6);
+  border-top-left-radius: 12px;
+}
+
+.futuristic-surface-border .corner-accent.top-right {
+  top: -1px;
+  right: -1px;
+  border-top-color: rgba(var(--surface-accent), 0.6);
+  border-right-color: rgba(var(--surface-accent), 0.6);
+  border-top-right-radius: 12px;
+}
+
+.futuristic-surface-border .corner-accent.bottom-left {
+  bottom: -1px;
+  left: -1px;
+  border-bottom-color: rgba(var(--surface-accent), 0.6);
+  border-left-color: rgba(var(--surface-accent), 0.6);
+  border-bottom-left-radius: 12px;
+}
+
+.futuristic-surface-border .corner-accent.bottom-right {
+  bottom: -1px;
+  right: -1px;
+  border-bottom-color: rgba(var(--surface-manuscript), 0.6);
+  border-right-color: rgba(var(--surface-manuscript), 0.6);
+  border-bottom-right-radius: 12px;
+}
+
+.futuristic-framework-border .corner-accent.top-left,
+.futuristic-framework-border .corner-accent.bottom-right {
+  border-color: rgba(var(--surface-framework), 0.6);
+}
+
+.futuristic-framework-border .corner-accent.top-right,
+.futuristic-framework-border .corner-accent.bottom-left {
+  border-color: rgba(var(--surface-accent), 0.6);
+}
+
+/* Animation Keyframes - UI/UX Optimized */
+
+/* Creative Flow Waves for Manuscript Surface */
+@keyframes creative-flow-waves {
+  0%, 100% { 
+    transform: scale(1) rotate(0deg);
+    opacity: var(--border-intensity);
+  }
+  33% { 
+    transform: scale(1.02) rotate(1deg);
+    opacity: calc(var(--border-intensity) * 1.1);
+  }
+  66% { 
+    transform: scale(0.98) rotate(-1deg);
+    opacity: calc(var(--border-intensity) * 0.9);
+  }
+}
+
+/* Floating Particles Animation */
+@keyframes floating-particles {
+  0%, 100% { 
+    transform: translateY(0px);
+    opacity: calc(var(--border-intensity) * 0.7);
+  }
+  25% { 
+    transform: translateY(-2px);
+    opacity: calc(var(--border-intensity) * 0.8);
+  }
+  50% { 
+    transform: translateY(1px);
+    opacity: calc(var(--border-intensity) * 0.6);
+  }
+  75% { 
+    transform: translateY(-1px);
+    opacity: calc(var(--border-intensity) * 0.9);
+  }
+}
+
+/* Structural Grid Pulse for Framework Surface */
+@keyframes structural-grid-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: var(--border-intensity);
+  }
+  50% { 
+    transform: scale(1.01);
+    opacity: calc(var(--border-intensity) * 1.2);
+  }
+}
+
+/* Circuit Flow Animation */
+@keyframes circuit-flow {
+  0% { 
+    background-position: 0% 0%, 0% 0%;
+    opacity: calc(var(--border-intensity) * 0.6);
+  }
+  25% { 
+    background-position: 100% 0%, 0% 100%;
+    opacity: calc(var(--border-intensity) * 0.8);
+  }
+  50% { 
+    background-position: 100% 100%, 100% 100%;
+    opacity: calc(var(--border-intensity) * 0.6);
+  }
+  75% { 
+    background-position: 0% 100%, 100% 0%;
+    opacity: calc(var(--border-intensity) * 0.8);
+  }
+  100% { 
+    background-position: 0% 0%, 0% 0%;
+    opacity: calc(var(--border-intensity) * 0.6);
+  }
+}
+
+@keyframes scanning-line {
+  0% { transform: translateX(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes data-flow-horizontal {
+  0% { transform: translateX(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+/* Hover Effects */
+.futuristic-surface-border:hover {
+  --border-intensity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 
+    0 0 0 1px rgba(var(--surface-manuscript), 0.3),
+    0 4px 20px rgba(var(--surface-manuscript), calc(var(--border-intensity) * 0.2)),
+    inset 0 0 var(--border-glow-size) rgba(var(--surface-manuscript), calc(var(--border-intensity) * 0.08));
+}
+
+.futuristic-framework-border:hover {
+  box-shadow: 
+    0 0 0 1px rgba(var(--surface-framework), 0.3),
+    0 4px 20px rgba(var(--surface-framework), calc(var(--border-intensity) * 0.2)),
+    inset 0 0 var(--border-glow-size) rgba(var(--surface-framework), calc(var(--border-intensity) * 0.08));
+}
+
+/* Focus State */
+.futuristic-surface-border:focus-within {
+  --border-intensity: 1;
+  outline: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .futuristic-surface-border {
+    --border-glow-size: 15px;
+    --border-intensity: 0.5;
+  }
+  
+  .futuristic-surface-border::before,
+  .futuristic-surface-border::after {
+    animation-duration: calc(var(--border-animation-speed) * 4s);
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .futuristic-surface-border::before,
+  .futuristic-surface-border::after,
+  .futuristic-surface-border .data-flow-line {
+    animation: none;
+  }
+  
+  .futuristic-surface-border {
+    transition: box-shadow 0.2s ease;
+  }
+}
+
+/* Dark Mode Adjustments */
+.dark {
+  --surface-manuscript: 96 165 250; /* blue-400 */
+  --surface-framework: 251 146 60; /* orange-400 */
+  --surface-neutral: 156 163 175; /* gray-400 */
+  --surface-accent: 196 181 253; /* purple-400 */
+}
+
+/* Content Protection */
+.futuristic-surface-border > *:not(.corner-accent):not(.data-flow-line) {
+  position: relative;
+  z-index: 10;
+  background: transparent;
+}
+
+.futuristic-surface-border .tiptap,
+.futuristic-surface-border .ProseMirror {
+  background: transparent;
+  min-height: 100%;
+  position: relative;
+  z-index: 10;
+  outline: 0;
+  border: 0;
+}
+
+.futuristic-surface-border .tiptap:focus,
+.futuristic-surface-border .ProseMirror:focus,
+.manuscript-surface:focus,
+.framework-surface:focus {
+  outline: 0;
+  border: 0;
+  box-shadow: none;
+}
+
+/* Performance Optimizations */
+.futuristic-surface-border,
+.futuristic-surface-border::before,
+.futuristic-surface-border::after,
+.futuristic-surface-border .corner-accent,
+.futuristic-surface-border .data-flow-line {
+  contain: layout style paint;
+}
+
+/* Utility Classes for Easy Application */
+.manuscript-surface {
+  @apply futuristic-surface-border futuristic-manuscript-border;
+}
+
+.framework-surface {
+  @apply futuristic-surface-border futuristic-framework-border;
+}
+
+.surface-with-corners .corner-accent {
+  display: block;
+}
+
+.surface-with-data-flow .data-flow-line {
+  display: block;
+}

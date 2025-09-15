@@ -1,0 +1,505 @@
+/* AI Border Effects for SpectreWeave5 */
+
+:root {
+  /* AI Color Palette */
+  --ai-primary: 99 102 241; /* indigo-500 */
+  --ai-secondary: 168 85 247; /* purple-500 */
+  --ai-accent: 34 197 94; /* emerald-500 */
+  --ai-warning: 245 158 11; /* amber-500 */
+  --ai-error: 239 68 68; /* red-500 */
+  
+  /* Dynamic Properties */
+  --ai-intensity: 0.5;
+  --ai-confidence: 0.7;
+  --ai-activity: 0;
+}
+
+/* Base AI Border Classes */
+.ai-border-base {
+  position: relative;
+  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: box-shadow, transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Neural Network Activity Border */
+.ai-neural-border {
+  border: 1px solid rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.4));
+  box-shadow: 
+    0 0 0 1px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.3)),
+    0 0 20px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.15)),
+    inset 0 0 20px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.08));
+}
+
+.ai-neural-border.ai-thinking {
+  --ai-intensity: 0.6;
+  animation: neural-pulse 2s ease-in-out infinite;
+}
+
+.ai-neural-border.ai-generating {
+  --ai-intensity: 0.8;
+  box-shadow: 
+    0 0 0 1px rgba(var(--ai-accent), calc(var(--ai-intensity) * 0.4)),
+    0 0 25px rgba(var(--ai-accent), calc(var(--ai-intensity) * 0.2)),
+    inset 0 0 25px rgba(var(--ai-accent), calc(var(--ai-intensity) * 0.1));
+  animation: neural-generate 1.2s ease-in-out infinite;
+}
+
+.ai-neural-border.ai-error {
+  --ai-intensity: 0.7;
+  box-shadow: 
+    0 0 0 1px rgba(var(--ai-error), calc(var(--ai-intensity) * 0.4)),
+    0 0 15px rgba(var(--ai-error), calc(var(--ai-intensity) * 0.2));
+  animation: neural-error 0.5s ease-out;
+}
+
+/* Confidence Level Visualization - TRUE BORDER APPROACH */
+.ai-confidence-border {
+  position: relative;
+  border-radius: 0.5rem;
+  background: transparent;
+}
+
+.ai-confidence-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(var(--ai-error), 0.6) 0deg,
+    rgba(var(--ai-warning), 0.7) calc(var(--ai-confidence) * 120deg),
+    rgba(var(--ai-accent), 0.8) calc(var(--ai-confidence) * 240deg),
+    rgba(var(--ai-accent), 0.9) calc(var(--ai-confidence) * 360deg),
+    transparent calc(var(--ai-confidence) * 360deg)
+  );
+  mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+  -webkit-mask-composite: xor;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* High visibility confidence border variant */
+.ai-confidence-border.high-confidence::before {
+  inset: -3px;
+  padding: 3px;
+}
+
+.ai-confidence-border.high-confidence {
+  box-shadow: 
+    0 0 0 1px rgba(var(--ai-accent), calc(var(--ai-confidence) * 0.4)),
+    0 0 20px rgba(var(--ai-accent), calc(var(--ai-confidence) * 0.2));
+}
+
+/* Medium confidence gets standard treatment */
+.ai-confidence-border.medium-confidence::before {
+  inset: -2px;
+  padding: 2px;
+}
+
+.ai-confidence-border.medium-confidence {
+  box-shadow: 0 0 15px rgba(var(--ai-accent), calc(var(--ai-confidence) * 0.15));
+}
+
+/* Low confidence gets subtle treatment */
+.ai-confidence-border.low-confidence::before {
+  inset: -1px;
+  padding: 1px;
+}
+
+.ai-confidence-border.low-confidence {
+  box-shadow: 0 0 8px rgba(var(--ai-warning), calc(var(--ai-confidence) * 0.1));
+}
+
+/* Data Flow Effects */
+.ai-data-flow {
+  overflow: hidden;
+}
+
+.ai-data-flow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--ai-primary), 0.3) 30%,
+    rgba(var(--ai-secondary), 0.4) 50%,
+    rgba(var(--ai-accent), 0.3) 70%,
+    transparent 100%
+  );
+  animation: data-flow-left-to-right 3s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.ai-data-flow.reverse::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    -90deg,
+    transparent 0%,
+    rgba(var(--ai-secondary), 0.3) 30%,
+    rgba(var(--ai-primary), 0.4) 50%,
+    rgba(var(--ai-accent), 0.3) 70%,
+    transparent 100%
+  );
+  animation: data-flow-right-to-left 3s ease-in-out infinite 1.5s;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* Scanning Line Effect */
+.ai-scan-border {
+  border: 1px solid rgba(var(--ai-primary), 0.2);
+  overflow: hidden;
+}
+
+.ai-scan-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(var(--ai-primary), 0.8),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: scan-line 2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Quality Indicator */
+.ai-quality-border {
+  position: relative;
+}
+
+.ai-quality-border::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    45deg,
+    rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.3)),
+    rgba(var(--ai-secondary), calc(var(--ai-intensity) * 0.4)),
+    rgba(var(--ai-accent), calc(var(--ai-intensity) * 0.3))
+  );
+  filter: blur(4px);
+  opacity: var(--ai-intensity);
+  z-index: -1;
+  pointer-events: none;
+}
+
+.ai-quality-border.high-quality {
+  --ai-intensity: 0.9;
+}
+
+.ai-quality-border.medium-quality {
+  --ai-intensity: 0.6;
+}
+
+.ai-quality-border.low-quality {
+  --ai-intensity: 0.3;
+}
+
+/* Animation Keyframes */
+@keyframes neural-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0 1px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.3)),
+      0 0 20px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.1)),
+      inset 0 0 20px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.05));
+  }
+  50% { 
+    box-shadow: 
+      0 0 0 1px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.5)),
+      0 0 30px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.2)),
+      inset 0 0 30px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.1));
+  }
+}
+
+@keyframes neural-generate {
+  0%, 100% { 
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  33% { 
+    transform: scale(1.005);
+    filter: brightness(1.1);
+  }
+  66% { 
+    transform: scale(0.995);
+    filter: brightness(0.9);
+  }
+}
+
+@keyframes neural-error {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  75% { transform: translateX(-1px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes data-flow-left-to-right {
+  0% { transform: translateX(-100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes data-flow-right-to-left {
+  0% { transform: translateX(100%); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateX(-100%); opacity: 0; }
+}
+
+@keyframes scan-line {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Combined Effect Classes */
+.ai-manuscript-border {
+  /* Neural network activity with quality indicators */
+  position: relative;
+  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: box-shadow, transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  
+  /* Apply neural border effects */
+  border: 1px solid rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.4));
+  box-shadow: 
+    0 0 0 1px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.3)),
+    0 0 20px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.15)),
+    inset 0 0 20px rgba(var(--ai-primary), calc(var(--ai-intensity) * 0.08));
+}
+
+.ai-framework-border {
+  /* Confidence visualization with data flow */
+  position: relative;
+  border-radius: 0.5rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: box-shadow, transform;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  background: transparent;
+  
+  /* Enhanced visibility */
+  box-shadow: 0 0 15px rgba(var(--ai-accent), calc(var(--ai-confidence) * 0.15));
+  overflow: hidden;
+}
+
+.ai-framework-border::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  padding: 2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(var(--ai-error), 0.6) 0deg,
+    rgba(var(--ai-warning), 0.7) calc(var(--ai-confidence) * 120deg),
+    rgba(var(--ai-accent), 0.8) calc(var(--ai-confidence) * 240deg),
+    rgba(var(--ai-accent), 0.9) calc(var(--ai-confidence) * 360deg),
+    transparent calc(var(--ai-confidence) * 360deg)
+  );
+  mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+  mask-composite: xor;
+  -webkit-mask: linear-gradient(white 0 0) content-box, linear-gradient(white 0 0);
+  -webkit-mask-composite: xor;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.ai-dual-flow {
+  /* Data flow effects for framework surface */
+  overflow: hidden;
+}
+
+.ai-dual-flow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(var(--ai-primary), 0.3) 30%,
+    rgba(var(--ai-secondary), 0.4) 50%,
+    rgba(var(--ai-accent), 0.3) 70%,
+    transparent 100%
+  );
+  animation: data-flow-left-to-right 3s ease-in-out infinite;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.ai-dual-flow.reverse::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    -90deg,
+    transparent 0%,
+    rgba(var(--ai-secondary), 0.3) 30%,
+    rgba(var(--ai-primary), 0.4) 50%,
+    rgba(var(--ai-accent), 0.3) 70%,
+    transparent 100%
+  );
+  animation: data-flow-right-to-left 3s ease-in-out infinite 1.5s;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ai-neural-border,
+  .ai-confidence-border,
+  .ai-quality-border {
+    --ai-intensity: calc(var(--ai-intensity) * 0.7);
+  }
+  
+  .ai-neural-border.ai-thinking,
+  .ai-neural-border.ai-generating {
+    animation-duration: 3s; /* Slower on mobile */
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .ai-neural-border.ai-thinking,
+  .ai-neural-border.ai-generating,
+  .ai-data-flow::before,
+  .ai-data-flow.reverse::after,
+  .ai-scan-border::before {
+    animation: none;
+  }
+  
+  .ai-neural-border.ai-thinking,
+  .ai-neural-border.ai-generating {
+    box-shadow: 0 0 0 1px rgba(var(--ai-primary), 0.4);
+  }
+}
+
+/* Performance Optimizations */
+.ai-border-base,
+.ai-border-base::before,
+.ai-border-base::after {
+  contain: layout style paint;
+}
+
+/* Dark Mode Adjustments */
+.dark {
+  --ai-primary: 129 140 248; /* indigo-400 */
+  --ai-secondary: 196 181 253; /* purple-400 */
+  --ai-accent: 52 211 153; /* emerald-400 */
+  --ai-warning: 251 191 36; /* amber-400 */
+  --ai-error: 248 113 113; /* red-400 */
+}
+
+/* Ensure surface labels and controls are always visible */
+.ai-border-base .surface-label,
+.ai-border-base .surface-title,
+.ai-manuscript-border .surface-label,
+.ai-framework-border .surface-label {
+  position: relative;
+  z-index: 50;
+  pointer-events: auto;
+}
+
+/* Ensure editor content is above border effects but below labels */
+.ai-manuscript-border .ProseMirror,
+.ai-framework-border .ProseMirror,
+.ai-manuscript-border > div,
+.ai-framework-border > div {
+  position: relative;
+  z-index: 10;
+  background: transparent;
+}
+
+/* Ensure mode switcher is always visible */
+.dual-mode-switcher {
+  z-index: 50;
+  pointer-events: auto;
+}
+
+/* Fix for EditorContent containers */
+.ai-manuscript-border .tiptap,
+.ai-framework-border .tiptap {
+  background: transparent !important;
+  min-height: 100%;
+}
+
+/* Ensure proper spacing from borders */
+.ai-manuscript-border > *:not(.surface-label),
+.ai-framework-border > *:not(.surface-label) {
+  padding: 1rem;
+  margin: 0;
+}
+
+/* Ensure proper layering for data flow effects */
+.ai-dual-flow > .tiptap {
+  position: relative;
+  z-index: 5;
+}
+
+/* Ensure content areas maintain transparency and proper layering */
+.ai-manuscript-border,
+.ai-framework-border,
+.ai-confidence-border {
+  background-color: transparent;
+}
+
+.ai-manuscript-border > *,
+.ai-framework-border > *,
+.ai-confidence-border > * {
+  background-color: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Fallback for browsers without mask support */
+@supports not (mask: linear-gradient(white 0 0)) {
+  .ai-confidence-border::before,
+  .ai-framework-border::before {
+    /* Use box-shadow as fallback */
+    background: transparent;
+    border: 2px solid;
+    border-image: conic-gradient(
+      from 0deg,
+      rgba(var(--ai-error), 0.6) 0deg,
+      rgba(var(--ai-warning), 0.7) calc(var(--ai-confidence) * 120deg),
+      rgba(var(--ai-accent), 0.8) calc(var(--ai-confidence) * 240deg),
+      rgba(var(--ai-accent), 0.9) calc(var(--ai-confidence) * 360deg),
+      transparent calc(var(--ai-confidence) * 360deg)
+    ) 1;
+  }
+}

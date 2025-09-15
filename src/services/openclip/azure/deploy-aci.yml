@@ -1,0 +1,141 @@
+# Azure Container Instances Deployment Configuration
+# YAML template for deploying OpenCLIP service to Azure
+
+apiVersion: 2023-05-01
+location: eastus2
+name: openclip-service
+properties:
+  osType: Linux
+  restartPolicy: Always
+  
+  # Container Configuration
+  containers:
+  - name: openclip-service
+    properties:
+      image: ${ACR_LOGIN_SERVER}/openclip-service:latest
+      resources:
+        requests:
+          cpu: 2.0
+          memoryInGb: 4.0
+        limits:
+          cpu: 2.0
+          memoryInGb: 4.0
+      
+      # Port Configuration
+      ports:
+      - protocol: TCP
+        port: 5000
+      
+      # Environment Variables
+      environmentVariables:
+      # Service Configuration
+      - name: PORT
+        value: '5000'
+      - name: WORKERS
+        value: '2'
+      - name: LOG_LEVEL
+        value: 'info'
+      
+      # Model Configuration
+      - name: CLIP_MODEL
+        value: 'clip-ViT-B-32'
+      - name: MAX_BATCH_SIZE
+        value: '16'
+      - name: MAX_IMAGE_SIZE
+        value: '1024'
+      
+      # Caching Configuration (Redis Cache for Azure)
+      - name: ENABLE_CACHE
+        value: 'true'
+      - name: REDIS_URL
+        secureValue: '${AZURE_REDIS_CONNECTION_STRING}'
+      - name: CACHE_TTL
+        value: '3600'
+      
+      # Performance Configuration
+      - name: TIMEOUT
+        value: '120'
+      - name: ALLOWED_ORIGINS
+        value: 'https://your-domain.com,https://your-dev-domain.com'
+      
+      # Azure Integration
+      - name: AZURE_SUBSCRIPTION_ID
+        secureValue: '${AZURE_SUBSCRIPTION_ID}'
+      - name: AZURE_TENANT_ID
+        secureValue: '${AZURE_TENANT_ID}'
+      
+      # Monitoring
+      - name: APPLICATION_INSIGHTS_CONNECTION_STRING
+        secureValue: '${APPLICATION_INSIGHTS_CONNECTION_STRING}'
+      
+      # Volume Mounts
+      volumeMounts:
+      - name: model-cache
+        mountPath: /home/clipuser/.cache
+      - name: logs
+        mountPath: /app/logs
+  
+  # Redis Cache Container (Optional - can use Azure Redis Cache instead)
+  - name: redis-cache
+    properties:
+      image: redis:7-alpine
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGb: 1.0
+        limits:
+          cpu: 1.0
+          memoryInGb: 1.0
+      ports:
+      - protocol: TCP
+        port: 6379
+      command:
+      - redis-server
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - allkeys-lru
+      - --save
+      - '60'
+      - '1000'
+      volumeMounts:
+      - name: redis-data
+        mountPath: /data
+
+  # Network Configuration
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: TCP
+      port: 5000
+    - protocol: TCP
+      port: 6379
+    dnsNameLabel: openclip-service-${RANDOM_SUFFIX}
+  
+  # Volume Configuration
+  volumes:
+  - name: model-cache
+    azureFile:
+      shareName: model-cache
+      storageAccountName: ${AZURE_STORAGE_ACCOUNT}
+      storageAccountKey: ${AZURE_STORAGE_KEY}
+  - name: logs
+    azureFile:
+      shareName: logs
+      storageAccountName: ${AZURE_STORAGE_ACCOUNT}
+      storageAccountKey: ${AZURE_STORAGE_KEY}
+  - name: redis-data
+    emptyDir: {}
+
+  # Diagnostics and Monitoring
+  diagnostics:
+    logAnalytics:
+      workspaceId: ${LOG_ANALYTICS_WORKSPACE_ID}
+      workspaceKey: ${LOG_ANALYTICS_WORKSPACE_KEY}
+
+tags:
+  Environment: production
+  Service: openclip-embedding
+  Owner: spectreweave-team
+  CostCenter: ai-services
+  AutoShutdown: 'false'

@@ -1,0 +1,73 @@
+# Lightweight OpenCLIP Dockerfile - Downloads models on startup
+# Smaller image size for Azure Container Instances
+
+FROM python:3.10-slim
+
+# Create non-root user
+RUN groupadd --gid 1000 clipuser && \
+    useradd --uid 1000 --gid clipuser --shell /bin/bash --create-home clipuser
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    libjpeg-dev \
+    libpng-dev \
+    ca-certificates \
+    procps \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements and install Python packages
+COPY requirements.production.txt .
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir --compile -r requirements.production.txt && \
+    find /usr/local -name "*.pyc" -delete && \
+    find /usr/local -name "__pycache__" -type d -delete
+
+# Create necessary directories
+RUN mkdir -p /app/logs /app/cache /home/clipuser/.cache && \
+    chown -R clipuser:clipuser /app /home/clipuser/.cache
+
+# Copy application files
+COPY --chown=clipuser:clipuser production_server.py .
+COPY --chown=clipuser:clipuser startup.sh .
+
+# Make startup script executable
+RUN chmod +x startup.sh
+
+# Switch to non-root user
+USER clipuser
+
+# Set environment variables
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1 \
+    PORT=5000 \
+    WORKERS=2 \
+    CLIP_MODEL=clip-ViT-B-32 \
+    LOG_LEVEL=INFO \
+    CACHE_TTL=3600 \
+    MAX_IMAGE_SIZE=1024 \
+    ENABLE_CACHE=true
+
+# Expose port
+EXPOSE 5000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:5000/health', timeout=5)"
+
+# Labels for container metadata
+LABEL maintainer="spectreweave-team" \
+      version="1.0.0" \
+      description="Lightweight OpenCLIP embedding service" \
+      org.opencontainers.image.title="OpenCLIP Lightweight Service" \
+      org.opencontainers.image.description="Lightweight CLIP embedding microservice" \
+      org.opencontainers.image.version="1.0.0"
+
+# Use startup script for graceful shutdown handling
+CMD ["./startup.sh"]

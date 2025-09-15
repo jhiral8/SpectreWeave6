@@ -1,0 +1,1 @@
+export { SlashCommandsList } from "./SlashCommandsList";

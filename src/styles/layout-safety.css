@@ -1,0 +1,60 @@
+/* Layout Safety CSS - Ensures UI components stay within viewport bounds */
+
+/* Sidebar container safety - removed containment that creates stacking issues */
+.sidebar-container {
+  /* No containment or isolation - let fixed positioning work naturally */
+}
+
+/* AI Writing Assistant Panel safety */
+.ai-writing-assistant-panel {
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 4rem);
+  /* Removed containment and isolation that prevent proper layering */
+}
+
+/* Custom AI Toolbar safety */
+.custom-ai-toolbar {
+  max-width: calc(100vw - 2rem);
+  /* Removed containment and isolation that prevent proper layering */
+}
+
+/* Editor main container safety - CRITICAL: No overflow hidden or isolation */
+.editor-main-container {
+  /* Removed all containment, isolation, and overflow constraints */
+  /* This allows child elements (sidebar, modals) to escape container bounds */
+}
+
+/* General viewport safety utilities */
+.viewport-safe-width {
+  max-width: calc(100vw - 2rem);
+}
+
+.viewport-safe-height {
+  max-height: calc(100vh - 4rem);
+}
+
+.safe-z-modal {
+  z-index: 1000;
+}
+
+.safe-z-tooltip {
+  z-index: 1050;
+}
+
+.safe-z-sidebar {
+  z-index: 999;
+}
+
+/* Performance optimizations */
+.gpu-accelerated {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+}
+
+/* Accessibility and touch targets */
+@media (max-width: 768px) {
+  .touch-safe {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

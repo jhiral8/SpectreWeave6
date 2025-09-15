@@ -1,0 +1,17 @@
+# OpenCLIP Server Requirements
+# Free, self-hosted multimodal embeddings
+
+# Core dependencies
+flask==3.0.0
+flask-cors==4.0.0
+numpy==1.24.3
+Pillow==10.2.0
+
+# CLIP model via sentence-transformers
+torch>=2.0.0
+torchvision>=0.15.0
+sentence-transformers==2.2.2
+
+# Optional for better performance
+gunicorn==21.2.0
+gevent==23.9.1

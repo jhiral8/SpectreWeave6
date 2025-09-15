@@ -1,0 +1,355 @@
+.ProseMirror {
+  font-family: Inter, var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  .is-empty::before {
+    @apply text-neutral-500 dark:text-neutral-400;
+  }
+
+  & > *:first-child,
+  [data-type='column'] > * {
+    @apply first:mt-0 last:mb-0;
+  }
+
+  & > * + * {
+    margin-top: 0.75em;
+  }
+
+  .node-imageUpload {
+    @apply rounded border-2 border-dotted border-black border-opacity-10 p-2 dark:border-neutral-500;
+    transition: border 160ms cubic-bezier(0.45, 0.05, 0.55, 0.95);
+
+    &:hover {
+      @apply border-opacity-30;
+    }
+
+    &:has(.is-active),
+    &.has-focus {
+      @apply border-opacity-40;
+    }
+  }
+
+  [data-type='columns'] {
+    &.has-focus [data-type='column'],
+    &:hover [data-type='column'] {
+      @apply border-neutral-300 dark:border-neutral-700;
+    }
+
+    [data-type='column'].has-focus {
+      @apply border-neutral-400 dark:border-neutral-600;
+    }
+  }
+
+  [data-type='column'] {
+    @apply rounded border-2 border-dotted border-transparent p-1;
+    transition: border 160ms cubic-bezier(0.45, 0.05, 0.55, 0.95);
+
+    &:hover {
+      @apply border-neutral-100 dark:border-neutral-900;
+    }
+
+    &:has(.is-active),
+    &.has-focus {
+      @apply border-neutral-100 dark:border-neutral-900;
+    }
+  }
+
+  .node-imageBlock {
+    & img {
+      @apply border-2 border-transparent rounded-xl overflow-hidden;
+    }
+
+    &:hover img {
+      @apply border-2 border-neutral-100 dark:border-neutral-900;
+    }
+
+    &:has(.is-active) img,
+    &.has-focus img {
+      @apply border-2 border-neutral-800 dark:border-neutral-200;
+    }
+  }
+
+  .node-aiWriter,
+  .node-aiImage,
+  .node-tableOfContentsNode {
+    &.has-focus [data-node-view-wrapper] > * {
+      @apply shadow-[0_0_0_2px] shadow-black/30 dark:shadow-white/30 transition-all rounded-lg;
+    }
+  }
+
+  .ProseMirror-gapcursor + .node-imageBlock,
+  .ProseMirror-gapcursor + .node-imageUpload,
+  .ProseMirror-gapcursor + [data-type='blockquoteFigure'] {
+    @apply outline-neutral-700 hover:outline-neutral-600 dark:outline-neutral-300 dark:hover:outline-neutral-400;
+  }
+
+  [data-type='blockquoteFigure'] > div {
+    @apply border-l-4 border-l-neutral-700 py-2 px-4 bg-opacity-80 rounded-lg rounded-tl-none rounded-bl-none;
+    @apply dark:border-l-neutral-300;
+  }
+
+  [data-type='blockquoteFigure'] > blockquote {
+    @apply text-lg text-black;
+    @apply dark:text-white;
+  }
+
+  [data-type='blockquoteFigure'] figcaption {
+    @apply text-sm text-neutral-500 mt-4 transition-all overflow-hidden;
+    @apply dark:text-neutral-400;
+  }
+  
+  /* Modern AI Suggestion Block with Glassmorphism */
+  .ai-suggestion-box {
+    position: relative;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 20px;
+    margin: 16px 0;
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 
+      0 8px 32px rgba(0, 0, 0, 0.3),
+      0 4px 16px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    animation: fadeIn 0.4s ease-out;
+  }
+
+  /* Animated Gradient Border */
+  .ai-suggestion-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 2px;
+    background: linear-gradient(45deg, 
+      #3b82f6 0%, 
+      #8b5cf6 25%, 
+      #a855f7 50%, 
+      #8b5cf6 75%, 
+      #3b82f6 100%
+    );
+    background-size: 300% 300%;
+    border-radius: 12px;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: xor;
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    animation: gradientShift 3s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  /* Gradient Shift Animation */
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  /* Hover Effects */
+  .ai-suggestion-box:hover {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 12px 40px rgba(0, 0, 0, 0.4),
+      0 6px 20px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
+
+  /* AI Badge */
+  .ai-suggestion-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(168, 85, 247, 0.4);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* Sparkle Animation for AI Icons */
+  .ai-sparkle {
+    animation: sparkle 2s ease-in-out infinite;
+  }
+
+  @keyframes sparkle {
+    0%, 100% { 
+      transform: scale(1) rotate(0deg); 
+      filter: brightness(1);
+    }
+    50% { 
+      transform: scale(1.1) rotate(180deg); 
+      filter: brightness(1.3);
+    }
+  }
+
+  /* Floating Particles */
+  .ai-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .ai-particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: linear-gradient(45deg, #60a5fa, #a855f7);
+    border-radius: 50%;
+    opacity: 0.6;
+  }
+
+  .ai-particle-1 {
+    top: 20%;
+    left: 10%;
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .ai-particle-2 {
+    top: 60%;
+    right: 20%;
+    animation: float 4s ease-in-out infinite 1s;
+  }
+
+  .ai-particle-3 {
+    bottom: 30%;
+    left: 70%;
+    animation: float 4s ease-in-out infinite 2s;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) scale(1);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateY(-10px) scale(1.2);
+      opacity: 0.8;
+    }
+  }
+
+  /* Accept Button */
+  .ai-accept-btn {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    border: 1px solid rgba(16, 185, 129, 0.5);
+  }
+
+  .ai-accept-btn:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    transform: translateY(-1px);
+  }
+
+  /* Shimmer Effect */
+  .ai-shimmer {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255, 255, 255, 0.2), 
+      transparent
+    );
+    transition: left 0.5s;
+  }
+
+  .ai-accept-btn:hover .ai-shimmer {
+    left: 100%;
+  }
+
+  /* Reject Button */
+  .ai-reject-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
+
+  .ai-reject-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: rgba(239, 68, 68, 0.5);
+    color: #fca5a5;
+    transform: translateY(-1px);
+  }
+
+  /* Original Text Styling */
+  .ai-original-text {
+    position: relative;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Suggested Text Styling */
+  .ai-suggested-text {
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    position: relative;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+
+  /* Glowing Pulse Effect */
+  .ai-glow-pulse {
+    animation: glowPulse 2s ease-in-out infinite;
+  }
+
+  @keyframes glowPulse {
+    0%, 100% {
+      box-shadow: 0 0 5px rgba(16, 185, 129, 0.5);
+    }
+    50% {
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.8);
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+  }
+}

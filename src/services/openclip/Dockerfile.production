@@ -1,0 +1,124 @@
+# Multi-stage production Dockerfile for OpenCLIP Service
+# Optimized for Azure Container Instances deployment
+
+# =====================================
+# Stage 1: Base Dependencies
+# =====================================
+FROM python:3.10-slim as base
+
+# Set build arguments
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
+ARG CLIP_MODEL="clip-ViT-B-32"
+
+# Environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONHASHSEED=random \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    DEBIAN_FRONTEND=noninteractive
+
+# Create non-root user for security
+RUN groupadd --gid 1000 clipuser && \
+    useradd --uid 1000 --gid clipuser --shell /bin/bash --create-home clipuser
+
+# Install system dependencies and security updates
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    # Essential build tools
+    gcc \
+    g++ \
+    # Image processing libraries
+    libjpeg-dev \
+    libpng-dev \
+    # Network security
+    ca-certificates \
+    # Monitoring tools
+    procps \
+    # Clean up
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -rf /tmp/* /var/tmp/*
+
+# =====================================
+# Stage 2: Python Dependencies
+# =====================================
+FROM base as dependencies
+
+WORKDIR /tmp
+
+# Copy requirements first for better caching
+COPY requirements.production.txt .
+
+# Install Python dependencies with security and performance optimizations
+RUN pip install --upgrade pip setuptools wheel && \
+    pip install --no-cache-dir --compile -r requirements.production.txt && \
+    # Remove unnecessary files
+    find /usr/local -name "*.pyc" -delete && \
+    find /usr/local -name "__pycache__" -type d -delete
+
+# =====================================
+# Stage 3: Model Download
+# =====================================
+FROM dependencies as model-stage
+
+# Pre-download CLIP model to include in image
+RUN python -c "import open_clip; import os; model, _, transform = open_clip.create_model_and_transforms(os.getenv('CLIP_MODEL', 'ViT-B-32'), pretrained='openai'); print('Model downloaded successfully')"
+
+# =====================================
+# Stage 4: Production Runtime
+# =====================================
+FROM dependencies as production
+
+# Copy downloaded model cache from model stage
+COPY --from=model-stage /root/.cache /home/clipuser/.cache
+
+# Set up application directory
+WORKDIR /app
+
+# Create necessary directories with proper permissions
+RUN mkdir -p /app/logs /app/cache && \
+    chown -R clipuser:clipuser /app /home/clipuser/.cache
+
+# Copy application code
+COPY --chown=clipuser:clipuser production_server.py .
+COPY --chown=clipuser:clipuser startup-simple.sh ./startup.sh
+
+# Make startup script executable
+RUN chmod +x startup.sh
+
+# Switch to non-root user
+USER clipuser
+
+# Expose port
+EXPOSE 5000
+
+# Health check with proper security context
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD python -c "import requests; import sys; \
+        try: \
+            response = requests.get('http://localhost:5000/health', timeout=5); \
+            sys.exit(0 if response.status_code == 200 else 1) \
+        except: \
+            sys.exit(1)"
+
+# Set production environment variables
+ENV PORT=5000 \
+    WORKERS=1 \
+    CLIP_MODEL=clip-ViT-B-32 \
+    MAX_BATCH_SIZE=16 \
+    CACHE_TTL=3600 \
+    MAX_IMAGE_SIZE=1024 \
+    ENABLE_CACHE=true
+
+# Labels for container metadata
+LABEL maintainer="spectreweave-team" \
+      version="1.0.0" \
+      description="Production OpenCLIP embedding service" \
+      org.opencontainers.image.title="OpenCLIP Production Service" \
+      org.opencontainers.image.description="Production-ready CLIP embedding microservice" \
+      org.opencontainers.image.version="1.0.0" \
+      org.opencontainers.image.source="https://github.com/spectreweave/openclip-service"
+
+# Use startup script for graceful shutdown handling
+CMD ["./startup.sh"]

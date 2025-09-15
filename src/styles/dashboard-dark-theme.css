@@ -1,0 +1,184 @@
+/* SpectreWeave Dashboard Dark Theme Enhancements */
+
+/* Dark theme root variables */
+:root {
+  --spectreweave-bg-primary: 255 255 255; /* white */
+  --spectreweave-bg-secondary: 249 250 251; /* gray-50 */
+  --spectreweave-bg-tertiary: 243 244 246; /* gray-100 */
+  --spectreweave-text-primary: 17 24 39; /* gray-900 */
+  --spectreweave-text-secondary: 75 85 99; /* gray-600 */
+  --spectreweave-border: 229 231 235; /* gray-200 */
+}
+
+:root.dark {
+  --spectreweave-bg-primary: 0 0 0; /* black */
+  --spectreweave-bg-secondary: 10 10 10; /* very dark gray */
+  --spectreweave-bg-tertiary: 23 23 23; /* neutral-900 */
+  --spectreweave-text-primary: 255 255 255; /* white */
+  --spectreweave-text-secondary: 156 163 175; /* gray-400 */
+  --spectreweave-border: 38 38 38; /* neutral-800 */
+}
+
+/* Enhanced dark theme for SpectreWeave components */
+.dark {
+  /* Improved dark background gradients */
+  .ai-neural-border {
+    background: radial-gradient(ellipse at center, rgb(17 24 39 / 0.8) 0%, rgb(0 0 0 / 0.95) 70%);
+  }
+
+  /* Enhanced contrast for better readability */
+  .project-card {
+    background: linear-gradient(145deg, rgb(15 15 15 / 0.9), rgb(25 25 25 / 0.8));
+    border-color: rgb(55 65 81 / 0.3);
+  }
+
+  .project-card:hover {
+    background: linear-gradient(145deg, rgb(20 20 20 / 0.95), rgb(30 30 30 / 0.85));
+    border-color: rgb(99 102 241 / 0.4);
+    box-shadow: 0 8px 32px rgb(99 102 241 / 0.1);
+  }
+
+  /* Sidebar enhancements */
+  .dashboard-sidebar {
+    background: linear-gradient(180deg, rgb(0 0 0 / 0.98) 0%, rgb(10 10 10 / 0.95) 100%);
+    border-right: 1px solid rgb(55 65 81 / 0.2);
+  }
+
+  /* Header improvements */
+  .dashboard-header {
+    background: rgb(0 0 0 / 0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgb(55 65 81 / 0.2);
+  }
+
+  /* Enhanced search bar */
+  .search-input {
+    background: rgb(23 23 23 / 0.8);
+    border: 1px solid rgb(75 85 99 / 0.3);
+    color: rgb(243 244 246);
+  }
+
+  .search-input:focus {
+    background: rgb(31 41 55 / 0.9);
+    border-color: rgb(99 102 241 / 0.5);
+    box-shadow: 0 0 0 3px rgb(99 102 241 / 0.1);
+  }
+
+  /* Status badges in dark theme */
+  .status-badge-draft {
+    background: rgb(55 65 81 / 0.3);
+    color: rgb(156 163 175);
+    border: 1px solid rgb(75 85 99 / 0.3);
+  }
+
+  .status-badge-in-progress {
+    background: rgb(30 58 138 / 0.2);
+    color: rgb(147 197 253);
+    border: 1px solid rgb(59 130 246 / 0.3);
+  }
+
+  .status-badge-completed {
+    background: rgb(6 78 59 / 0.2);
+    color: rgb(110 231 183);
+    border: 1px solid rgb(34 197 94 / 0.3);
+  }
+
+  .status-badge-archived {
+    background: rgb(120 53 15 / 0.2);
+    color: rgb(251 191 36);
+    border: 1px solid rgb(245 158 11 / 0.3);
+  }
+
+  /* Navigation enhancements */
+  .nav-item-active {
+    background: linear-gradient(135deg, rgb(99 102 241 / 0.15), rgb(139 92 246 / 0.1));
+    border-left: 3px solid rgb(99 102 241);
+    color: rgb(224 231 255);
+  }
+
+  .nav-item:hover {
+    background: rgb(31 41 55 / 0.5);
+    color: rgb(243 244 246);
+  }
+
+  /* Theme switcher enhancements */
+  .theme-switcher {
+    background: rgb(31 41 55 / 0.6);
+    border: 1px solid rgb(75 85 99 / 0.2);
+  }
+
+  .theme-switcher:hover {
+    background: rgb(55 65 81 / 0.8);
+    border-color: rgb(99 102 241 / 0.3);
+  }
+
+  /* AI health indicators */
+  .health-indicator-excellent {
+    color: rgb(34 197 94);
+    background: rgb(34 197 94 / 0.1);
+  }
+
+  .health-indicator-good {
+    color: rgb(59 130 246);
+    background: rgb(59 130 246 / 0.1);
+  }
+
+  .health-indicator-warning {
+    color: rgb(245 158 11);
+    background: rgb(245 158 11 / 0.1);
+  }
+
+  .health-indicator-critical {
+    color: rgb(239 68 68);
+    background: rgb(239 68 68 / 0.1);
+  }
+
+  /* Scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: rgb(23 23 23);
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(75 85 99 / 0.5);
+    border-radius: 3px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgb(99 102 241 / 0.7);
+  }
+
+  /* Modal and dropdown shadows */
+  .modal-shadow {
+    box-shadow: 0 25px 50px rgb(0 0 0 / 0.5), 0 0 0 1px rgb(55 65 81 / 0.1);
+  }
+
+  .dropdown-shadow {
+    box-shadow: 0 10px 25px rgb(0 0 0 / 0.3), 0 0 0 1px rgb(55 65 81 / 0.1);
+  }
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure proper contrast ratios */
+@media (prefers-contrast: high) {
+  .dark {
+    --spectreweave-text-primary: 255 255 255;
+    --spectreweave-text-secondary: 209 213 219;
+    --spectreweave-border: 75 85 99;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}

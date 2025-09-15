@@ -1,0 +1,232 @@
+/* AI Toolbar and Panel Layout Fixes - Enhanced for Viewport Containment */
+
+/* Improved z-index hierarchy - ensuring proper layering */
+.ai-toolbar-bubble {
+  z-index: 25 !important;
+}
+
+.ai-toolbar-bubble [data-tippy-root] {
+  z-index: 25 !important;
+}
+
+/* Text menu should have higher z-index */
+[data-tippy-root]:not(:has(.ai-toolbar-bubble)) {
+  z-index: 50 !important;
+}
+
+/* AI Writing Assistant Panel - Enhanced containment */
+.ai-writing-assistant-panel {
+  /* Let component control its own styling without !important overrides */
+}
+
+/* Sidebar positioning fixes - Enhanced viewport constraints */
+/* Avoid !important where possible; rely on component classes. Keep only minimal helper styles here. */
+.sidebar-container {}
+
+/* Container overflow fixes - Comprehensive containment */
+.editor-main-container {
+  /* Removed overflow: hidden to prevent sidebar clipping */
+  /* Removed contain: strict to prevent stacking context issues */
+  /* Removed isolation: isolate to allow natural layering */ /* Create new stacking context */
+}
+
+/* AI Toolbar positioning improvements - Enhanced boundary checks */
+.custom-ai-toolbar {
+  max-width: min(360px, calc(100vw - 2rem)) !important;
+  min-width: min(220px, calc(100vw - 2rem)) !important;
+  z-index: 9999 !important;
+  contain: layout style paint !important;
+  content-visibility: auto !important;
+}
+
+/* Ensure desired surface regardless of other overrides */
+.custom-ai-toolbar > div > div:nth-child(2) {
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+  border: 1px solid var(--border) !important;
+}
+
+/* Prevent content overflow in all AI components - Enhanced containment */
+.ai-toolbar-bubble .tippy-content {
+  padding: 0;
+  border-radius: 8px;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  contain: layout style paint;
+}
+
+/* Ensure expanded menus stay within bounds - Strict viewport constraints */
+.ai-toolbar-bubble .absolute,
+.ai-writing-assistant-panel .absolute,
+.custom-ai-toolbar .absolute {
+  max-width: calc(100vw - 2rem) !important;
+  min-width: 0 !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+  contain: strict !important;
+  overscroll-behavior: contain !important;
+}
+
+/* Pointer events fix - Enhanced interaction handling */
+.ProseMirror .ai-toolbar-bubble,
+.ProseMirror .ai-toolbar-bubble *,
+.ProseMirror .custom-ai-toolbar,
+.ProseMirror .custom-ai-toolbar *,
+.ProseMirror .ai-writing-assistant-panel,
+.ProseMirror .ai-writing-assistant-panel * {
+  pointer-events: auto;
+}
+
+/* Prevent text selection conflicts in AI panels */
+.ai-writing-assistant-panel,
+.custom-ai-toolbar {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.ai-writing-assistant-panel input,
+.ai-writing-assistant-panel textarea,
+.custom-ai-toolbar input,
+.custom-ai-toolbar textarea {
+  user-select: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+/* Responsive containment - Enhanced mobile support */
+@media (max-width: 640px) {
+  .ai-writing-assistant-panel {
+    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    min-width: calc(100vw - 2rem) !important;
+    left: 1rem !important;
+    right: 1rem !important;
+    transform: none !important;
+    max-height: min(70vh, 500px) !important;
+  }
+  
+  .custom-ai-toolbar {
+    max-width: calc(100vw - 2rem) !important;
+    min-width: calc(100vw - 4rem) !important;
+  }
+  
+  .sidebar-container {
+    max-width: min(280px, calc(100vw - 2rem)) !important;
+    min-width: 0 !important;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .ai-writing-assistant-panel {
+    max-width: min(360px, calc(100vw - 3rem)) !important;
+  }
+  
+  .custom-ai-toolbar {
+    max-width: min(320px, calc(100vw - 3rem)) !important;
+  }
+  
+  .sidebar-container {
+    max-width: min(300px, 70vw) !important;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 2dppx) {
+  .ai-writing-assistant-panel,
+  .custom-ai-toolbar,
+  .sidebar-container {
+    transform: translateZ(0); /* Force GPU acceleration for smoother rendering */
+    backface-visibility: hidden;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .ai-writing-assistant-panel,
+  .custom-ai-toolbar,
+  .sidebar-container {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Dark mode enhancements for better visibility */
+@media (prefers-color-scheme: dark) {
+  .ai-writing-assistant-panel {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+  }
+  
+  .custom-ai-toolbar {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+  }
+}
+
+/* Critical layout fixes for viewport containment */
+.editor-main-container {
+  container-type: inline-size !important;
+  container-name: editor-main !important;
+}
+
+/* Container query support for responsive AI panels */
+@container editor-main (max-width: 600px) {
+  .ai-writing-assistant-panel {
+    width: calc(100cqw - 2rem) !important;
+    max-width: calc(100cqw - 2rem) !important;
+    right: 1rem !important;
+    transform: none !important;
+  }
+  
+  .custom-ai-toolbar {
+    max-width: calc(100cqw - 2rem) !important;
+  }
+}
+
+/* Prevent layout shift and ensure stable positioning */
+.ai-writing-assistant-panel,
+.custom-ai-toolbar {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Ensure proper stacking context for overlays */
+.ProseMirror {
+  position: relative;
+  z-index: 1;
+}
+
+/* Fix for floating elements getting clipped */
+.ProseMirror .absolute,
+.ProseMirror [data-floating-ui-portal] {
+  z-index: 1000 !important;
+}
+
+/* Accessibility improvements */
+.ai-writing-assistant-panel:focus-within,
+.custom-ai-toolbar:focus-within {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Performance optimizations for large documents */
+.editor-main-container {
+  contain-intrinsic-size: 100vw 100vh;
+}
+
+.ai-writing-assistant-panel {
+  contain-intrinsic-size: 384px 400px;
+}
+
+.custom-ai-toolbar {
+  contain-intrinsic-size: 360px 80px;
+}
+
+.sidebar-container {
+  contain-intrinsic-size: 320px 100vh;
+}

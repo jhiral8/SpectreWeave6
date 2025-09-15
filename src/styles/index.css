@@ -1,0 +1,264 @@
+.ProseMirror {
+  font-family: var(--font-sans);
+  @apply caret-black dark:caret-white outline-0 px-1 py-8 z-0 sm:px-1 sm:py-12 lg:px-2 lg:py-16;
+
+  & > * {
+    @apply mx-auto max-w-2xl;
+  }
+
+  .selection {
+    @apply inline;
+  }
+
+  .selection,
+  *::selection {
+    background: color-mix(in srgb, var(--brand) 28%, transparent);
+  }
+
+  & > .react-renderer {
+    @apply my-12 first:mt-0 last:mb-0;
+  }
+
+  &.resize-cursor {
+    @apply cursor-col-resize;
+  }
+
+  .ProseMirror-gapcursor {
+    @apply relative w-full max-w-2xl mx-auto;
+
+    &:after {
+      @apply border-t-black/40 dark:border-t-white/40 w-full -top-[1.5em] max-w-2xl mx-auto left-0 right-0;
+    }
+  }
+}
+
+[data-theme='slash-command'] {
+  width: 1000vw;
+}
+
+@import './partials/animations.css';
+@import './partials/blocks.css';
+@import './partials/code.css';
+@import './partials/collab.css';
+@import './partials/lists.css';
+@import './partials/placeholder.css';
+@import './partials/table.css';
+@import './partials/typography.css';
+@import './ai-toolbar.css';
+@import './ai-border-effects.css';
+
+/* Text Menu Bubble Styles - Solid background for better visibility */
+.text-menu-bubble {
+  background-color: white;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  z-index: 9999;
+  position: relative;
+}
+
+.dark .text-menu-bubble {
+  background-color: #000000;
+  border-color: #374151;
+}
+
+/* Ensure the Surface component inside doesn't override */
+.text-menu-bubble .surface {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* Surface-specific styling for dual mode */
+.text-menu-manuscript {
+  border-color: #93c5fd;
+}
+
+.dark .text-menu-manuscript {
+  border-color: #1e40af;
+}
+
+.text-menu-framework {
+  border-color: #fdba74;
+}
+
+.dark .text-menu-framework {
+  border-color: #c2410c;
+}
+
+/* Custom AI Toolbar Styles - Solid background and proper positioning */
+.custom-ai-toolbar {
+  position: fixed !important;
+  z-index: 9995 !important;
+  /* Prevent clipping by parent containers */
+  contain: none !important;
+  isolation: auto !important;
+  clip: auto !important;
+  clip-path: none !important;
+  /* Ensure it's not affected by parent transforms */
+  transform-origin: top left !important;
+}
+
+.custom-ai-toolbar > div > div:nth-child(2) {
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+.dark .custom-ai-toolbar > div > div:nth-child(2) {
+  background: var(--card) !important;
+  color: var(--card-foreground) !important;
+  border-color: var(--border) !important;
+}
+
+/* Custom AI Toolbar Bubble Menu Styles - Using BubbleMenu component */
+.custom-ai-toolbar-bubble {
+  background-color: transparent;
+  border: none;
+  z-index: 9996 !important; /* Lower than TextMenu (above selection) */
+  position: relative;
+}
+
+.dark .custom-ai-toolbar-bubble {
+  background-color: transparent;
+  border: none;
+}
+
+/* Ensure proper spacing - AI toolbar below selection, TextMenu above */
+.custom-ai-toolbar-bubble [data-tippy-root] {
+  z-index: 9996 !important;
+  margin-top: 8px; /* Add space below selection */
+}
+
+/* Text menu should have higher z-index (appears above selection) */
+.text-menu-bubble {
+  z-index: 9999 !important;
+  margin-bottom: 8px; /* Add space above selection */
+}
+
+/* Ghost completion styles */
+.ghost-completion-container {
+  display: inline-block;
+  position: relative;
+}
+
+.ghost-suggestion-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: color-mix(in srgb, var(--background) 95%, var(--foreground) 5%);
+  border: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  border-radius: 6px;
+  padding: 2px 6px;
+  transition: all 0.2s ease;
+}
+
+.ghost-suggestion-wrapper:hover {
+  background: color-mix(in srgb, var(--background) 90%, var(--foreground) 10%);
+  border-color: color-mix(in srgb, var(--foreground) 25%, transparent);
+}
+
+.ghost-completion {
+  color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  font-style: italic;
+  user-select: none;
+}
+
+.ghost-controls {
+  display: inline-flex;
+  gap: 3px;
+  margin-left: 4px;
+}
+
+.ghost-accept-btn,
+.ghost-reject-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.ghost-accept-btn {
+  background: color-mix(in srgb, #22c55e 80%, transparent);
+  color: #ffffff;
+}
+
+.ghost-accept-btn:hover {
+  background: #22c55e;
+  transform: scale(1.1);
+}
+
+.ghost-reject-btn {
+  background: color-mix(in srgb, #ef4444 80%, transparent);
+  color: #ffffff;
+}
+
+.ghost-reject-btn:hover {
+  background: #ef4444;
+  transform: scale(1.1);
+}
+
+/* Floating modal for writing plan */
+.ghost-plan-modal {
+  position: fixed;
+  top: auto;
+  bottom: 15vh;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--background);
+  border: 1px solid color-mix(in srgb, var(--foreground) 20%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  min-width: 280px;
+  max-width: 400px;
+  max-height: 50vh;
+  overflow-y: auto;
+  z-index: 9998;
+  animation: ghostModalFadeIn 0.2s ease-out;
+}
+
+.ghost-modal-header {
+  background: color-mix(in srgb, var(--background) 95%, var(--foreground) 5%);
+  border-bottom: 1px solid color-mix(in srgb, var(--foreground) 15%, transparent);
+  padding: 8px 12px;
+  font-size: 0.75em;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+  border-radius: 8px 8px 0 0;
+}
+
+.ghost-modal-content {
+  padding: 10px 12px;
+}
+
+.ghost-plan-item {
+  color: color-mix(in srgb, var(--foreground) 80%, transparent);
+  font-size: 0.8em;
+  line-height: 1.4;
+  margin-bottom: 6px;
+}
+
+.ghost-plan-item:last-child {
+  margin-bottom: 0;
+}
+
+@keyframes ghostModalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+

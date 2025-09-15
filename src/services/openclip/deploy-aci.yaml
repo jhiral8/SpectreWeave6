@@ -1,0 +1,42 @@
+# Azure Container Instance deployment template
+apiVersion: '2021-07-01'
+location: swedencentral
+name: openclip-service
+properties:
+  containers:
+  - name: openclip-service
+    properties:
+      image: openclipspectreweave.azurecr.io/openclip-service:latest
+      resources:
+        requests:
+          cpu: 4
+          memoryInGb: 16
+      ports:
+      - port: 5000
+        protocol: TCP
+      environmentVariables:
+      - name: PORT
+        value: '5000'
+      - name: WORKERS
+        value: '2'
+      - name: LOG_LEVEL
+        value: 'INFO'
+      - name: CLIP_MODEL
+        value: 'clip-ViT-B-32'
+      - name: ENABLE_CACHE
+        value: 'true'
+  osType: Linux
+  restartPolicy: Always
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: TCP
+      port: 5000
+    dnsNameLabel: openclip-spectreweave
+  imageRegistryCredentials:
+  - server: openclipspectreweave.azurecr.io
+    username: openclipspectreweave
+    password: YOUR_ACR_PASSWORD_HERE
+tags:
+  service: openclip
+  environment: production

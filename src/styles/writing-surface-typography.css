@@ -1,0 +1,113 @@
+/* Reduced font sizes for writing surfaces */
+
+/* Apply smaller text to both manuscript and framework surfaces */
+.ai-manuscript-border .ProseMirror,
+.ai-framework-border .ProseMirror {
+  /* Base font size - significantly smaller */
+  font-size: 0.875rem; /* 14px instead of default 16px */
+  line-height: 1.6;
+  font-family: var(--font-sans);
+}
+
+/* Paragraph text */
+.ai-manuscript-border .ProseMirror p,
+.ai-framework-border .ProseMirror p {
+  @apply text-sm leading-relaxed; /* 14px */
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Headings - all reduced by ~25% */
+.ai-manuscript-border .ProseMirror h1,
+.ai-framework-border .ProseMirror h1 {
+  @apply text-2xl; /* Down from 3xl */
+  font-family: Inter, var(--font-sans);
+}
+
+.ai-manuscript-border .ProseMirror h2,
+.ai-framework-border .ProseMirror h2 {
+  @apply text-xl; /* Down from 2xl */
+  font-family: Inter, var(--font-sans);
+}
+
+.ai-manuscript-border .ProseMirror h3,
+.ai-framework-border .ProseMirror h3 {
+  @apply text-lg; /* Down from xl */
+  font-family: Inter, var(--font-sans);
+}
+
+.ai-manuscript-border .ProseMirror h4,
+.ai-framework-border .ProseMirror h4 {
+  @apply text-base; /* Down from lg */
+}
+
+.ai-manuscript-border .ProseMirror h5,
+.ai-framework-border .ProseMirror h5 {
+  @apply text-sm; /* Down from base */
+}
+
+.ai-manuscript-border .ProseMirror h6,
+.ai-framework-border .ProseMirror h6 {
+  @apply text-xs; /* Down from sm */
+}
+
+/* Lists */
+.ai-manuscript-border .ProseMirror ul,
+.ai-manuscript-border .ProseMirror ol,
+.ai-framework-border .ProseMirror ul,
+.ai-framework-border .ProseMirror ol {
+  @apply text-sm;
+}
+
+.ai-manuscript-border .ProseMirror li,
+.ai-framework-border .ProseMirror li {
+  @apply text-sm;
+}
+
+/* Blockquotes */
+.ai-manuscript-border .ProseMirror blockquote,
+.ai-framework-border .ProseMirror blockquote {
+  @apply text-sm;
+}
+
+/* Code blocks */
+.ai-manuscript-border .ProseMirror pre,
+.ai-manuscript-border .ProseMirror code,
+.ai-framework-border .ProseMirror pre,
+.ai-framework-border .ProseMirror code {
+  @apply text-xs; /* Extra small for code */
+}
+
+/* Framework surface can be even smaller for better density */
+.ai-framework-border .ProseMirror {
+  font-size: 0.8125rem; /* 13px - even smaller for framework */
+}
+
+.ai-framework-border .ProseMirror p {
+  @apply text-xs; /* 12px for framework paragraphs */
+}
+
+/* Reduce spacing between elements */
+.ai-manuscript-border .ProseMirror > *,
+.ai-framework-border .ProseMirror > * {
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.ai-manuscript-border .ProseMirror > *:first-child,
+.ai-framework-border .ProseMirror > *:first-child {
+  margin-top: 0;
+}
+
+.ai-manuscript-border .ProseMirror > *:last-child,
+.ai-framework-border .ProseMirror > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Reduced padding for both manuscript and framework to fit more content */
+.ai-manuscript-border .ProseMirror,
+.ai-framework-border .ProseMirror {
+  @apply px-3 py-2;
+}
+
+/* Removed padding overrides - let ai-border-effects.css handle consistent 1rem padding for both surfaces */
