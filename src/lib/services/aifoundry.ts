@@ -14,7 +14,7 @@ import {
 } from '../ai/types'
 
 const getAIFoundryConfig = (): AIFoundryConfig => {
-  const apiKey = process.env.AIFOUNDRY_API_KEY || ''
+  const apiKey = process.env.AIFOUNDRY_API_KEY
   const endpoint = process.env.AIFOUNDRY_ENDPOINT || 'https://orion-jhiral-resource.cognitiveservices.azure.com'
   const model = process.env.AIFOUNDRY_MODEL || 'gpt-5-nano'
   const apiVersion = process.env.AIFOUNDRY_API_VERSION || '2025-04-01-preview'
