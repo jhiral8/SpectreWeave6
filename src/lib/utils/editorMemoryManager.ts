@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import { useEffect } from 'react'
 import { Editor } from '@tiptap/react'
 
 /**
@@ -210,7 +210,7 @@ export const editorMemoryManager = EditorMemoryManager.getInstance()
  * Hook for using memory manager in React components
  */
 export const useEditorMemoryTracking = (editor: Editor | null, editorId: string) => {
-  React.useEffect(() => {
+  useEffect(() => {
     if (!editor) return
     
     // Register editor for memory tracking

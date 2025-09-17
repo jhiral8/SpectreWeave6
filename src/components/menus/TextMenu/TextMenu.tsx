@@ -13,7 +13,7 @@ import { FontSizePicker } from './components/FontSizePicker'
 import { useTextmenuContentTypes } from './hooks/useTextmenuContentTypes'
 import { ContentTypePicker } from './components/ContentTypePicker'
 import { EditLinkPopover } from './components/EditLinkPopover'
-import { useEditorContext } from '@/context/EditorContext'
+import { useEditorContext } from "@/contexts/EditorContext"
 
 // We memorize the button so each button is not rerendered
 // on every editor state change

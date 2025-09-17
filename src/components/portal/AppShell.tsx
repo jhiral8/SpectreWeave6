@@ -3,7 +3,7 @@ import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/portal/utils";
+import { cn } from "@/lib/utils";
 import type { ComponentType } from "react";
 import { LayoutDashboard, Bot, Folder, Settings, BarChart3, Menu, ChevronLeft, MessageSquare, List, LogOut, Baby, Image as ImageIcon, GitBranch } from "lucide-react";
 import { ThemeToggle } from "@/components/portal/ThemeToggle";

@@ -13,7 +13,7 @@ import '@/styles/index.css'
 
 import { Sidebar } from '@/components/Sidebar'
 import { AIChatSidebar } from '@/components/AIChatSidebar/AIChatSidebar'
-import { EditorProvider } from '@/context/EditorProvider'
+import { EditorProvider } from "@/contexts/EditorProvider"
 import ErrorBoundary from '@/components/ui/ErrorBoundary'
 import ImageBlockMenu from '@/extensions/ImageBlock/components/ImageBlockMenu'
 import { ColumnsMenu } from '@/extensions/MultiColumn/menus'

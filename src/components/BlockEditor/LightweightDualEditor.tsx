@@ -11,7 +11,7 @@ import { User } from '@supabase/supabase-js'
 import '@/styles/editor.css'
 
 // Lazy load ALL heavy components - this is the key to reducing module count
-const EditorProvider = lazy(() => import('@/context/EditorProvider').then(mod => ({ default: mod.EditorProvider })))
+const EditorProvider = lazy(() => import('@/contexts/EditorProvider').then(mod => ({ default: mod.EditorProvider })))
 const SplitEditorProvider = lazy(() => import('./context/SplitEditorContext').then(mod => ({ default: mod.SplitEditorProvider })))
 const ContextAwareEditorHeader = lazy(() => import('./components/ContextAwareEditorHeader').then(mod => ({ default: mod.ContextAwareEditorHeader })))
 const Sidebar = lazy(() => import('@/components/Sidebar').then(mod => ({ default: mod.Sidebar })))

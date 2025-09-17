@@ -21,7 +21,7 @@ import { useSimplifiedDualEditors } from '@/hooks/useSimplifiedDualEditors'
 import { useFrameworkManager } from '@/hooks/useFrameworkManager'
 
 // Context providers
-import { EditorProvider } from '@/context/EditorProvider'
+import { EditorProvider } from "@/contexts/EditorProvider"
 import { UnifiedEditorProvider } from './context/UnifiedEditorContext'
 
 // Styles
