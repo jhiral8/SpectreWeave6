@@ -1,169 +1,125 @@
-/**
- * Command Palette Component
- * 
- * VS Code-style command palette accessible via ⌘K or ⌘⇧P.
- * Provides fuzzy search across all registered commands.
- */
-
 'use client';
 
 import React, { useState, useCallback, useEffect, useRef, useMemo } from 'react';
 import { cn } from '@/lib/utils';
-import { Search, Command as CommandIcon, X, ChevronRight } from 'lucide-react';
-import { commandRegistry } from './CommandRegistry';
+import { Search, ChevronRight, Command, Keyboard } from 'lucide-react';
+import type { Command as CommandType } from './types';
 import { defaultCommands } from './defaultCommands';
-import { 
-  Command, 
-  CommandContext, 
-  CommandCategory,
-  CATEGORY_LABELS, 
-  CATEGORY_ICONS 
-} from './types';
-import { useAgents } from '../AIAgents/context/AgentContext';
-import { usePanels } from '../PanelSystem/PanelContext';
-import type { AgentId } from '../AIAgents/types';
-
-// Register default commands on module load
-commandRegistry.registerAll(defaultCommands);
 
 interface CommandPaletteProps {
+  /** Whether the palette is open */
   isOpen?: boolean;
+  /** Callback when open state changes */
   onOpenChange?: (open: boolean) => void;
-  className?: string;
+  /** Additional commands to include */
+  commands?: CommandType[];
+  /** Callback when command is executed */
+  onCommandExecute?: (command: CommandType) => void;
 }
 
-export const CommandPalette: React.FC<CommandPaletteProps> = ({ 
-  isOpen: controlledIsOpen,
+/**
+ * VS Code-style Command Palette
+ * 
+ * Modal with fuzzy search for commands, files, and actions.
+ * 
+ * ┌──────────────────────────────────────────────────────────┐
+ * │ >  Search commands...                                   │
+ * ├──────────────────────────────────────────────────────────┤
+ * │   📄 Open File                                    ⌘O   │
+ * │   💾 Save                                         ⌘S   │
+ * │   🔍 Find in Files                                ⌘⇧F  │
+ * │ > 👤 Characters: Show Panel                       ⌘2   │
+ * │   🤖 AI: Generate Content                         ⌘G   │
+ * └──────────────────────────────────────────────────────────┘
+ */
+export function CommandPalette({
+  isOpen = false,
   onOpenChange,
-  className,
-}) => {
-  const [internalIsOpen, setInternalIsOpen] = useState(false);
-  
-  // Support both controlled and uncontrolled modes
-  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
-  const setIsOpen = useCallback((open: boolean) => {
-    setInternalIsOpen(open);
-    onOpenChange?.(open);
-  }, [onOpenChange]);
-  
+  commands = [],
+  onCommandExecute,
+}: CommandPaletteProps) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
-  
-  const { runAgent } = useAgents();
-  const { togglePanel, setActivePanel } = usePanels();
 
-  // Build command context
-  const context: CommandContext = useMemo(() => ({
-    selection: '',
-    cursorPosition: 0,
-    previousText: '',
-    followingText: '',
-    currentChapter: null,
-    currentScene: null,
-    selectionWordCount: 0,
-    runAgent: async (agentId: AgentId, content?: string) => {
-      await runAgent(agentId, content ? { content, context: {} } : undefined);
-    },
-    insertText: (text: string) => {
-      // Will be connected to editor
-      console.log('Insert text:', text);
-    },
-    replaceSelection: (text: string) => {
-      console.log('Replace selection:', text);
-    },
-    navigateTo: (id: string) => {
-      console.log('Navigate to:', id);
-    },
-    togglePanel: (panel: string) => {
-      if (panel === 'bottom') {
-        togglePanel('bottom');
-      } else {
-        setActivePanel('left', panel as any);
-      }
-    },
-    closePalette: () => setIsOpen(false),
-  }), [runAgent, togglePanel, setActivePanel]);
+  // Combine default and custom commands
+  const allCommands = useMemo(() => {
+    return [...defaultCommands, ...commands];
+  }, [commands]);
 
-  // Get filtered commands
+  // Filter commands based on query
   const filteredCommands = useMemo(() => {
-    return commandRegistry.search(query, context);
-  }, [query, context]);
+    if (!query.trim()) {
+      return allCommands.slice(0, 10); // Show recent/popular when no query
+    }
 
-  // Group commands by category
-  const groupedCommands = useMemo(() => {
-    const groups: { category: CommandCategory; commands: Command[] }[] = [];
-    const categoryMap = new Map<CommandCategory, Command[]>();
-    
-    filteredCommands.forEach(cmd => {
-      if (!categoryMap.has(cmd.category)) {
-        categoryMap.set(cmd.category, []);
-      }
-      categoryMap.get(cmd.category)!.push(cmd);
-    });
-    
-    // Order categories
-    const categoryOrder: CommandCategory[] = ['ai', 'agent', 'editor', 'navigation', 'view', 'character', 'file'];
-    categoryOrder.forEach(cat => {
-      const cmds = categoryMap.get(cat);
-      if (cmds && cmds.length > 0) {
-        groups.push({ category: cat, commands: cmds });
-      }
-    });
-    
-    return groups;
-  }, [filteredCommands]);
+    const lowerQuery = query.toLowerCase();
+    const terms = lowerQuery.split(/\s+/);
 
-  // Flatten for keyboard navigation
-  const flatCommands = useMemo(() => filteredCommands, [filteredCommands]);
+    return allCommands
+      .map(cmd => {
+        const titleLower = cmd.title.toLowerCase();
+        const categoryLower = (cmd.category || '').toLowerCase();
+        const keywordsLower = (cmd.keywords || []).map((k: string) => k.toLowerCase());
 
-  // Keyboard shortcut to open palette
+        // Calculate match score
+        let score = 0;
+        
+        // Exact match in title
+        if (titleLower.includes(lowerQuery)) {
+          score += 100;
+        }
+        
+        // Term matches
+        for (const term of terms) {
+          if (titleLower.includes(term)) score += 50;
+          if (categoryLower.includes(term)) score += 30;
+          if (keywordsLower.some((k: string) => k.includes(term))) score += 20;
+        }
+
+        // Prefix match bonus
+        if (titleLower.startsWith(lowerQuery)) {
+          score += 50;
+        }
+
+        return { ...cmd, score };
+      })
+      .filter(cmd => cmd.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 15);
+  }, [allCommands, query]);
+
+  // Reset selection when filtered results change
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // ⌘K or ⌘⇧P to open
-      if ((e.metaKey || e.ctrlKey) && (
-        e.key === 'k' || 
-        (e.shiftKey && e.key === 'p')
-      )) {
-        e.preventDefault();
-        setIsOpen(true);
-      }
-      
-      // Escape to close (only if palette is open and focused)
-      if (e.key === 'Escape' && isOpen) {
-        e.preventDefault();
-        setIsOpen(false);
-      }
-    };
-    
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen]);
+    setSelectedIndex(0);
+  }, [filteredCommands.length]);
 
   // Focus input when opened
   useEffect(() => {
     if (isOpen) {
-      // Small delay to ensure the input is rendered
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 10);
+      setTimeout(() => inputRef.current?.focus(), 50);
       setQuery('');
       setSelectedIndex(0);
     }
   }, [isOpen]);
 
-  // Reset selection when query changes
+  // Scroll selected item into view
   useEffect(() => {
-    setSelectedIndex(0);
-  }, [query]);
+    if (listRef.current) {
+      const selectedEl = listRef.current.children[selectedIndex] as HTMLElement;
+      if (selectedEl) {
+        selectedEl.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  }, [selectedIndex]);
 
-  // Handle keyboard navigation in the list
+  // Handle keyboard navigation
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
     switch (e.key) {
       case 'ArrowDown':
         e.preventDefault();
-        setSelectedIndex(i => Math.min(i + 1, flatCommands.length - 1));
+        setSelectedIndex(i => Math.min(i + 1, filteredCommands.length - 1));
         break;
       case 'ArrowUp':
         e.preventDefault();
@@ -171,58 +127,57 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         break;
       case 'Enter':
         e.preventDefault();
-        if (flatCommands[selectedIndex]) {
-          executeCommand(flatCommands[selectedIndex]);
+        if (filteredCommands[selectedIndex]) {
+          executeCommand(filteredCommands[selectedIndex]);
         }
         break;
       case 'Escape':
         e.preventDefault();
-        setIsOpen(false);
+        onOpenChange?.(false);
         break;
     }
-  }, [flatCommands, selectedIndex]);
+  }, [filteredCommands, selectedIndex, onOpenChange]);
 
-  // Execute command
-  const executeCommand = useCallback((command: Command) => {
-    if (command.isEnabled && !command.isEnabled(context)) {
-      return;
+  // Execute a command
+  const executeCommand = useCallback((command: CommandType) => {
+    onCommandExecute?.(command);
+    command.action?.();
+    onOpenChange?.(false);
+  }, [onCommandExecute, onOpenChange]);
+
+  // Close on backdrop click
+  const handleBackdropClick = useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onOpenChange?.(false);
     }
-    command.execute(context);
-  }, [context]);
-
-  // Scroll selected item into view
-  useEffect(() => {
-    const selectedElement = listRef.current?.querySelector(`[data-index="${selectedIndex}"]`);
-    selectedElement?.scrollIntoView({ block: 'nearest' });
-  }, [selectedIndex]);
+  }, [onOpenChange]);
 
   if (!isOpen) return null;
 
   return (
-    <>
-      {/* Backdrop */}
-      <div 
-        className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm animate-fade-in"
-        onClick={() => setIsOpen(false)}
-      />
-      
-      {/* Palette */}
-      <div className={cn(
-        'fixed top-[15%] left-1/2 -translate-x-1/2 z-[101]',
-        'w-[600px] max-w-[90vw] max-h-[60vh]',
-        'bg-[--ide-sidebar-bg] border border-[--ide-border]',
-        'rounded-xl shadow-2xl overflow-hidden',
-        'flex flex-col',
-        'animate-slide-down',
-        className
-      )}>
+    <div
+      className={cn(
+        'fixed inset-0 z-50',
+        'flex items-start justify-center pt-[15vh]',
+        'bg-black/50'
+      )}
+      onClick={handleBackdropClick}
+    >
+      <div
+        className={cn(
+          'w-full max-w-[600px]',
+          'bg-[var(--ide-bg-elevated,#252526)]',
+          'border border-[var(--ide-border,#454545)]',
+          'rounded-md shadow-2xl',
+          'overflow-hidden',
+          'animate-vscode-slide-up'
+        )}
+        role="dialog"
+        aria-label="Command Palette"
+      >
         {/* Search Input */}
-        <div className={cn(
-          'flex items-center gap-3 px-4 py-3',
-          'border-b border-[--ide-border]',
-          'bg-[--ide-input-bg]'
-        )}>
-          <Search className="w-5 h-5 text-[--ide-foreground-muted] flex-shrink-0" />
+        <div className="flex items-center px-3 border-b border-[var(--ide-border,#454545)]">
+          <ChevronRight className="w-4 h-4 text-[var(--ide-foreground,#cccccc)] flex-shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -231,133 +186,124 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             onKeyDown={handleKeyDown}
             placeholder="Type a command or search..."
             className={cn(
-              'flex-1 bg-transparent border-none outline-none',
-              'text-[--ide-foreground] placeholder:text-[--ide-foreground-muted]',
-              'text-base'
+              'flex-1 h-[36px] px-2',
+              'bg-transparent',
+              'text-[14px]',
+              'text-[var(--ide-foreground,#cccccc)]',
+              'placeholder:text-[var(--ide-foreground-muted,#8c8c8c)]',
+              'outline-none'
             )}
-            autoComplete="off"
-            autoCorrect="off"
-            autoCapitalize="off"
-            spellCheck={false}
           />
-          <kbd className={cn(
-            'hidden sm:flex items-center gap-1 px-1.5 py-0.5 rounded',
-            'bg-[--ide-border] text-[--ide-foreground-muted]',
-            'text-[10px] font-mono'
-          )}>
-            ESC
-          </kbd>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="p-1 rounded hover:bg-[--ide-border] transition-colors"
-          >
-            <X className="w-4 h-4 text-[--ide-foreground-muted]" />
-          </button>
         </div>
-        
+
         {/* Command List */}
-        <div 
+        <div
           ref={listRef}
-          className="flex-1 overflow-y-auto py-2"
+          className={cn(
+            'max-h-[300px] overflow-y-auto',
+            'vscode-scrollbar'
+          )}
         >
-          {flatCommands.length === 0 ? (
-            <div className="px-4 py-8 text-center text-[--ide-foreground-muted]">
-              <p className="text-sm">No commands found</p>
-              <p className="text-xs mt-1">Try a different search term</p>
+          {filteredCommands.length === 0 ? (
+            <div className="px-4 py-8 text-center text-[13px] text-[var(--ide-foreground-muted,#8c8c8c)]">
+              No commands found
             </div>
           ) : (
-            groupedCommands.map((group) => (
-              <div key={group.category} className="mb-2">
-                {/* Category Header */}
-                <div className="px-4 py-1.5 text-[10px] font-medium text-[--ide-foreground-muted] uppercase tracking-wider">
-                  {CATEGORY_ICONS[group.category]} {CATEGORY_LABELS[group.category]}
-                </div>
-                
-                {/* Commands */}
-                {group.commands.map((command) => {
-                  const globalIndex = flatCommands.indexOf(command);
-                  const isSelected = globalIndex === selectedIndex;
-                  const isEnabled = !command.isEnabled || command.isEnabled(context);
-                  
-                  return (
-                    <button
-                      key={command.id}
-                      data-index={globalIndex}
-                      onClick={() => isEnabled && executeCommand(command)}
-                      className={cn(
-                        'w-full flex items-center gap-3 px-4 py-2.5 text-left',
-                        'transition-colors',
-                        isSelected 
-                          ? 'bg-[--ide-list-active-bg] text-[--ide-list-active-fg]'
-                          : 'hover:bg-[--ide-list-hover]',
-                        !isEnabled && 'opacity-50 cursor-not-allowed'
-                      )}
-                    >
-                      {/* Icon */}
-                      <span className="text-base flex-shrink-0 w-6 text-center">
-                        {command.icon || CATEGORY_ICONS[command.category]}
-                      </span>
-                      
-                      {/* Label & Description */}
-                      <div className="flex-1 min-w-0">
-                        <div className="text-sm text-[--ide-foreground] truncate">
-                          {command.label}
-                        </div>
-                        {command.description && (
-                          <div className="text-[10px] text-[--ide-foreground-muted] truncate">
-                            {command.description}
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Shortcut */}
-                      {command.shortcut && (
-                        <kbd className={cn(
-                          'px-1.5 py-0.5 rounded text-[10px] font-mono',
-                          'bg-[--ide-border] text-[--ide-foreground-muted]',
-                          'flex-shrink-0'
-                        )}>
-                          {command.shortcut}
-                        </kbd>
-                      )}
-                      
-                      {/* Arrow indicator */}
-                      {isSelected && (
-                        <ChevronRight className="w-4 h-4 text-[--ide-foreground-muted] flex-shrink-0" />
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+            filteredCommands.map((command, index) => (
+              <CommandItem
+                key={command.id}
+                command={command}
+                isSelected={index === selectedIndex}
+                onClick={() => executeCommand(command)}
+                onMouseEnter={() => setSelectedIndex(index)}
+              />
             ))
           )}
         </div>
-        
-        {/* Footer */}
-        <div className={cn(
-          'flex items-center justify-between px-4 py-2',
-          'border-t border-[--ide-border]',
-          'text-[10px] text-[--ide-foreground-muted]'
-        )}>
-          <div className="flex items-center gap-4">
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 rounded bg-[--ide-border]">↑↓</kbd>
-              Navigate
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 rounded bg-[--ide-border]">↵</kbd>
-              Select
-            </span>
-            <span className="flex items-center gap-1">
-              <kbd className="px-1 py-0.5 rounded bg-[--ide-border]">ESC</kbd>
-              Close
-            </span>
-          </div>
-          <span>{flatCommands.length} commands</span>
-        </div>
       </div>
-    </>
+    </div>
+  );
+}
+
+/**
+ * Individual command item
+ */
+interface CommandItemProps {
+  command: CommandType & { score?: number };
+  isSelected: boolean;
+  onClick: () => void;
+  onMouseEnter: () => void;
+}
+
+const CommandItem: React.FC<CommandItemProps> = ({
+  command,
+  isSelected,
+  onClick,
+  onMouseEnter,
+}) => {
+  return (
+    <button
+      className={cn(
+        'w-full flex items-center gap-3 px-3 py-2',
+        'text-left text-[13px]',
+        isSelected
+          ? 'bg-[var(--ide-accent-transparent,#094771)] text-[var(--ide-foreground,#ffffff)]'
+          : 'text-[var(--ide-foreground,#cccccc)] hover:bg-[var(--ide-hover-bg,#2a2d2e)]'
+      )}
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+    >
+      {/* Icon */}
+      <span className="w-5 h-5 flex items-center justify-center flex-shrink-0">
+        {command.icon || <Command className="w-4 h-4" />}
+      </span>
+
+      {/* Label + Category */}
+      <span className="flex-1 truncate">
+        {command.category && (
+          <span className="text-[var(--ide-foreground-muted,#8c8c8c)]">
+            {command.category}:{' '}
+          </span>
+        )}
+        {command.title}
+      </span>
+
+      {/* Shortcut */}
+      {command.shortcut && (
+        <span className="flex items-center gap-1 text-[11px] text-[var(--ide-foreground-muted,#8c8c8c)]">
+          {formatShortcut(command.shortcut)}
+        </span>
+      )}
+    </button>
   );
 };
+
+/**
+ * Format keyboard shortcut for display
+ */
+function formatShortcut(shortcut: string): React.ReactNode {
+  const parts = shortcut.split('+').map((part, i) => {
+    const key = part.trim();
+    return (
+      <kbd
+        key={i}
+        className={cn(
+          'px-1.5 py-0.5',
+          'bg-[var(--ide-bg,#3c3c3c)]',
+          'border border-[var(--ide-border,#333333)]',
+          'rounded text-[10px] font-medium'
+        )}
+      >
+        {key}
+      </kbd>
+    );
+  });
+
+  return (
+    <span className="flex items-center gap-0.5">
+      {parts}
+    </span>
+  );
+}
 
 export default CommandPalette;

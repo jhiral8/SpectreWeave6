@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { callOpenRouterWithFallback, handleAIError } from '@/lib/ai/openrouter-utils';
 
 /**
  * Agent Review API
@@ -6,7 +7,6 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 interface AgentConfig {
   name: string;
@@ -131,41 +131,33 @@ Return your review as JSON:
   "priority_fix": "The single most important thing to address"
 }`;
 
-    const response = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-        'X-Title': 'SpectreWeave'
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: `Please review this text:\n\n${content}` }
-        ],
-        temperature: 0.5,
-        max_tokens: 2000
-      })
-    });
+    const messages = [
+			{ role: 'system', content: systemPrompt },
+			{ role: 'user', content: `Context:\n${context}\n\nReview the following text:\n${content}` }
+		];
 
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('OpenRouter error:', error);
-      return NextResponse.json({ error: 'AI service error' }, { status: 500 });
-    }
+		const result = await callOpenRouterWithFallback(model, messages, {
+			temperature: 0.7,
+			max_tokens: 1500,
+			title: 'SpectreWeave Agent Review',
+			type: 'free'
+		});
 
-    const data = await response.json();
-    const responseContent = data.choices?.[0]?.message?.content || '';
+		if (!result.ok) {
+			const { error, status } = handleAIError(result);
+			return NextResponse.json({ error }, { status });
+		}
 
-    // Parse JSON from response
-    let review = null;
-    const jsonMatch = responseContent.match(/\{[\s\S]*\}/);
+		const data = result.data;
+		const responseContent = data.choices?.[0]?.message?.content || '';
+
+		// Extract JSON block
+		const jsonMatch = responseContent.match(/```json\s*([\s\S]*?)\s*```/);
     
+    let review = null;
     if (jsonMatch) {
       try {
-        review = JSON.parse(jsonMatch[0]);
+        review = JSON.parse(jsonMatch[1]);
       } catch (e) {
         console.error('Failed to parse review JSON:', e);
         // Return raw response if JSON parsing fails

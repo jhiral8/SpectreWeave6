@@ -335,7 +335,10 @@ function analyzeText(
       }
     }
     
-    offset += sentence.length + 2; // +2 for punctuation and space
+    // Find the actual separator (punctuation and following whitespace) after the sentence
+    const separatorMatch = text.slice(offset + sentence.length).match(/^([.!?]+[\s]*)/);
+    const separatorLength = separatorMatch ? separatorMatch[0].length : 0;
+    offset += sentence.length + separatorLength;
   }
 }
 

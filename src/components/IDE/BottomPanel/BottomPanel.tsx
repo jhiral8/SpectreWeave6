@@ -98,17 +98,19 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
 
   return (
     <div className={cn(
-      'bottom-panel flex flex-col h-full',
-      'bg-[--ide-panel-bg,--ide-sidebar-bg] text-[--ide-foreground]',
+      'vsc-panel flex flex-col h-full',
+      'bg-[--vsc-panel-bg] text-[--vsc-panel-fg]',
       isMaximized && 'fixed inset-0 z-50',
       className
     )}>
-      {/* Panel Header with Tabs - VSCode style */}
+      {/* Panel Header with Tabs - VS Code style */}
       <div className={cn(
-        'panel-header flex items-center h-[35px] min-h-[35px]',
-        'bg-[--ide-background]',
-        'border-b border-[--ide-border]'
-      )}>
+        'vsc-panel__header flex items-center',
+        'bg-[--vsc-panel-bg]',
+        'border-b border-[--vsc-panel-border]'
+      )}
+      style={{ height: 'var(--vsc-panel-header-height)', minHeight: 'var(--vsc-panel-header-height)' }}
+      >
         {/* Tabs */}
         <div className="flex-1 flex items-center h-full overflow-x-auto">
           {tabs.map((tab) => {
@@ -120,12 +122,12 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  'flex items-center gap-1.5 px-3 h-full',
+                  'vsc-panel__tab flex items-center gap-1.5 px-3 h-full',
                   'text-[11px] font-medium uppercase tracking-wider whitespace-nowrap',
                   'transition-colors relative border-b-2',
                   isActive
-                    ? 'text-[--ide-foreground] border-b-[--ide-activitybar-badge]'
-                    : 'text-[--ide-foreground-secondary] hover:text-[--ide-foreground] border-b-transparent'
+                    ? 'vsc-panel__tab--active text-[--vsc-panel-title-active-fg] border-b-[--vsc-panel-title-active-border]'
+                    : 'text-[--vsc-panel-title-inactive-fg] hover:text-[--vsc-panel-title-active-fg] border-b-transparent'
                 )}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -133,7 +135,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
                 {tab.badgeCount !== undefined && tab.badgeCount > 0 && (
                   <span className={cn(
                     'ml-1.5 min-w-[18px] h-[18px] px-1.5 text-[10px] font-semibold leading-[18px] rounded-full text-white text-center',
-                    isActive ? 'bg-[--ide-activitybar-badge]' : 'bg-[--ide-background-tertiary] text-[--ide-foreground-secondary]'
+                    isActive ? 'bg-[--vsc-activitybar-badge-bg]' : 'bg-[--ide-background-tertiary] text-[--vsc-panel-title-inactive-fg]'
                   )}>
                     {tab.badgeCount}
                   </span>
@@ -146,7 +148,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
         {/* Status indicators */}
         <div className="flex items-center gap-2 px-2 text-[11px]">
           {isAnalyzing && (
-            <span className="flex items-center gap-1 text-[--ide-info,#3b82f6]">
+            <span className="flex items-center gap-1 text-[--ide-info]">
               <Sparkles className="w-3 h-3 animate-pulse" />
               Analyzing...
             </span>
@@ -166,12 +168,12 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
         </div>
         
         {/* Panel Actions */}
-        <div className="flex items-center border-l border-[--ide-panel-border,--ide-border]">
+        <div className="flex items-center border-l border-[--vsc-panel-border]">
           <button
             onClick={handleMaximize}
             className={cn(
-              'p-2 hover:bg-[--ide-list-hover-bg] transition-colors',
-              'text-[--ide-activitybar-inactive] hover:text-[--ide-foreground]'
+              'p-2 hover:bg-[--vsc-list-hover-bg] transition-colors',
+              'text-[--vsc-panel-title-inactive-fg] hover:text-[--vsc-panel-title-active-fg]'
             )}
             title={isMaximized ? 'Restore' : 'Maximize'}
           >
@@ -184,8 +186,8 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
           <button
             onClick={handleClose}
             className={cn(
-              'p-2 hover:bg-[--ide-list-hover-bg] transition-colors',
-              'text-[--ide-activitybar-inactive] hover:text-[--ide-foreground]'
+              'p-2 hover:bg-[--vsc-list-hover-bg] transition-colors',
+              'text-[--vsc-panel-title-inactive-fg] hover:text-[--vsc-panel-title-active-fg]'
             )}
             title="Close Panel"
           >
@@ -195,7 +197,7 @@ export const BottomPanel: React.FC<BottomPanelProps> = ({
       </div>
       
       {/* Panel Content */}
-      <div className="flex-1 overflow-hidden">
+      <div className="vsc-panel__content flex-1 overflow-hidden">
         {activeTab === 'problems' && (
           <ProblemsPanel 
             problems={problems}

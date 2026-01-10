@@ -99,7 +99,7 @@ export const ExtensionKit = ({
     codeBlock: false,
     link: false,
     underline: false,
-  } as any),
+  }),
   CodeBlockLowlight.configure({
     lowlight,
     defaultLanguage: null,
@@ -155,21 +155,21 @@ export const ExtensionKit = ({
   }),
   ...(enableWritingTools ? [
     AuthorStyleBlock.configure({
-      enableAI,
+      enableAI: enableAI,
       enableStyleAnalysis: enableAI,
-    } as any),
+    }),
     CharacterProfileBlock.configure({
-      enableAI,
-    } as any),
+      enableAI: enableAI,
+    }),
     FeedbackBlock.configure({
       HTMLAttributes: {},
-      enableAI,
-    } as any),
+      enableAI: enableAI,
+    }),
     ResearchBlock.configure({
-      enableAI,
+      enableAI: enableAI,
       enableWebSearch: enableResearch,
       enableCitations: true,
-    } as any),
+    }),
   ] : []),
   AISuggestionBlock,
   GhostCompletion.configure({
@@ -182,7 +182,7 @@ export const ExtensionKit = ({
     planCount: 3,
     provider: 'azure', // Changed from 'aifoundry' to 'azure' to match allowed types
     punctuationChars: '.!?',
-  } as any),
+  }),
 ]
 
 // Export types for external use

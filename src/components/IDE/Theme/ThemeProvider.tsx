@@ -13,7 +13,8 @@ export type ThemeId =
   | 'spectre-light' 
   | 'midnight-writer' 
   | 'parchment' 
-  | 'focus-mode';
+  | 'focus-mode'
+  | 'graphite-portal';
 
 export interface ThemeConfig {
   id: ThemeId;
@@ -58,6 +59,13 @@ export const THEMES: ThemeConfig[] = [
     description: 'Minimal distractions, bright editor',
     category: 'dark',
     preview: 'linear-gradient(135deg, #000000 0%, #1a1a1a 50%, #ffffff 100%)',
+  },
+  {
+    id: 'graphite-portal',
+    name: 'Graphite Portal',
+    description: 'Modern graphite with purple accents',
+    category: 'dark',
+    preview: 'linear-gradient(135deg, #0f1115 0%, #10141b 50%, #6e7dfc 100%)',
   },
 ];
 

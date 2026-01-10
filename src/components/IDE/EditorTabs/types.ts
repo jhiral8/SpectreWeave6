@@ -4,7 +4,7 @@ export interface EditorTab {
   id: string;
   label: string;
   path?: string; // Chapter path in story structure
-  type: 'chapter' | 'scene' | 'character' | 'note' | 'settings';
+  type: 'chapter' | 'scene' | 'character' | 'note' | 'settings' | 'framework' | 'location';
   isDirty?: boolean; // Has unsaved changes
   isPinned?: boolean;
   isPreview?: boolean; // Single-click preview tab (italicized)

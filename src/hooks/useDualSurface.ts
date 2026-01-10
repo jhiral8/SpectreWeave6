@@ -1,20 +1,20 @@
-'use client'
-
 import { useState, useCallback } from 'react'
 import { WritingSurface } from '@/lib/ai/dualSurfaceContextManager'
 
-export interface DualSurfaceState {
+interface UseDualSurfaceReturn {
   activeSurface: WritingSurface
-  switchToSurface: (surface: WritingSurface) => void
+  setActiveSurface: (surface: WritingSurface) => void
   toggleSurface: () => void
 }
 
-const useDualSurface = (initialSurface: WritingSurface = 'manuscript'): DualSurfaceState => {
+/**
+ * Hook for managing active writing surface (manuscript vs framework)
+ * Simple state management for dual editor surface switching
+ */
+export default function useDualSurface(
+  initialSurface: WritingSurface = 'manuscript'
+): UseDualSurfaceReturn {
   const [activeSurface, setActiveSurface] = useState<WritingSurface>(initialSurface)
-
-  const switchToSurface = useCallback((surface: WritingSurface) => {
-    setActiveSurface(surface)
-  }, [])
 
   const toggleSurface = useCallback(() => {
     setActiveSurface(current => current === 'manuscript' ? 'framework' : 'manuscript')
@@ -22,9 +22,7 @@ const useDualSurface = (initialSurface: WritingSurface = 'manuscript'): DualSurf
 
   return {
     activeSurface,
-    switchToSurface,
+    setActiveSurface,
     toggleSurface,
   }
 }
-
-export default useDualSurface

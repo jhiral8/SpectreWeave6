@@ -87,6 +87,8 @@
   --ide-background: #1e1e1e;
   --ide-background-secondary: #252526;
   --ide-background-tertiary: #2d2d2d;
+  --ide-bg: #1e1e1e;
+  --ide-bg-elevated: #2d2d2d;
   
   /* Foreground Colors */
   --ide-foreground: #cccccc;
@@ -96,6 +98,11 @@
   /* Border Colors */
   --ide-border: #3c3c3c;
   --ide-border-secondary: #2d2d2d;
+  
+  /* Hover/Interactive States */
+  --ide-hover-bg: rgba(90, 93, 94, 0.31);
+  --ide-accent: #007acc;
+  --ide-accent-transparent: rgba(0, 122, 204, 0.2);
   
   /* Panel Colors - Exact VS Code */
   --ide-titlebar-bg: #323233;
@@ -187,6 +194,8 @@
   --ide-background: #ffffff;
   --ide-background-secondary: #f6f8fa;
   --ide-background-tertiary: #f0f2f4;
+  --ide-bg: #ffffff;
+  --ide-bg-elevated: #f6f8fa;
   
   /* Foreground Colors */
   --ide-foreground: #24292f;
@@ -196,6 +205,13 @@
   /* Border Colors */
   --ide-border: #d0d7de;
   --ide-border-secondary: #e6e8eb;
+  
+  /* Hover/Interactive States */
+  --ide-hover-bg: rgba(55, 65, 81, 0.08);
+  --ide-accent: #0969da;
+  --ide-accent-transparent: rgba(9, 105, 218, 0.15);
+  
+  /* Panel Colors */
   
   /* Panel Colors */
   --ide-titlebar-bg: #f6f8fa;
@@ -276,6 +292,8 @@
   --ide-background: #0a0e14;
   --ide-background-secondary: #0d1117;
   --ide-background-tertiary: #151b24;
+  --ide-bg: #0a0e14;
+  --ide-bg-elevated: #151b24;
   
   /* Foreground Colors */
   --ide-foreground: #b3b1ad;
@@ -285,6 +303,11 @@
   /* Border Colors */
   --ide-border: #1d242d;
   --ide-border-secondary: #151b24;
+  
+  /* Hover/Interactive States */
+  --ide-hover-bg: rgba(255, 255, 255, 0.08);
+  --ide-accent: #ffb454;
+  --ide-accent-transparent: rgba(255, 180, 84, 0.2);
   
   /* Panel Colors */
   --ide-titlebar-bg: #050709;
@@ -365,6 +388,8 @@
   --ide-background: #f5f0e6;
   --ide-background-secondary: #ebe5d7;
   --ide-background-tertiary: #e1d9c9;
+  --ide-bg: #f5f0e6;
+  --ide-bg-elevated: #ebe5d7;
   
   /* Foreground Colors */
   --ide-foreground: #3c3836;
@@ -374,6 +399,11 @@
   /* Border Colors */
   --ide-border: #d5cec0;
   --ide-border-secondary: #e1d9c9;
+  
+  /* Hover/Interactive States */
+  --ide-hover-bg: rgba(0, 0, 0, 0.05);
+  --ide-accent: #9d0006;
+  --ide-accent-transparent: rgba(157, 0, 6, 0.15);
   
   /* Panel Colors */
   --ide-titlebar-bg: #ebe5d7;
@@ -454,6 +484,8 @@
   --ide-background: #000000;
   --ide-background-secondary: #0a0a0a;
   --ide-background-tertiary: #141414;
+  --ide-bg: #000000;
+  --ide-bg-elevated: #141414;
   
   /* Muted chrome text */
   --ide-foreground: #555555;
@@ -463,6 +495,11 @@
   /* Minimal borders */
   --ide-border: #1a1a1a;
   --ide-border-secondary: #141414;
+  
+  /* Hover/Interactive States */
+  --ide-hover-bg: rgba(255, 255, 255, 0.05);
+  --ide-accent: #666666;
+  --ide-accent-transparent: rgba(255, 255, 255, 0.1);
   
   /* Super minimal chrome */
   --ide-titlebar-bg: #000000;
@@ -531,4 +568,111 @@
   --ide-problem-warning: #777777;
   --ide-problem-info: #666666;
   --ide-problem-hint: #999999;
+}
+
+/* ================================================================
+   THEME: GRAPHITE PORTAL
+   Matches the portal/login page styling - Modern, sleek graphite
+   ================================================================ */
+
+[data-theme="graphite-portal"] {
+  /* Background Colors - Portal graphite style */
+  --ide-background: #0f1115;
+  --ide-background-secondary: #10141b;
+  --ide-background-tertiary: #151922;
+  --ide-bg: #0f1115;
+  --ide-bg-elevated: #151922;
+  
+  /* Foreground Colors */
+  --ide-foreground: #e6e8eb;
+  --ide-foreground-secondary: #9aa4b2;
+  --ide-foreground-muted: #6b7280;
+  
+  /* Border Colors */
+  --ide-border: #1d2330;
+  --ide-border-secondary: #151922;
+  
+  /* Hover/Interactive States - Purple brand accent */
+  --ide-hover-bg: rgba(110, 125, 252, 0.1);
+  --ide-accent: #6e7dfc;
+  --ide-accent-transparent: rgba(110, 125, 252, 0.2);
+  
+  /* Panel Colors */
+  --ide-titlebar-bg: #0b0c0f;
+  --ide-titlebar-fg: #e6e8eb;
+  
+  --ide-activitybar-bg: #0f1115;
+  --ide-activitybar-fg: #e6e8eb;
+  --ide-activitybar-inactive: #6b7280;
+  --ide-activitybar-badge: #6e7dfc;
+  
+  --ide-sidebar-bg: #10141b;
+  --ide-sidebar-fg: #e6e8eb;
+  --ide-sidebar-header: #151922;
+  
+  --ide-editor-bg: #0f1115;
+  --ide-editor-fg: #e6e8eb;
+  --ide-editor-lineNumber: #6b7280;
+  --ide-editor-selection: rgba(110, 125, 252, 0.25);
+  --ide-editor-cursor: #6e7dfc;
+  
+  --ide-panel-bg: #10141b;
+  --ide-panel-fg: #e6e8eb;
+  --ide-panel-border: #1d2330;
+  
+  --ide-statusbar-bg: #6e7dfc;
+  --ide-statusbar-fg: #0b0c0f;
+  --ide-statusbar-item-hover: rgba(0, 0, 0, 0.15);
+  
+  /* Tab Colors */
+  --ide-tab-active-bg: #0f1115;
+  --ide-tab-inactive-bg: #10141b;
+  --ide-tab-border: #1d2330;
+  --ide-tab-active-border: #6e7dfc;
+  
+  /* Interactive Elements */
+  --ide-input-bg: #121722;
+  --ide-input-fg: #e6e8eb;
+  --ide-input-border: #1d2330;
+  --ide-input-focus: #6e7dfc;
+  
+  --ide-button-primary-bg: #6e7dfc;
+  --ide-button-primary-fg: #0b0c0f;
+  --ide-button-secondary-bg: #151922;
+  --ide-button-secondary-fg: #e6e8eb;
+  
+  --ide-list-hover: rgba(110, 125, 252, 0.1);
+  --ide-list-active: rgba(110, 125, 252, 0.15);
+  --ide-list-selected: rgba(110, 125, 252, 0.2);
+  
+  /* Scrollbar */
+  --ide-scrollbar-bg: transparent;
+  --ide-scrollbar-thumb: rgba(110, 125, 252, 0.3);
+  --ide-scrollbar-thumb-hover: rgba(110, 125, 252, 0.5);
+  
+  /* Writing Surface */
+  --ide-writing-bg: #0f1115;
+  --ide-writing-fg: #e6e8eb;
+  --ide-writing-heading: #6e7dfc;
+  --ide-writing-link: #818cf8;
+  --ide-writing-quote: #9aa4b2;
+  --ide-writing-dialogue: #a78bfa;
+  
+  /* Syntax-style Highlights - Purple-toned */
+  --ide-highlight-character: #f9a8d4;
+  --ide-highlight-location: #67e8f9;
+  --ide-highlight-action: #fb923c;
+  --ide-highlight-emotion: #c4b5fd;
+  --ide-highlight-time: #86efac;
+  
+  /* AI with purple glow */
+  --ide-ai-accent: #a78bfa;
+  --ide-ai-glow: rgba(167, 139, 250, 0.25);
+  --ide-ghost-text: #6b7280;
+  
+  /* Problems/Diagnostics */
+  --ide-problem-error: #f87171;
+  --ide-problem-warning: #fbbf24;
+  --ide-problem-info: #60a5fa;
+  --ide-problem-hint: #34d399;
 }

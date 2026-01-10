@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { callOpenRouterWithFallback, handleAIError } from '@/lib/ai/openrouter-utils';
 import { createClient } from '@/lib/supabase/server';
 
 /**
@@ -163,38 +164,25 @@ INSTRUCTION: ${prompt}
 NEW CONTENT:`;
     }
 
-    // Make API call
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'HTTP-Referer': 'https://spectreweave.com',
-        'X-Title': 'SpectreWeave',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        max_tokens: 2500,
-        temperature: 0.8
-      })
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userPrompt }
+    ];
+
+    const result = await callOpenRouterWithFallback(model, messages, {
+      temperature: 0.8,
+      max_tokens: 2000,
+      title: 'SpectreWeave Ghostwriter',
+      type: 'free'
     });
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      console.error('OpenRouter error:', errorData);
-      throw new Error(errorData.error?.message || `API error: ${response.status}`);
+    if (!result.ok) {
+      const { error, status } = handleAIError(result);
+      return NextResponse.json({ error }, { status });
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
-
-    if (!content) {
-      throw new Error('No response from AI');
-    }
+    const data = result.data;
+    const content = data.choices?.[0]?.message?.content || '';
 
     // Clean up the response - remove common AI preambles
     const cleanedContent = cleanAIResponse(content);

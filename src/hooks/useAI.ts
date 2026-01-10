@@ -12,7 +12,7 @@ import {
   AIGenerationOptions,
   UseAIOptions,
   UseAIReturn
-} from '@/lib/ai/types'
+} from '@/types/ai'
 
 /**
  * React hook for AI text generation and chat completions

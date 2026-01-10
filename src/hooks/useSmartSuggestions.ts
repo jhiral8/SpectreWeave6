@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { Editor } from '@tiptap/react'
 import { useAI } from './useAI'
-import { AIProvider } from '@/lib/ai/types'
+import { AIProvider } from '@/types/ai'
 
 interface Suggestion {
   id: string

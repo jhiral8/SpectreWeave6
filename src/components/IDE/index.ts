@@ -3,6 +3,7 @@ export { IDEShell } from './IDEShell';
 export { ActivityBar } from './ActivityBar/ActivityBar';
 export { ActivityBarItem } from './ActivityBar/ActivityBarItem';
 export { StatusBar } from './StatusBar/StatusBar';
+export { RightPanelContent } from './RightPanelContent';
 
 // Panel System
 export { PanelProvider, usePanels } from './PanelSystem/PanelContext';
@@ -68,9 +69,12 @@ export {
   useProductionAgent,
   // Connection Status
   ConnectionStatusIndicator,
-  StatusBarConnectionStatus,
   ConnectionStatusPanel,
 } from './AIAgents';
+
+// Agent Reviews
+export { AgentReviewsPanel } from './AgentReviews';
+
 export type {
   AgentId,
   AgentStatus,
@@ -157,6 +161,24 @@ export type { StoryLocation } from './WorldBuilding';
 export { NotesPanel } from './Notes';
 export type { StoryNote } from './Notes';
 
+// VS Code Copilot Panel (New VS Code-style AI Chat)
+export {
+  VSCodeCopilotPanel,
+  VSCodeCopilotWrapper,
+  CopilotHeader,
+  ContextChips,
+  ChatMessage,
+  ChatMessages,
+  ChatInput,
+} from './VSCodeCopilot';
+export type {
+  ChatRole,
+  CopilotTab,
+  ContextChipType,
+  ContextChip,
+  ChatMessageData,
+  AgentOption,
+} from './VSCodeCopilot/types';
 // AI Copilot Panel (AI Cowriter)
 export { 
   AICopilotPanel,
@@ -168,3 +190,16 @@ export type {
   CopilotContext,
   CopilotMessage
 } from './AICopilotPanel/types';
+
+// Framework Wizard
+export { FrameworkWizard } from './FrameworkWizard';
+
+// Framework Editor
+export { FrameworkEditor } from './FrameworkEditor';
+export type { FrameworkData } from './FrameworkEditor';
+
+// Story Framework Builder
+export { FrameworkBuilder } from './FrameworkBuilder';
+
+// Outline Builder
+export { OutlineBuilder } from './OutlineBuilder';

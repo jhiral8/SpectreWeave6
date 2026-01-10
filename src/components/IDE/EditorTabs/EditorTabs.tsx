@@ -11,6 +11,9 @@ import {
   Edit3,
   Circle,
   ChevronDown,
+  BookOpen,
+  Sparkles,
+  MapPin,
 } from 'lucide-react';
 import { EditorTab } from './types';
 
@@ -37,6 +40,10 @@ function getTabIcon(type: EditorTab['type']): React.ElementType {
       return StickyNote;
     case 'settings':
       return Settings;
+    case 'framework':
+      return Sparkles;
+    case 'location':
+      return MapPin;
     default:
       return FileText;
   }

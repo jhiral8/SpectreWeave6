@@ -190,6 +190,15 @@ export interface AICopilotPanelProps {
   onAcceptSuggestion?: (reviewId: string, suggestionId: string) => Promise<void>;
   onRejectSuggestion?: (reviewId: string, suggestionId: string) => Promise<void>;
   
+  // Framework Wizard launcher
+  onLaunchFrameworkWizard?: () => void;
+  
+  // Framework Editor launcher
+  onOpenFrameworkEditor?: () => void;
+  
+  // Whether a framework exists
+  hasFramework?: boolean;
+  
   className?: string;
 }
 
@@ -255,7 +264,7 @@ export const FREE_MODELS: AIModel[] = [
     description: 'Larger Google model for quality',
     maxTokens: 8192,
     isFree: true,
-    icon: '�',
+    icon: '💎',
   },
   {
     id: 'qwen/qwen3-4b:free',
@@ -264,7 +273,7 @@ export const FREE_MODELS: AIModel[] = [
     description: 'Fast Qwen model, multilingual',
     maxTokens: 4096,
     isFree: true,
-    icon: '�',
+    icon: '🌐',
   },
   {
     id: 'nousresearch/hermes-3-llama-3.1-405b:free',

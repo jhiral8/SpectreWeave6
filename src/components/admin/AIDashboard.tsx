@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { Icon } from '@/components/ui/Icon'
 import { aiMonitoring, aiTester } from '@/lib/ai/aiMonitoring'
 import { resilientAIService } from '@/lib/ai/resilientAIService'
-import { AIProvider } from '@/lib/ai/types'
+import { AIProvider } from '@/types/ai'
 import { cn } from '@/lib/utils'
 
 interface AIDashboardProps {

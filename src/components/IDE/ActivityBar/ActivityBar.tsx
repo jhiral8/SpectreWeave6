@@ -75,7 +75,7 @@ export const ActivityBar: React.FC<ActivityBarProps> = ({
     {
       id: 'ai-agents',
       icon: Bot,
-      label: 'AI Agents',
+      label: 'Agent Reviews',
       panel: 'ai-agents',
       badge: problemCount > 0 ? problemCount : undefined,
       badgeColor: problemCount > 0 ? 'warning' : undefined,
@@ -146,10 +146,15 @@ export const ActivityBar: React.FC<ActivityBarProps> = ({
 
   return (
     <div className={cn(
-      'activity-bar flex flex-col w-12 h-full',
-      'bg-[--ide-activitybar-bg] border-r border-[--ide-border]',
-      'flex-shrink-0'
-    )}>
+      'vscode-activitybar flex flex-col h-full',
+      'bg-[var(--ide-bg-elevated,#333333)]',
+      'border-r border-[var(--ide-border,#2b2b2b)]',
+      'flex-shrink-0',
+      'w-[48px]' // Exact VS Code width
+    )}
+    role="navigation"
+    aria-label="Activity Bar"
+    >
       {/* Home button at top */}
       <div className="py-2 border-b border-[--ide-border]">
         <ActivityBarItem

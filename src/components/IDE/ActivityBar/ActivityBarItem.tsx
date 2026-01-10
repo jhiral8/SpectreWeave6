@@ -44,55 +44,60 @@ export const ActivityBarItem: React.FC<ActivityBarItemProps> = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={cn(
-        'relative w-12 h-12 flex items-center justify-center',
+        'vscode-activitybar__item relative flex items-center justify-center',
+        'w-[48px] h-[48px]', // Exact VS Code dimensions
         'transition-colors duration-100',
         isActive
-          ? 'text-[--ide-activitybar-fg]'
-          : 'text-[--ide-activitybar-inactive] hover:text-[--ide-activitybar-fg]'
+          ? 'text-[var(--ide-foreground,#ffffff)]'
+          : 'text-[var(--ide-foreground-muted,#8c8c8c)] hover:text-[var(--ide-foreground,#ffffff)]'
       )}
       aria-label={label}
       aria-pressed={isActive}
     >
-      {/* Active indicator - white bar on left */}
+      {/* Active indicator - white bar on left (VS Code style) */}
       {isActive && (
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 w-0.5 h-6 bg-[--ide-activitybar-fg]" />
+        <div 
+          className="absolute left-0 top-1/2 -translate-y-1/2 w-[2px] h-6 bg-[var(--ide-accent,#ffffff)]" 
+        />
       )}
       
-      {/* Icon - no scale effect for cleaner look */}
+      {/* Icon - 24px VS Code standard */}
       <Icon className="w-6 h-6" />
       
-      {/* Badge */}
+      {/* Badge - VS Code style */}
       {badge !== undefined && (
         <div 
           className={cn(
-            'absolute top-2 right-2',
+            'vscode-activitybar__badge absolute top-2 right-2',
             badge === 'dot'
               ? 'w-2 h-2 rounded-full'
-              : 'min-w-[16px] h-4 px-1 rounded-full text-[10px] font-bold flex items-center justify-center',
-            badgeColor === 'error' && 'bg-[--ide-error] text-white',
-            badgeColor === 'warning' && 'bg-[--ide-warning] text-black',
-            badgeColor === 'info' && 'bg-[--ide-info] text-white',
-            !badgeColor && 'bg-[--ide-activitybar-badge] text-white'
+              : 'min-w-[18px] h-[18px] px-1 rounded-[9px] text-[11px] font-medium flex items-center justify-center',
+            badgeColor === 'error' && 'bg-red-500 text-white',
+            badgeColor === 'warning' && 'bg-yellow-500 text-black',
+            badgeColor === 'info' && 'bg-[var(--ide-accent,#007acc)] text-white',
+            !badgeColor && 'bg-[var(--ide-accent,#007acc)] text-white'
           )}
         >
           {badge !== 'dot' && badge}
         </div>
       )}
       
-      {/* Tooltip */}
+      {/* Tooltip - VS Code style */}
       {showTooltip && (
         <div 
           className={cn(
-            'absolute left-full ml-2 py-1 px-2 rounded',
-            'bg-[--ide-background-tertiary] text-[--ide-foreground]',
-            'text-[11px] whitespace-nowrap pointer-events-none',
-            'border border-[--ide-border] shadow-md z-50',
-            'flex items-center gap-2'
+            'absolute left-full ml-2 py-1.5 px-2.5 rounded',
+            'bg-[var(--ide-bg-elevated,#252526)]',
+            'text-[var(--ide-foreground,#cccccc)]',
+            'text-[12px] whitespace-nowrap pointer-events-none',
+            'border border-[var(--ide-border,#454545)]',
+            'shadow-lg z-50',
+            'flex items-center gap-3'
           )}
         >
           <span>{label}</span>
           {shortcut && (
-            <kbd className="px-1 py-0.5 rounded text-[10px] bg-[--ide-background] border border-[--ide-border] text-[--ide-foreground-muted]">
+            <kbd className="px-1.5 py-0.5 rounded text-[11px] bg-[var(--ide-bg,#464647)] border border-[var(--ide-border,#3c3c3c)] text-[var(--ide-foreground-muted,#cccccc)]">
               {shortcut}
             </kbd>
           )}

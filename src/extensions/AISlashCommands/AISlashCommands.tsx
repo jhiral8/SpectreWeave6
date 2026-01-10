@@ -198,7 +198,10 @@ export const AISlashCommands = Extension.create<AISlashCommandsOptions>({
                 return true;
               }
               
-              return (component?.ref as any)?.onKeyDown?.(props);
+              if (component?.ref && typeof (component.ref as { onKeyDown?: (props: any) => boolean }).onKeyDown === 'function') {
+                return (component.ref as { onKeyDown: (props: any) => boolean }).onKeyDown(props);
+              }
+              return false;
             },
             
             onExit: () => {

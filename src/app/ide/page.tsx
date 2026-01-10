@@ -23,8 +23,8 @@ import {
   CommandPalette,
   useKeyboardShortcuts,
   ProductionAgentProvider,
+  RightPanelContent,
 } from '@/components/IDE';
-import { AIAgentsPanel } from '@/components/IDE/AIAgents/AIAgentsPanel';
 import { AIWritingSurface } from '@/components/IDE/AIWritingSurface';
 
 // Hooks
@@ -237,7 +237,7 @@ function ProjectIDEContent({ projectId }: ProjectIDEContentProps) {
               onRefresh={() => {}}
             />
           }
-          rightPanel={<AIAgentsPanel />}
+          rightPanel={<RightPanelContent />}
           bottomPanel={
             <BottomPanel
               problems={problems}

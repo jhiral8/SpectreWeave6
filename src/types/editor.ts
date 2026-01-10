@@ -1,7 +1,7 @@
 import { Editor } from '@tiptap/react'
 import { User } from '@supabase/supabase-js'
 import { WebSocketStatus } from '@hocuspocus/provider'
-import { AIProvider } from '@/lib/ai/types'
+import { AIProvider } from '@/types/ai'
 
 // Base editor component props
 export interface BaseEditorProps {

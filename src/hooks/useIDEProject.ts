@@ -247,35 +247,39 @@ const ideProjectApi = {
   
   async getCharacters(projectId: string): Promise<Character[]> {
     const supabase = createClient();
-    // Try story_characters first (new IDE schema)
-    const { data, error } = await supabase
-      .from('story_characters')
-      .select('*')
-      .eq('project_id', projectId)
-      .order('name', { ascending: true });
-    
-    if (error) {
-      // Fallback to character_profiles (children's books)
-      const { data: profileData, error: profileError } = await supabase
+
+    // Query all three tables in parallel
+    const [storyCharacters, characterProfiles, legacyCharacters] = await Promise.all([
+      supabase
+        .from('story_characters')
+        .select('*')
+        .eq('project_id', projectId)
+        .order('name', { ascending: true }),
+      supabase
         .from('character_profiles')
         .select('*')
         .eq('project_id', projectId)
-        .order('name', { ascending: true });
-      
-      if (profileError) {
-        // Final fallback to characters (legacy)
-        const { data: legacyData, error: legacyError } = await supabase
-          .from('characters')
-          .select('*')
-          .eq('project_id', projectId)
-          .order('name', { ascending: true });
-        
-        if (legacyError) return [];
-        return legacyData || [];
-      }
-      return profileData || [];
+        .order('name', { ascending: true }),
+      supabase
+        .from('characters')
+        .select('*')
+        .eq('project_id', projectId)
+        .order('name', { ascending: true }),
+    ]);
+
+    // Return the first non-empty, non-error result
+    if (!storyCharacters.error && storyCharacters.data && storyCharacters.data.length > 0) {
+      return storyCharacters.data;
     }
-    return data || [];
+    if (!characterProfiles.error && characterProfiles.data && characterProfiles.data.length > 0) {
+      return characterProfiles.data;
+    }
+    if (!legacyCharacters.error && legacyCharacters.data && legacyCharacters.data.length > 0) {
+      return legacyCharacters.data;
+    }
+
+    // If all failed or empty, return empty array
+    return [];
   },
   
   async updateProject(id: string, updates: Partial<Project>): Promise<Project> {

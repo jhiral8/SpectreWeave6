@@ -3,7 +3,7 @@
 import React, { useState, useCallback, useEffect, ReactNode, useMemo } from 'react'
 import { Editor } from '@tiptap/react'
 import { EditorContext, EditorContextValue } from './EditorContext'
-import { AIProvider } from '@/lib/ai/types'
+import { AIProvider } from '@/types/ai'
 import { WritingSurface } from '@/lib/ai/dualSurfaceContextManager'
 
 interface EditorProviderProps {

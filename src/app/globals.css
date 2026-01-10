@@ -4,6 +4,8 @@
 
 @import '../styles/theme.css';
 @import '../styles/theme-tokens.css';
+@import '../styles/vscode-tokens.css';
+@import '../styles/vscode-layout.css';
 @import '../styles/writing-surface.css';
 @import '../styles/animations.css';
 @import '../styles/ide-polish.css';

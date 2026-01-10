@@ -17,6 +17,7 @@ import {
   Clock,
   BookOpen,
   CheckCircle,
+  MessageSquare,
 } from 'lucide-react';
 import { usePanels } from '../PanelSystem/PanelContext';
 
@@ -37,7 +38,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
   isSynced = true,
   isOnline = true,
 }) => {
-  const { togglePanel } = usePanels();
+  const { layout, togglePanel, setActivePanel } = usePanels();
   const [showWordCountDetails, setShowWordCountDetails] = useState(false);
   
   // Calculate stats
@@ -87,24 +88,46 @@ export const StatusBar: React.FC<StatusBarProps> = ({
   const handleWordCountClick = useCallback(() => {
     setShowWordCountDetails(prev => !prev);
   }, []);
+
+  const handleAIChatClick = useCallback(() => {
+    if (layout.rightPanel.isVisible && layout.rightPanel.activePanel === 'ai-chat') {
+      // Toggle off if already showing AI Chat
+      togglePanel('right');
+    } else {
+      // Show AI Chat panel
+      setActivePanel('right', 'ai-chat');
+    }
+  }, [layout.rightPanel, togglePanel, setActivePanel]);
   
   const totalProblems = problemCount.errors + problemCount.warnings;
+  const isAIChatActive = layout.rightPanel.isVisible && layout.rightPanel.activePanel === 'ai-chat';
 
   return (
     <div className={cn(
-      'status-bar flex items-center',
-      'h-[22px] min-h-[22px]',
-      'bg-[--ide-statusbar-bg] text-[--ide-statusbar-fg]',
+      'vscode-statusbar flex items-center',
+      'h-[22px] min-h-[22px]', // Exact VS Code height
+      'bg-[var(--ide-accent,#007acc)]',
+      'text-[var(--ide-foreground,#ffffff)]',
       'text-[12px] select-none flex-shrink-0'
-    )}>
+    )}
+    role="status"
+    aria-label="Status Bar"
+    >
       {/* Left section */}
-      <div className="flex items-center h-full">
+      <div className="vscode-statusbar__left flex items-center h-full">
         {/* Remote indicator (like VSCode's remote status) */}
         <StatusBarItem 
           icon={FileText}
           label={projectTitle}
           tooltip="Current project"
-          className="bg-[--ide-accent] hover:bg-[--ide-accent-hover]"
+          className="bg-[var(--ide-accent,#16825d)] hover:bg-[var(--ide-accent,#16825d)]"
+        />
+        
+        {/* Git branch indicator */}
+        <StatusBarItem
+          label="main*"
+          tooltip="Git branch: main (modified)"
+          onClick={() => {/* TODO: Git actions */}}
         />
         
         {/* Problems indicator - always visible */}
@@ -112,14 +135,12 @@ export const StatusBar: React.FC<StatusBarProps> = ({
           icon={totalProblems > 0 
             ? (problemCount.errors > 0 ? AlertCircle : AlertTriangle) 
             : CheckCircle}
-          label={totalProblems > 0 
-            ? `${problemCount.errors} ${problemCount.warnings}` 
-            : ''}
+          label={`${problemCount.errors} ${problemCount.warnings}`}
           onClick={handleProblemsClick}
           tooltip={`${problemCount.errors} errors, ${problemCount.warnings} warnings`}
           className={cn(
-            problemCount.errors > 0 && 'text-[--ide-error]',
-            problemCount.warnings > 0 && !problemCount.errors && 'text-[--ide-warning]'
+            problemCount.errors > 0 && 'text-[var(#f14c4c,#f14c4c)]',
+            problemCount.warnings > 0 && !problemCount.errors && 'text-[var(#cca700,#cca700)]'
           )}
         />
       </div>
@@ -128,7 +149,18 @@ export const StatusBar: React.FC<StatusBarProps> = ({
       <div className="flex-1" />
       
       {/* Right section */}
-      <div className="flex items-center h-full">
+      <div className="vsc-statusbar__right flex items-center h-full">
+        {/* Ghost Writer Toggle - like VS Code Copilot */}
+        <StatusBarItem
+          icon={MessageSquare}
+          label="Ghost Writer"
+          onClick={handleAIChatClick}
+          tooltip={isAIChatActive ? 'Hide Ghost Writer (⌘⇧G)' : 'Show Ghost Writer (⌘⇧G)'}
+          className={cn(
+            isAIChatActive && 'bg-[var(--ide-hover-bg,#ffffff1f)]'
+          )}
+        />
+
         {/* AI Status - always visible */}
         <StatusBarItem
           icon={aiStatus === 'working' ? Sparkles : Bot}
@@ -143,7 +175,7 @@ export const StatusBar: React.FC<StatusBarProps> = ({
             : 'AI assistant ready'
           }
           className={cn(
-            aiStatus === 'working' && 'text-[--ide-activitybar-badge] animate-pulse',
+            aiStatus === 'working' && 'text-[--vsc-activitybar-badge-bg] animate-pulse',
             aiStatus === 'error' && 'text-[--ide-error]'
           )}
         />
@@ -220,9 +252,11 @@ const StatusBarItem: React.FC<StatusBarItemProps> = ({
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         className={cn(
-          'flex items-center gap-1.5 h-full px-2',
+          'vscode-statusbar__item flex items-center gap-1.5 h-full px-2',
           'transition-colors duration-100',
-          onClick ? 'hover:bg-[--ide-statusbar-item-hover] cursor-pointer' : 'cursor-default',
+          onClick 
+            ? 'hover:bg-[var(--ide-hover-bg,#ffffff1f)] cursor-pointer' 
+            : 'cursor-default',
           className
         )}
         aria-label={tooltip || label}
@@ -231,15 +265,15 @@ const StatusBarItem: React.FC<StatusBarItemProps> = ({
         {label && <span className="leading-none">{label}</span>}
       </button>
       
-      {/* Tooltip */}
+      {/* Tooltip - VS Code style */}
       {tooltip && showTooltip && (
         <div className={cn(
           'absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5',
-          'px-2 py-1 rounded text-[11px] whitespace-nowrap',
-          'bg-[--ide-background-tertiary] text-[--ide-foreground]',
-          'border border-[--ide-border] shadow-lg',
-          'pointer-events-none z-50',
-          'animate-in fade-in-0 slide-in-from-bottom-1 duration-100'
+          'px-2 py-1 rounded text-[12px] whitespace-nowrap',
+          'bg-[var(--ide-bg-elevated,#252526)]',
+          'text-[var(--ide-foreground,#cccccc)]',
+          'border border-[var(--ide-border,#454545)]',
+          'shadow-lg pointer-events-none z-50'
         )}>
           {tooltip}
         </div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { callOpenRouterWithFallback, handleAIError } from '@/lib/ai/openrouter-utils';
 
 /**
  * Framework Chat API
@@ -6,7 +7,6 @@ import { NextRequest, NextResponse } from 'next/server';
  */
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
-const OPENROUTER_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 // Topic-specific prompts
 const TOPIC_PROMPTS: Record<string, string> = {
@@ -88,7 +88,9 @@ export async function POST(req: NextRequest) {
       characters = [], 
       locations = [],
       model = 'meta-llama/llama-3.2-3b-instruct:free',
-      projectTitle 
+      projectTitle,
+      selectedText,
+      documentContent
     } = body;
 
     if (!prompt) {
@@ -123,32 +125,39 @@ Project: "${projectTitle || 'Untitled'}"
       systemPrompt += `\nExisting locations: ${locations.map((l: any) => l.name).join(', ')}`;
     }
 
-    const response = await fetch(OPENROUTER_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-        'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
-        'X-Title': 'SpectreWeave'
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: prompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000
-      })
-    });
-
-    if (!response.ok) {
-      const error = await response.text();
-      console.error('OpenRouter error:', error);
-      return NextResponse.json({ error: 'AI service error' }, { status: 500 });
+    // Build user message with context
+    let userMessage = prompt;
+    
+    if (selectedText) {
+      userMessage += `\n\n**Selected Text from Manuscript:**\n"""${selectedText}"""`;
+    }
+    
+    if (documentContent && !selectedText) {
+      // Only add document context if no selection (to avoid duplication)
+      const truncated = documentContent.length > 3000 
+        ? documentContent.slice(-3000) + '\n[... earlier content truncated ...]'
+        : documentContent;
+      userMessage += `\n\n**Current Document Context:**\n"""${truncated}"""`;
     }
 
-    const data = await response.json();
+    const messages = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: userMessage }
+    ];
+
+    const result = await callOpenRouterWithFallback(model, messages, {
+      temperature: 0.7,
+      max_tokens: 1000,
+      title: 'SpectreWeave Framework Chat',
+      type: 'free'
+    });
+
+    if (!result.ok) {
+      const { error, status } = handleAIError(result);
+      return NextResponse.json({ error }, { status });
+    }
+
+    const data = result.data;
     const content = data.choices?.[0]?.message?.content || '';
 
     // Parse for JSON framework element

@@ -15,7 +15,8 @@ export type StoryNodeType =
   | 'note'
   | 'note-folder'
   | 'research'
-  | 'style-guide';
+  | 'style-guide'
+  | 'framework';
 
 export type ExplorerTab = 'manuscript' | 'characters' | 'world' | 'notes';
 

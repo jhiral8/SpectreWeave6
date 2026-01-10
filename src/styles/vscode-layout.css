@@ -1,0 +1,967 @@
+/* ================================================================
+   VS CODE LAYOUT SYSTEM
+   CSS Variables and utility classes for VS Code-style UI layout
+   Based on: https://code.visualstudio.com/api/ux-guidelines/overview
+   ================================================================ */
+
+:root {
+  /* ────────────────────────────────────────
+     LAYOUT DIMENSIONS
+     VS Code standard container sizes
+     ──────────────────────────────────────── */
+  
+  /* Activity Bar */
+  --vsc-activitybar-width: 48px;
+  --vsc-activitybar-icon-size: 24px;
+  --vsc-activitybar-badge-size: 18px;
+  
+  /* Sidebars */
+  --vsc-sidebar-width: 280px;
+  --vsc-sidebar-min-width: 170px;
+  --vsc-sidebar-max-width: 500px;
+  --vsc-sidebar-header-height: 35px;
+  --vsc-sidebar-section-header-height: 22px;
+  
+  /* Secondary Sidebar (Copilot Panel) */
+  --vsc-secondary-sidebar-width: 340px;
+  --vsc-secondary-sidebar-min-width: 280px;
+  --vsc-secondary-sidebar-max-width: 600px;
+  
+  /* Panel (Bottom) */
+  --vsc-panel-height: 300px;
+  --vsc-panel-min-height: 100px;
+  --vsc-panel-header-height: 35px;
+  
+  /* Title Bar */
+  --vsc-titlebar-height: 30px;
+  
+  /* Status Bar */
+  --vsc-statusbar-height: 22px;
+  
+  /* Tabs */
+  --vsc-tab-height: 35px;
+  --vsc-breadcrumb-height: 22px;
+  
+  /* ────────────────────────────────────────
+     CONTAINER BACKGROUNDS
+     VS Code specific container colors
+     ──────────────────────────────────────── */
+  
+  /* Activity Bar Container */
+  --vsc-activitybar-bg: #333333;
+  --vsc-activitybar-fg: #ffffff;
+  --vsc-activitybar-inactive-fg: rgba(255, 255, 255, 0.6);
+  --vsc-activitybar-border: transparent;
+  --vsc-activitybar-active-border: #ffffff;
+  --vsc-activitybar-active-bg: transparent;
+  --vsc-activitybar-badge-bg: #007acc;
+  --vsc-activitybar-badge-fg: #ffffff;
+  --vsc-activitybar-drag-drop-border: #53595d;
+  
+  /* Primary Sidebar Container */
+  --vsc-sidebar-bg: #252526;
+  --vsc-sidebar-fg: #cccccc;
+  --vsc-sidebar-border: transparent;
+  --vsc-sidebar-header-bg: #252526;
+  --vsc-sidebar-header-fg: #bbbbbb;
+  --vsc-sidebar-section-header-bg: transparent;
+  --vsc-sidebar-section-header-fg: #cccccc;
+  --vsc-sidebar-section-header-border: transparent;
+  --vsc-sidebar-drop-bg: rgba(83, 89, 93, 0.5);
+  
+  /* Secondary Sidebar Container (AI Copilot) */
+  --vsc-secondary-sidebar-bg: #252526;
+  --vsc-secondary-sidebar-fg: #cccccc;
+  --vsc-secondary-sidebar-border: #3c3c3c;
+  
+  /* Editor Container */
+  --vsc-editor-bg: #1e1e1e;
+  --vsc-editor-fg: #d4d4d4;
+  --vsc-editor-tabs-bg: #252526;
+  --vsc-editor-group-header-bg: #252526;
+  --vsc-editor-breadcrumb-bg: #1e1e1e;
+  
+  /* Panel Container (Bottom) */
+  --vsc-panel-bg: #1e1e1e;
+  --vsc-panel-fg: #cccccc;
+  --vsc-panel-border: #3c3c3c;
+  --vsc-panel-title-active-fg: #e7e7e7;
+  --vsc-panel-title-inactive-fg: rgba(231, 231, 231, 0.6);
+  --vsc-panel-title-active-border: #e7e7e7;
+  
+  /* Status Bar Container */
+  --vsc-statusbar-bg: #007acc;
+  --vsc-statusbar-fg: #ffffff;
+  --vsc-statusbar-border: transparent;
+  --vsc-statusbar-item-hover-bg: rgba(255, 255, 255, 0.12);
+  --vsc-statusbar-item-active-bg: rgba(255, 255, 255, 0.18);
+  --vsc-statusbar-prominent-bg: #388a34;
+  --vsc-statusbar-prominent-fg: #ffffff;
+  --vsc-statusbar-remote-bg: #16825d;
+  --vsc-statusbar-remote-fg: #ffffff;
+  --vsc-statusbar-offline-bg: #6c6c6c;
+  --vsc-statusbar-debugging-bg: #cc6633;
+  --vsc-statusbar-no-folder-bg: #68217a;
+  
+  /* ────────────────────────────────────────
+     LIST & TREE ITEMS
+     ──────────────────────────────────────── */
+  --vsc-list-active-selection-bg: #04395e;
+  --vsc-list-active-selection-fg: #ffffff;
+  --vsc-list-inactive-selection-bg: #37373d;
+  --vsc-list-inactive-selection-fg: #cccccc;
+  --vsc-list-hover-bg: #2a2d2e;
+  --vsc-list-hover-fg: inherit;
+  --vsc-list-focus-outline: #007fd4;
+  --vsc-list-highlight-fg: #0097fb;
+  --vsc-list-invalid-fg: #b89500;
+  --vsc-list-error-fg: #f88070;
+  --vsc-list-warning-fg: #cca700;
+  
+  /* ────────────────────────────────────────
+     INPUT CONTROLS
+     ──────────────────────────────────────── */
+  --vsc-input-bg: #3c3c3c;
+  --vsc-input-fg: #cccccc;
+  --vsc-input-border: transparent;
+  --vsc-input-placeholder-fg: #a6a6a6;
+  --vsc-input-focus-border: #007fd4;
+  --vsc-input-option-active-bg: #0e639c;
+  --vsc-input-option-active-fg: #ffffff;
+  --vsc-input-validation-error-bg: #5a1d1d;
+  --vsc-input-validation-error-border: #be1100;
+  --vsc-input-validation-warning-bg: #352a05;
+  --vsc-input-validation-warning-border: #9d5d00;
+  --vsc-input-validation-info-bg: #063b49;
+  --vsc-input-validation-info-border: #007acc;
+  
+  /* ────────────────────────────────────────
+     BUTTONS
+     ──────────────────────────────────────── */
+  --vsc-button-bg: #0e639c;
+  --vsc-button-fg: #ffffff;
+  --vsc-button-hover-bg: #1177bb;
+  --vsc-button-secondary-bg: #3a3d41;
+  --vsc-button-secondary-fg: #ffffff;
+  --vsc-button-secondary-hover-bg: #45494e;
+  
+  /* ────────────────────────────────────────
+     CHAT/COPILOT SPECIFIC
+     Based on: microsoft/vscode chat.css & inlineChat.css
+     ──────────────────────────────────────── */
+  
+  /* Chat session container */
+  --vsc-chat-session-fg: var(--vsc-editor-fg);
+  --vsc-chat-request-bg: #1f1f1f;
+  --vsc-chat-request-border: transparent;
+  --vsc-chat-request-bubble-bg: #2b2d30;
+  --vsc-chat-response-bg: transparent;
+  
+  /* Chat input styling - from inlineChat.css */
+  --vsc-chat-input-bg: var(--vsc-input-bg);
+  --vsc-chat-input-border: var(--vsc-input-border);
+  --vsc-chat-input-focus-border: var(--vsc-input-focus-border);
+  --vsc-chat-input-radius: 4px;
+  --vsc-chat-input-padding: 8px;
+  
+  /* Chat slash commands */
+  --vsc-chat-slash-command-bg: #34414b;
+  --vsc-chat-slash-command-fg: #4daafc;
+  
+  /* Chat avatars */
+  --vsc-chat-avatar-bg: #40a6ff;
+  --vsc-chat-avatar-fg: #1e1e1e;
+  
+  /* Chat font sizes - from chat.css */
+  --vsc-chat-font-size-xs: 0.846em;  /* 11px @ 13px base */
+  --vsc-chat-font-size-s: 0.923em;   /* 12px @ 13px base */
+  --vsc-chat-font-size-m: 1em;       /* 13px @ 13px base */
+  --vsc-chat-font-size-l: 1.077em;   /* 14px @ 13px base */
+  --vsc-chat-font-size-xl: 1.231em;  /* 16px @ 13px base */
+  
+  /* Inline chat specific - from inlineChat.css */
+  --vsc-inline-chat-bg: #252526;
+  --vsc-inline-chat-border: #454545;
+  --vsc-inline-chat-shadow: var(--vsc-widget-shadow, rgba(0, 0, 0, 0.36));
+  
+  /* Chat list items */
+  --vsc-chat-list-item-padding: 12px 16px;
+  --vsc-chat-item-gap: 8px;
+  
+  /* Chat used context */
+  --vsc-chat-used-context-bg: var(--vsc-list-hover-bg);
+  --vsc-chat-used-context-radius: 4px;
+  
+  /* Chat code blocks */
+  --vsc-chat-code-block-bg: rgba(0, 0, 0, 0.2);
+  --vsc-chat-code-block-radius: 4px;
+  
+  /* Chat buttons */
+  --vsc-chat-button-radius: 4px;
+  --vsc-chat-button-padding: 4px 8px;
+  
+  /* ────────────────────────────────────────
+     WIDGET SHADOW
+     ──────────────────────────────────────── */
+  --vsc-widget-shadow: rgba(0, 0, 0, 0.36);
+  
+  /* ────────────────────────────────────────
+     SCROLLBAR
+     ──────────────────────────────────────── */
+  --vsc-scrollbar-shadow: #000000;
+  --vsc-scrollbar-slider-bg: rgba(121, 121, 121, 0.4);
+  --vsc-scrollbar-slider-hover-bg: rgba(100, 100, 100, 0.7);
+  --vsc-scrollbar-slider-active-bg: rgba(191, 191, 191, 0.4);
+  
+  /* ────────────────────────────────────────
+     COMMAND PALETTE
+     ──────────────────────────────────────── */
+  --vsc-quickinput-bg: #252526;
+  --vsc-quickinput-fg: #cccccc;
+  --vsc-quickinput-list-focus-bg: #04395e;
+  --vsc-quickinput-list-bg: transparent;
+}
+
+/* ================================================================
+   LIGHT THEME OVERRIDES
+   ================================================================ */
+
+[data-theme="spectre-light"],
+[data-theme="light"] {
+  /* Activity Bar */
+  --vsc-activitybar-bg: #2c2c2c;
+  --vsc-activitybar-fg: #ffffff;
+  --vsc-activitybar-inactive-fg: rgba(255, 255, 255, 0.6);
+  
+  /* Primary Sidebar */
+  --vsc-sidebar-bg: #f3f3f3;
+  --vsc-sidebar-fg: #616161;
+  --vsc-sidebar-header-bg: #f3f3f3;
+  --vsc-sidebar-header-fg: #424242;
+  
+  /* Secondary Sidebar */
+  --vsc-secondary-sidebar-bg: #f3f3f3;
+  --vsc-secondary-sidebar-fg: #616161;
+  --vsc-secondary-sidebar-border: #e5e5e5;
+  
+  /* Editor */
+  --vsc-editor-bg: #ffffff;
+  --vsc-editor-fg: #000000;
+  --vsc-editor-tabs-bg: #f3f3f3;
+  --vsc-editor-group-header-bg: #f3f3f3;
+  --vsc-editor-breadcrumb-bg: #ffffff;
+  
+  /* Panel */
+  --vsc-panel-bg: #ffffff;
+  --vsc-panel-fg: #616161;
+  --vsc-panel-border: #e7e7e7;
+  --vsc-panel-title-active-fg: #424242;
+  --vsc-panel-title-inactive-fg: rgba(66, 66, 66, 0.75);
+  --vsc-panel-title-active-border: #424242;
+  
+  /* Status Bar */
+  --vsc-statusbar-bg: #007acc;
+  --vsc-statusbar-fg: #ffffff;
+  
+  /* List Items */
+  --vsc-list-active-selection-bg: #0060c0;
+  --vsc-list-active-selection-fg: #ffffff;
+  --vsc-list-inactive-selection-bg: #e4e6f1;
+  --vsc-list-inactive-selection-fg: inherit;
+  --vsc-list-hover-bg: #e8e8e8;
+  --vsc-list-focus-outline: #0090f1;
+  --vsc-list-highlight-fg: #0066bf;
+  
+  /* Input */
+  --vsc-input-bg: #ffffff;
+  --vsc-input-fg: #616161;
+  --vsc-input-border: #cecece;
+  --vsc-input-placeholder-fg: #767676;
+  
+  /* Chat */
+  --vsc-chat-request-bg: #f4f4f4;
+  --vsc-chat-slash-command-bg: #d2ecff;
+  --vsc-chat-slash-command-fg: #0f4a85;
+  
+  /* Scrollbar */
+  --vsc-scrollbar-slider-bg: rgba(100, 100, 100, 0.4);
+  --vsc-scrollbar-slider-hover-bg: rgba(100, 100, 100, 0.7);
+  --vsc-scrollbar-slider-active-bg: rgba(0, 0, 0, 0.6);
+  
+  /* Quick Input */
+  --vsc-quickinput-bg: #f3f3f3;
+  --vsc-quickinput-fg: #616161;
+  --vsc-quickinput-list-focus-bg: #0060c0;
+}
+
+/* ================================================================
+   LAYOUT CONTAINER CLASSES
+   Utility classes for VS Code-style container layout
+   ================================================================ */
+
+/* Main Grid Layout */
+.vsc-layout {
+  display: grid;
+  grid-template-areas:
+    "titlebar titlebar titlebar titlebar"
+    "activitybar sidebar editor secondary-sidebar"
+    "activitybar sidebar panel secondary-sidebar"
+    "statusbar statusbar statusbar statusbar";
+  grid-template-columns: var(--vsc-activitybar-width) var(--vsc-sidebar-width) 1fr var(--vsc-secondary-sidebar-width);
+  grid-template-rows: var(--vsc-titlebar-height) 1fr auto var(--vsc-statusbar-height);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+}
+
+/* Hide titlebar variant */
+.vsc-layout--no-titlebar {
+  grid-template-areas:
+    "activitybar sidebar editor secondary-sidebar"
+    "activitybar sidebar panel secondary-sidebar"
+    "statusbar statusbar statusbar statusbar";
+  grid-template-rows: 1fr auto var(--vsc-statusbar-height);
+}
+
+/* Collapsed sidebars */
+.vsc-layout--sidebar-collapsed {
+  grid-template-columns: var(--vsc-activitybar-width) 0 1fr var(--vsc-secondary-sidebar-width);
+}
+
+.vsc-layout--secondary-collapsed {
+  grid-template-columns: var(--vsc-activitybar-width) var(--vsc-sidebar-width) 1fr 0;
+}
+
+.vsc-layout--both-collapsed {
+  grid-template-columns: var(--vsc-activitybar-width) 0 1fr 0;
+}
+
+/* Panel hidden */
+.vsc-layout--panel-hidden {
+  grid-template-areas:
+    "titlebar titlebar titlebar titlebar"
+    "activitybar sidebar editor secondary-sidebar"
+    "statusbar statusbar statusbar statusbar";
+  grid-template-rows: var(--vsc-titlebar-height) 1fr var(--vsc-statusbar-height);
+}
+
+/* Container Elements */
+.vsc-titlebar {
+  grid-area: titlebar;
+  background: var(--vsc-titlebar-bg, var(--ide-titlebar-bg));
+  color: var(--vsc-titlebar-fg, var(--ide-titlebar-fg));
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ide-spacing-2);
+  font-size: var(--ide-font-size-sm);
+  -webkit-app-region: drag;
+}
+
+.vsc-activitybar {
+  grid-area: activitybar;
+  background: var(--vsc-activitybar-bg);
+  color: var(--vsc-activitybar-fg);
+  width: var(--vsc-activitybar-width);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: var(--ide-spacing-2);
+}
+
+.vsc-activitybar__item {
+  width: var(--vsc-activitybar-width);
+  height: var(--vsc-activitybar-width);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--vsc-activitybar-inactive-fg);
+  position: relative;
+  transition: color var(--ide-transition-fast);
+}
+
+.vsc-activitybar__item:hover {
+  color: var(--vsc-activitybar-fg);
+}
+
+.vsc-activitybar__item--active {
+  color: var(--vsc-activitybar-fg);
+}
+
+.vsc-activitybar__item--active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 24px;
+  background: var(--vsc-activitybar-active-border);
+}
+
+.vsc-activitybar__badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  min-width: var(--vsc-activitybar-badge-size);
+  height: var(--vsc-activitybar-badge-size);
+  padding: 0 4px;
+  background: var(--vsc-activitybar-badge-bg);
+  color: var(--vsc-activitybar-badge-fg);
+  border-radius: 9px;
+  font-size: 9px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vsc-sidebar {
+  grid-area: sidebar;
+  background: var(--vsc-sidebar-bg);
+  color: var(--vsc-sidebar-fg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid var(--vsc-sidebar-border);
+}
+
+.vsc-sidebar__header {
+  height: var(--vsc-sidebar-header-height);
+  background: var(--vsc-sidebar-header-bg);
+  color: var(--vsc-sidebar-header-fg);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ide-spacing-4);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.vsc-sidebar__content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.vsc-secondary-sidebar {
+  grid-area: secondary-sidebar;
+  background: var(--vsc-secondary-sidebar-bg);
+  color: var(--vsc-secondary-sidebar-fg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-left: 1px solid var(--vsc-secondary-sidebar-border);
+}
+
+.vsc-editor {
+  grid-area: editor;
+  background: var(--vsc-editor-bg);
+  color: var(--vsc-editor-fg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.vsc-editor__tabs {
+  height: var(--vsc-tab-height);
+  background: var(--vsc-editor-tabs-bg);
+  display: flex;
+  overflow-x: auto;
+}
+
+.vsc-editor__breadcrumb {
+  height: var(--vsc-breadcrumb-height);
+  background: var(--vsc-editor-breadcrumb-bg);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ide-spacing-2);
+  font-size: var(--ide-font-size-sm);
+}
+
+.vsc-editor__content {
+  flex: 1;
+  overflow: auto;
+}
+
+.vsc-panel {
+  grid-area: panel;
+  background: var(--vsc-panel-bg);
+  color: var(--vsc-panel-fg);
+  border-top: 1px solid var(--vsc-panel-border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.vsc-panel__header {
+  height: var(--vsc-panel-header-height);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--ide-spacing-2);
+  gap: var(--ide-spacing-4);
+}
+
+.vsc-panel__tab {
+  font-size: var(--ide-font-size-sm);
+  padding: 0 var(--ide-spacing-2);
+  color: var(--vsc-panel-title-inactive-fg);
+  cursor: pointer;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.vsc-panel__tab--active {
+  color: var(--vsc-panel-title-active-fg);
+}
+
+.vsc-panel__tab--active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--vsc-panel-title-active-border);
+}
+
+.vsc-panel__content {
+  flex: 1;
+  overflow: auto;
+}
+
+.vsc-statusbar {
+  grid-area: statusbar;
+  background: var(--vsc-statusbar-bg);
+  color: var(--vsc-statusbar-fg);
+  height: var(--vsc-statusbar-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--ide-spacing-2);
+  font-size: var(--ide-font-size-xs);
+}
+
+.vsc-statusbar__left,
+.vsc-statusbar__right {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.vsc-statusbar__item {
+  padding: 0 var(--ide-spacing-1);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background var(--ide-transition-fast);
+}
+
+.vsc-statusbar__item:hover {
+  background: var(--vsc-statusbar-item-hover-bg);
+}
+
+/* ================================================================
+   CHAT VIEW SPECIFIC STYLES
+   For AI Copilot Panel - Based on VS Code chat.css patterns
+   ================================================================ */
+
+/* Main chat container - mirrors .interactive-session */
+.vsc-chat {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 950px; /* VS Code chat max-width */
+  margin: auto;
+  position: relative;
+  
+  /* VS Code chat font sizes */
+  --vscode-chat-font-size-body-xs: var(--vsc-chat-font-size-xs);
+  --vscode-chat-font-size-body-s: var(--vsc-chat-font-size-s);
+  --vscode-chat-font-size-body-m: var(--vsc-chat-font-size-m);
+}
+
+/* Chat header */
+.vsc-chat__header {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--vsc-secondary-sidebar-border);
+}
+
+.vsc-chat__title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.vsc-chat__actions {
+  display: flex;
+  gap: var(--ide-spacing-1);
+}
+
+/* Messages container - mirrors .interactive-list */
+.vsc-chat__messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--ide-spacing-3);
+  position: relative;
+}
+
+/* Message items - mirrors .interactive-item-container */
+.vsc-chat__message {
+  padding: var(--vsc-chat-list-item-padding, 12px 16px);
+  display: flex;
+  flex-direction: column;
+  color: var(--vsc-chat-session-fg);
+  cursor: default;
+  user-select: text;
+  -webkit-user-select: text;
+  margin-bottom: var(--vsc-chat-item-gap, 8px);
+}
+
+/* User request messages - mirrors .interactive-request */
+.vsc-chat__message--user {
+  background: var(--vsc-chat-request-bubble-bg);
+  border-radius: 8px;
+  padding: 8px 12px;
+  max-width: 90%;
+  margin-left: auto;
+  width: fit-content;
+}
+
+/* Assistant response messages - mirrors .interactive-response */
+.vsc-chat__message--assistant {
+  background: var(--vsc-chat-response-bg);
+}
+
+.vsc-chat__message-header {
+  display: flex;
+  align-items: center;
+  gap: var(--ide-spacing-2);
+  margin-bottom: var(--ide-spacing-2);
+  font-size: var(--ide-font-size-sm);
+  font-weight: 500;
+}
+
+.vsc-chat__avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--vsc-chat-avatar-bg);
+  color: var(--vsc-chat-avatar-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+/* Input area - mirrors .interactive-input-part */
+.vsc-chat__input-area {
+  flex: none;
+  margin: 0 16px;
+  padding: 4px 0 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+}
+
+/* Input container - mirrors .chat-input-container */
+.vsc-chat__input-wrapper {
+  box-sizing: border-box;
+  cursor: text;
+  background: var(--vsc-chat-input-bg);
+  border: 1px solid var(--vsc-chat-input-border);
+  border-radius: var(--vsc-chat-input-radius);
+  padding: 0 6px 6px 6px;
+  width: 100%;
+}
+
+.vsc-chat__input-wrapper:focus-within {
+  border-color: var(--vsc-chat-input-focus-border);
+}
+
+/* Input element */
+.vsc-chat__input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: var(--vsc-chat-input-padding) 4px;
+  color: var(--vsc-input-fg);
+  font-family: var(--ide-font-sans);
+  font-size: 13px;
+  line-height: 20px;
+  resize: none;
+  outline: none;
+}
+
+.vsc-chat__input::placeholder {
+  color: var(--vsc-input-placeholder-fg);
+}
+
+/* Chat attachments/context - mirrors .chat-attached-context */
+.vsc-chat__attached-context {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.vsc-chat__slash-command {
+  background: var(--vsc-chat-slash-command-bg);
+  color: var(--vsc-chat-slash-command-fg);
+  padding: 1px 3px;
+  border-radius: var(--vsc-chat-button-radius);
+  font-size: var(--vsc-chat-font-size-xs);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Chat toolbar - mirrors .chat-input-toolbars */
+.vsc-chat__toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.vsc-chat__model-selector {
+  display: flex;
+  align-items: center;
+  padding: var(--ide-spacing-1) 0;
+  font-size: var(--ide-font-size-xs);
+  color: var(--vsc-secondary-sidebar-fg);
+  opacity: 0.8;
+}
+
+/* Chat followups - mirrors .interactive-session-followups */
+.vsc-chat__followups {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  margin-top: 8px;
+}
+
+.vsc-chat__followup-btn {
+  text-align: left;
+  color: var(--vsc-link-fg, #4daafc);
+  font-size: 12px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.vsc-chat__followup-btn:hover {
+  text-decoration: underline;
+}
+
+/* ================================================================
+   VS CODE INTERACTIVE SESSION CLASSES
+   Direct patterns from microsoft/vscode chat.css
+   ================================================================ */
+
+/* Main interactive session container */
+.interactive-session {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 950px;
+  margin: auto;
+  position: relative;
+  font-family: var(--ide-font-sans);
+  color: var(--vsc-secondary-sidebar-fg);
+}
+
+/* Chat welcome view - from chatViewWelcome.css */
+.chat-welcome-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex: 1;
+  position: relative;
+  padding: 12px;
+}
+
+.chat-welcome-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  max-width: 600px;
+}
+
+.chat-welcome-view-icon {
+  min-height: 48px;
+  margin-bottom: 12px;
+}
+
+.chat-welcome-view-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.chat-welcome-view-message {
+  color: var(--vsc-input-placeholder-fg);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* Interactive list */
+.interactive-list {
+  flex: 1;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* Interactive item container - messages */
+.interactive-item-container {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  color: var(--vsc-secondary-sidebar-fg);
+  cursor: default;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Header with avatar */
+.interactive-item-container .header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.interactive-item-container .avatar-container {
+  flex-shrink: 0;
+}
+
+.interactive-item-container .avatar {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--vsc-chat-avatar-bg);
+  color: var(--vsc-chat-avatar-fg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+
+.interactive-item-container .username {
+  font-weight: 500;
+  font-size: 12px;
+}
+
+/* Message value/content */
+.interactive-item-container .value {
+  color: var(--vsc-secondary-sidebar-fg);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* User request bubble - VS Code pattern */
+.interactive-request .value .rendered-markdown .interactive-request-content {
+  background: var(--vsc-chat-request-bubble-bg);
+  border-radius: 8px;
+  padding: 8px 12px;
+  max-width: 90%;
+  margin-left: auto;
+  width: fit-content;
+  display: inline-block;
+}
+
+/* Footer toolbar */
+.interactive-item-container .chat-footer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.interactive-item-container:hover .chat-footer-toolbar {
+  opacity: 1;
+}
+
+/* Interactive input part - input area */
+.interactive-input-part {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Chat input container */
+.chat-input-container {
+  box-sizing: border-box;
+  cursor: text;
+  background: var(--vsc-input-bg);
+  border: 1px solid var(--vsc-input-border);
+  border-radius: 4px;
+  margin: 0 16px 12px 16px;
+}
+
+.chat-input-container:focus-within {
+  border-color: var(--vsc-input-focus-border);
+}
+
+/* Chat input and execute toolbar */
+.chat-input-and-execute-toolbar {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+}
+
+.interactive-input-editor {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  font-family: var(--ide-font-sans);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+/* Toolbar hover background */
+.vsc-toolbar-hoverBackground,
+[class*="hover:bg-[--vsc-toolbar-hoverBackground]"]:hover {
+  background: var(--vsc-toolbar-hoverBackground, rgba(90, 93, 94, 0.31));
+}
+
+
+
+/* ================================================================
+   ACCESSIBILITY
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .vsc-activitybar__item,
+  .vsc-statusbar__item,
+  .vsc-chat__input-wrapper {
+    transition: none;
+  }
+}
+
+/* Focus visible for keyboard navigation */
+.vsc-activitybar__item:focus-visible,
+.vsc-statusbar__item:focus-visible,
+.vsc-panel__tab:focus-visible {
+  outline: 1px solid var(--vsc-list-focus-outline);
+  outline-offset: -1px;
+}

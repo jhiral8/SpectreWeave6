@@ -14,17 +14,19 @@ import {
   WritingProblem, 
   EditorTabs, 
   EditorTab, 
-  AIAgentsPanel, 
+  AgentReviewsPanel,
   AgentProvider, 
   useAgents, 
   CommandPalette, 
   useKeyboardShortcuts, 
   AIWritingSurface,
-  AICopilotPanel,
+  VSCodeCopilotWrapper,
   WorldBuildingPanel,
   NotesPanel,
-  StoryNote
+  StoryNote,
+  FrameworkWizard
 } from '@/components/IDE';
+import { FrameworkEditor, FrameworkData } from '@/components/IDE/FrameworkEditor';
 import { 
   BookOpen, 
   Users, 
@@ -118,6 +120,51 @@ export default function WriterPage() {
   const handleNodeSelect = (node: StoryNode) => {
     if (node.type === 'chapter') {
       handleTabSelect(node.id);
+    } else if (node.type === 'framework') {
+      // Handle framework tab
+      const frameworkTabId = 'framework-editor';
+      const existingTab = tabs.find(t => t.id === frameworkTabId);
+      if (!existingTab) {
+        setTabs(prev => [...prev, { 
+          id: frameworkTabId, 
+          label: 'Story Framework', 
+          type: 'framework'
+        }]);
+      }
+      setActiveTabId(frameworkTabId);
+    } else if (node.type === 'note') {
+      // Handle note tab - open in TipTap editor like chapters
+      const existingTab = tabs.find(t => t.id === node.id);
+      if (!existingTab) {
+        setTabs(prev => [...prev, { 
+          id: node.id, 
+          label: node.label, 
+          type: 'note'
+        }]);
+      }
+      setActiveTabId(node.id);
+    } else if (node.type === 'location') {
+      // Handle location tab - open in TipTap editor
+      const existingTab = tabs.find(t => t.id === node.id);
+      if (!existingTab) {
+        setTabs(prev => [...prev, { 
+          id: node.id, 
+          label: node.label, 
+          type: 'location'
+        }]);
+      }
+      setActiveTabId(node.id);
+    } else if (node.type === 'character') {
+      // Handle character tab - open in TipTap editor
+      const existingTab = tabs.find(t => t.id === node.id);
+      if (!existingTab) {
+        setTabs(prev => [...prev, { 
+          id: node.id, 
+          label: node.label, 
+          type: 'character'
+        }]);
+      }
+      setActiveTabId(node.id);
     }
   };
 
@@ -180,6 +227,7 @@ export default function WriterPage() {
           problems={problems}
           currentChapter={state.currentChapter}
           characters={state.characters}
+          chapters={state.chapters}
           notes={state.notes}
           locations={state.locations}
           outlines={state.outlines}
@@ -210,18 +258,80 @@ function WriterIDE({
   onCreateLocation,
   onUpdateLocation,
   onDeleteLocation,
+  onDeleteAgentReview,
   onRefresh,
   problems,
   currentChapter,
   characters,
+  chapters,
   notes,
   locations,
+  agentReviews,
   onContentChange,
   isSyncing
 }: any) {
   const { layout, togglePanel, setActivePanel } = usePanels();
   const { theme, setTheme, toggleTheme } = useTheme();
   const { activeTasks, taskHistory, clearHistory } = useAgents();
+  
+  // Framework Wizard state
+  const [showFrameworkWizard, setShowFrameworkWizard] = useState(false);
+  
+  // Framework Editor state
+  const [frameworkData, setFrameworkData] = useState<FrameworkData | null>(null);
+  
+  // Load framework data from notes
+  useEffect(() => {
+    if (notes) {
+      const frameworkNote = notes.find((n: any) => 
+        n.title === 'Story Framework' && n.tags?.includes('framework')
+      );
+      if (frameworkNote) {
+        try {
+          const parsed = JSON.parse(frameworkNote.content);
+          setFrameworkData(parsed);
+        } catch (e) {
+          console.error('Failed to parse framework note:', e);
+        }
+      }
+    }
+  }, [notes]);
+  
+  // Open framework editor tab
+  const openFrameworkTab = useCallback(() => {
+    const frameworkTabId = 'framework-editor';
+    const existingTab = tabs.find((t: EditorTab) => t.id === frameworkTabId);
+    if (!existingTab) {
+      // Tab doesn't exist, need to add it - will be handled by parent
+      onNodeSelect({ id: frameworkTabId, type: 'framework', label: 'Story Framework' } as any);
+    } else {
+      setActiveTabId(frameworkTabId);
+    }
+  }, [tabs, onNodeSelect, setActiveTabId]);
+  
+  // Handle framework save from editor
+  const handleFrameworkSave = useCallback(async (data: FrameworkData) => {
+    setFrameworkData(data);
+    
+    // Find existing framework note or create new one
+    const existingNote = notes?.find((n: any) => 
+      n.title === 'Story Framework' && n.tags?.includes('framework')
+    );
+    
+    if (existingNote) {
+      await onUpdateNote(existingNote.id, {
+        content: JSON.stringify(data, null, 2)
+      });
+    } else {
+      await onCreateNote({
+        title: 'Story Framework',
+        content: JSON.stringify(data, null, 2),
+        category: 'research',
+        tags: ['framework', 'ai-generated']
+      });
+    }
+    console.log('Framework saved:', data);
+  }, [notes, onUpdateNote, onCreateNote]);
   
   // Track editor selection for AI context
   const [editorSelection, setEditorSelection] = useState<{
@@ -258,10 +368,42 @@ function WriterIDE({
     onToggleBottomPanel: () => togglePanel('bottom'),
     onToggleRightPanel: () => togglePanel('right'),
   });
+  
+  // Handle Framework Wizard save
+  const handleSaveFramework = useCallback(async (frameworkData: any) => {
+    // Save framework as a note with special category
+    // Note: 'framework' is not a valid DB category, using 'research' and adding it to tags
+    await onCreateNote({
+      title: 'Story Framework',
+      content: JSON.stringify(frameworkData, null, 2),
+      category: 'research',
+      tags: ['framework', 'ai-generated']
+    });
+    console.log('Framework saved:', frameworkData);
+    
+    // Update local state
+    setFrameworkData(frameworkData);
+    
+    // Open the framework editor tab
+    onNodeSelect({ id: 'framework-editor', type: 'framework', label: 'Story Framework' } as any);
+  }, [onCreateNote, onNodeSelect]);
 
   return (
     <div className="h-screen w-screen overflow-hidden bg-[--ide-editor-bg] text-[--ide-foreground] flex flex-col">
       <CommandPalette />
+      
+      {/* Framework Wizard Modal */}
+      {showFrameworkWizard && (
+        <FrameworkWizard
+          projectId={project?.id || ''}
+          projectTitle={project?.title || 'Untitled Project'}
+          onSave={handleSaveFramework}
+          onCreateCharacter={onCreateCharacter}
+          onCreateLocation={onCreateLocation}
+          onCreateNote={onCreateNote}
+          onClose={() => setShowFrameworkWizard(false)}
+        />
+      )}
       
       <IDEShell
         projectTitle={project?.title}
@@ -290,6 +432,14 @@ function WriterIDE({
                 onCreateCharacter={onCreateCharacter}
                 onUpdateCharacter={onUpdateCharacter}
                 onDeleteCharacter={onDeleteCharacter}
+                onSelectCharacter={(char: any) => {
+                  // Open character in editor tab
+                  onNodeSelect({ 
+                    id: char.id, 
+                    type: 'character', 
+                    label: char.name 
+                  } as any);
+                }}
               />
             )}
             {layout.leftPanel.activePanel === 'notes' && (
@@ -298,6 +448,14 @@ function WriterIDE({
                 onCreateNote={onCreateNote}
                 onUpdateNote={onUpdateNote}
                 onDeleteNote={onDeleteNote}
+                onSelectNote={(note) => {
+                  // Open note in editor tab
+                  onNodeSelect({ 
+                    id: note.id, 
+                    type: 'note', 
+                    label: note.title 
+                  } as any);
+                }}
               />
             )}
             {layout.leftPanel.activePanel === 'world' && (
@@ -306,13 +464,27 @@ function WriterIDE({
                 onCreateLocation={onCreateLocation}
                 onUpdateLocation={onUpdateLocation}
                 onDeleteLocation={onDeleteLocation}
+                onSelectLocation={(location) => {
+                  // Open location in editor tab
+                  onNodeSelect({ 
+                    id: location.id, 
+                    type: 'location', 
+                    label: location.name 
+                  } as any);
+                }}
               />
             )}
             {layout.leftPanel.activePanel === 'search' && (
               <SearchPanel />
             )}
             {layout.leftPanel.activePanel === 'ai-agents' && (
-              <AIAgentsPanel />
+              <AgentReviewsPanel 
+                reviews={agentReviews || []}
+                chapters={chapters || []}
+                onDeleteReview={async (id) => {
+                  await onDeleteAgentReview(id);
+                }}
+              />
             )}
             {layout.leftPanel.activePanel === 'settings' && (
               <SettingsPanel />
@@ -328,17 +500,16 @@ function WriterIDE({
           />
         }
         rightPanel={
-          <AICopilotPanel 
+          <VSCodeCopilotWrapper 
             documentContent={currentChapter?.content}
             selectedText={editorSelection.selectedText}
-            cursorPosition={editorSelection.cursorPosition}
-            // Story framework data
+            chapterTitle={currentChapter?.title}
+            projectTitle={project?.title}
             characters={characters?.map((c: any) => ({
               id: c.id,
               name: c.name,
               role: c.role,
               description: c.description,
-              traits: c.traits
             })) || []}
             locations={(locations || []).map((l: any) => ({
               id: l.id,
@@ -352,96 +523,31 @@ function WriterIDE({
               content: n.content,
               category: n.category
             }))}
-            chapterTitle={currentChapter?.title}
-            projectTitle={project?.title}
-            // Framework creation callbacks (for AI to populate story framework)
-            onCreateCharacter={async (data: { name?: string; role?: string; description?: string; traits?: string[]; notes?: string }) => {
-              const result = await onCreateCharacter({
-                name: data.name || 'Unnamed Character',
-                role: data.role,
-                description: data.description,
-                traits: data.traits,
-                notes: data.notes
-              });
-              return {
-                id: result.id,
-                name: result.name,
-                role: result.role,
-                description: result.description,
-                traits: result.traits,
-                notes: result.notes
-              };
-            }}
-            onCreateLocation={async (data: { name?: string; type?: string; description?: string }) => {
-              const result = await onCreateLocation({
-                name: data.name || 'Unnamed Location',
-                type: data.type,
-                description: data.description
-              });
-              return {
-                id: result.id,
-                name: result.name,
-                type: result.type,
-                description: result.description
-              };
-            }}
-            onCreateNote={async (data: { title?: string; content?: string; category?: string }) => {
-              const result = await onCreateNote({
-                title: data.title || 'Untitled Note',
-                content: data.content || '',
-                category: data.category
-              });
-              return {
-                id: result.id,
-                title: result.title,
-                content: result.content,
-                category: result.category
-              };
-            }}
             onInsertText={(text: string) => {
-              console.log('AICopilotPanel onInsertText called:', { 
-                textLength: text.length, 
-                hasEditorFns: !!editorFnsRef.current,
-                hasInsertText: !!editorFnsRef.current?.insertText 
-              });
-              
-              // Use the editor's native insertText if available
               if (editorFnsRef.current?.insertText) {
                 editorFnsRef.current.insertText(text);
-              } else {
-                console.warn('No editor insertText function available, using fallback');
-                // Fallback: manually insert into content string
-                if (currentChapter?.content !== undefined && onContentChange) {
-                  const pos = editorSelection.cursorPosition || currentChapter.content.length;
-                  const newContent = 
-                    currentChapter.content.slice(0, pos) + 
-                    text + 
-                    currentChapter.content.slice(pos);
-                  onContentChange(newContent);
-                }
+              } else if (currentChapter?.content !== undefined && onContentChange) {
+                const pos = editorSelection.cursorPosition || currentChapter.content.length;
+                const newContent = 
+                  currentChapter.content.slice(0, pos) + 
+                  text + 
+                  currentChapter.content.slice(pos);
+                onContentChange(newContent);
               }
             }}
             onReplaceSelection={(text: string) => {
-              console.log('AICopilotPanel onReplaceSelection called:', { 
-                textLength: text.length, 
-                hasEditorFns: !!editorFnsRef.current,
-                hasReplaceSelection: !!editorFnsRef.current?.replaceSelection,
-                currentSelection: editorSelection.selectedText?.slice(0, 50)
-              });
-              
-              // Use the editor's native replaceSelection if available
               if (editorFnsRef.current?.replaceSelection) {
                 editorFnsRef.current.replaceSelection(text);
-              } else {
-                console.warn('No editor replaceSelection function, trying insertText');
-                // Fallback: try insert
-                if (editorFnsRef.current?.insertText) {
-                  editorFnsRef.current.insertText(text);
-                } else {
-                  console.error('No editor functions available at all!');
-                }
+              } else if (editorFnsRef.current?.insertText) {
+                editorFnsRef.current.insertText(text);
               }
             }}
+            onCreateCharacter={onCreateCharacter}
+            onCreateLocation={onCreateLocation}
+            onCreateNote={onCreateNote}
+            onLaunchFrameworkWizard={() => setShowFrameworkWizard(true)}
+            onOpenFrameworkEditor={() => onNodeSelect({ id: 'framework-editor', type: 'framework', label: 'Story Framework' } as any)}
+            hasFramework={!!frameworkData}
           />
         }
       >
@@ -461,26 +567,112 @@ function WriterIDE({
                   activeTabId === tab.id ? "opacity-100 z-10" : "opacity-0 z-0 pointer-events-none"
                 )}
               >
-                <AIWritingSurface 
-                  content={tab.id === currentChapter?.id ? currentChapter.content : ''}
-                  onContentChange={tab.id === currentChapter?.id ? onContentChange : undefined}
-                  onSelectionChange={tab.id === activeTabId ? setEditorSelection : undefined}
-                  onEditorReady={(fns) => { 
-                    console.log('onEditorReady called for tab:', tab.id, { 
-                      hasInsertText: !!fns.insertText, 
-                      hasReplaceSelection: !!fns.replaceSelection,
-                      isActive: tab.id === activeTabId
-                    });
-                    // Always store in the map
-                    allEditorFnsRef.current.set(tab.id, fns);
-                    // If this is the active tab, also set the main ref
-                    if (tab.id === activeTabId) {
-                      editorFnsRef.current = fns;
-                    }
-                  }}
-                  chapterTitle={tab.label}
-                  characters={characters?.map((c: any) => c.name)}
-                />
+                {tab.type === 'framework' ? (
+                  <FrameworkEditor
+                    projectId={project?.id || ''}
+                    initialData={frameworkData || undefined}
+                    onSave={handleFrameworkSave}
+                    onCreateCharacter={onCreateCharacter}
+                    onUpdateCharacter={onUpdateCharacter}
+                    onDeleteCharacter={onDeleteCharacter}
+                    onCreateLocation={onCreateLocation}
+                    onUpdateLocation={onUpdateLocation}
+                    onDeleteLocation={onDeleteLocation}
+                    onCreateNote={onCreateNote}
+                    onUpdateNote={onUpdateNote}
+                    characters={characters}
+                    locations={locations}
+                    notes={notes}
+                  />
+                ) : tab.type === 'note' ? (
+                  // Note editing in TipTap - same editor as chapters
+                  <AIWritingSurface 
+                    content={notes?.find((n: any) => n.id === tab.id)?.content || ''}
+                    onContentChange={(content: string) => {
+                      // Update the note content
+                      onUpdateNote(tab.id, { content });
+                    }}
+                    onSelectionChange={tab.id === activeTabId ? setEditorSelection : undefined}
+                    onEditorReady={(fns) => { 
+                      allEditorFnsRef.current.set(tab.id, fns);
+                      if (tab.id === activeTabId) {
+                        editorFnsRef.current = fns;
+                      }
+                    }}
+                    chapterTitle={tab.label}
+                    characters={characters?.map((c: any) => c.name)}
+                  />
+                ) : tab.type === 'location' ? (
+                  // Location editing in TipTap
+                  <AIWritingSurface 
+                    content={locations?.find((l: any) => l.id === tab.id)?.description || ''}
+                    onContentChange={(content: string) => {
+                      onUpdateLocation(tab.id, { description: content });
+                    }}
+                    onSelectionChange={tab.id === activeTabId ? setEditorSelection : undefined}
+                    onEditorReady={(fns) => { 
+                      allEditorFnsRef.current.set(tab.id, fns);
+                      if (tab.id === activeTabId) {
+                        editorFnsRef.current = fns;
+                      }
+                    }}
+                    chapterTitle={tab.label}
+                    characters={characters?.map((c: any) => c.name)}
+                  />
+                ) : tab.type === 'character' ? (
+                  // Character editing in TipTap - edit description/notes
+                  <AIWritingSurface 
+                    content={(() => {
+                      const char = characters?.find((c: any) => c.id === tab.id);
+                      if (!char) return '';
+                      // Combine description and notes into editable content
+                      let content = char.description || '';
+                      if (char.notes) {
+                        content += (content ? '\n\n---\n\n' : '') + '## Notes\n\n' + char.notes;
+                      }
+                      return content;
+                    })()}
+                    onContentChange={(content: string) => {
+                      // Parse content back to description and notes
+                      const parts = content.split('\n\n---\n\n');
+                      const description = parts[0] || '';
+                      const notesMatch = parts[1]?.match(/^## Notes\n\n([\s\S]*)$/);
+                      const notes = notesMatch ? notesMatch[1] : parts[1] || '';
+                      onUpdateCharacter(tab.id, { description, notes });
+                    }}
+                    onSelectionChange={tab.id === activeTabId ? setEditorSelection : undefined}
+                    onEditorReady={(fns) => { 
+                      allEditorFnsRef.current.set(tab.id, fns);
+                      if (tab.id === activeTabId) {
+                        editorFnsRef.current = fns;
+                      }
+                    }}
+                    chapterTitle={tab.label}
+                    characters={characters?.map((c: any) => c.name)}
+                  />
+                ) : (
+                  // Chapter editing
+                  <AIWritingSurface 
+                    content={tab.id === currentChapter?.id ? currentChapter.content : ''}
+                    onContentChange={tab.id === currentChapter?.id ? onContentChange : undefined}
+                    onSelectionChange={tab.id === activeTabId ? setEditorSelection : undefined}
+                    onEditorReady={(fns) => { 
+                      console.log('onEditorReady called for tab:', tab.id, { 
+                        hasInsertText: !!fns.insertText, 
+                        hasReplaceSelection: !!fns.replaceSelection,
+                        isActive: tab.id === activeTabId
+                      });
+                      // Always store in the map
+                      allEditorFnsRef.current.set(tab.id, fns);
+                      // If this is the active tab, also set the main ref
+                      if (tab.id === activeTabId) {
+                        editorFnsRef.current = fns;
+                      }
+                    }}
+                    chapterTitle={tab.label}
+                    characters={characters?.map((c: any) => c.name)}
+                  />
+                )}
               </div>
             ))}
             {tabs.length === 0 && (
@@ -516,7 +708,8 @@ function CharactersPanel({
   characters, 
   onCreateCharacter, 
   onUpdateCharacter, 
-  onDeleteCharacter 
+  onDeleteCharacter,
+  onSelectCharacter
 }: any) {
   const [isCreating, setIsCreating] = useState(false);
   const [newCharName, setNewCharName] = useState('');
@@ -588,6 +781,7 @@ function CharactersPanel({
             {characters.map((char: any) => (
               <div 
                 key={char.id}
+                onClick={() => onSelectCharacter?.(char)}
                 className="p-2 rounded hover:bg-[--ide-list-hover] cursor-pointer group"
               >
                 <div className="flex items-center justify-between">

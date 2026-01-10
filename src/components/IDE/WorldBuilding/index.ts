@@ -1,3 +1,2 @@
-export { WorldBuildingPanel } from './WorldBuildingPanel';
-export type { StoryLocation } from './WorldBuildingPanel';
-export { default } from './WorldBuildingPanel';
+export { WorldBuildingPanel, type StoryLocation } from './WorldBuildingPanel';
+export { WorldBuildingPanel as default } from './WorldBuildingPanel';

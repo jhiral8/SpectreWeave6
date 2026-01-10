@@ -1,1 +1,0 @@
-export { SpectreWeaveEditor } from './SpectreWeaveEditor';

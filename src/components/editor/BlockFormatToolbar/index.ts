@@ -1,1 +1,0 @@
-export { BlockFormatToolbar } from './BlockFormatToolbar';

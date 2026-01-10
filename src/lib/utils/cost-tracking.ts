@@ -7,7 +7,7 @@ import {
   UsageTracking, 
   CostEstimate,
   TokenUsage 
-} from '@/lib/ai/types'
+} from '@/types/ai'
 
 // Updated pricing as of 2024 (prices per 1K tokens)
 export const AI_PRICING = {

@@ -8,7 +8,8 @@ import { Icon } from '@/components/ui/Icon'
 // Lazy load heavy editor components for better performance
 const AIWritingAssistant = lazy(() => import('./AIWritingAssistant'))
 const AdvancedFormatting = lazy(() => import('./AdvancedFormatting'))
-const WritingAnalytics = lazy(() => import('./WritingAnalytics'))
+// TODO: WritingAnalytics component not yet implemented
+// const WritingAnalytics = lazy(() => import('./WritingAnalytics'))
 
 // Loading fallback components
 const AIAssistantSkeleton = () => (
@@ -51,17 +52,18 @@ export const LazyAdvancedFormatting: React.FC<LazyComponentProps> = ({ editor, c
   </Suspense>
 )
 
-export const LazyWritingAnalytics: React.FC<LazyComponentProps> = ({ editor, className }) => (
-  <Suspense fallback={<AnalyticsSkeleton />}>
-    <WritingAnalytics editor={editor} className={className} />
-  </Suspense>
-)
+// TODO: Uncomment when WritingAnalytics component is implemented
+// export const LazyWritingAnalytics: React.FC<LazyComponentProps> = ({ editor, className }) => (
+//   <Suspense fallback={<AnalyticsSkeleton />}>
+//     <WritingAnalytics editor={editor} className={className} />
+//   </Suspense>
+// )
 
 // Bundle splitting for different feature sets
 export const EditorFeatures = {
   AI: LazyAIWritingAssistant,
   Formatting: LazyAdvancedFormatting,
-  Analytics: LazyWritingAnalytics
+  // Analytics: LazyWritingAnalytics  // TODO: Uncomment when implemented
 }
 
 export default EditorFeatures

@@ -4,7 +4,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
-import { RateLimit, RateLimitStatus } from '@/lib/ai/types'
+import { RateLimit, RateLimitStatus } from '@/types/ai'
 
 interface RateLimitRule {
   windowMs: number     // Time window in milliseconds
