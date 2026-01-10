@@ -17,6 +17,15 @@ export interface Project {
   created_at: string
   updated_at: string
   user_id: string
+  // Children's book and extended fields
+  project_type?: 'manuscript' | 'childrens-book' | 'poetry' | 'screenplay'
+  default_doc_id?: string
+  target_age?: string
+  book_theme?: string
+  illustration_style?: string
+  author_style?: string
+  total_pages?: number
+  name?: string // Fallback for title
   // Derived fields for API responses (runtime-only)
   chapter_count?: number
   character_count?: number

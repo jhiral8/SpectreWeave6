@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import LightweightDualEditor from '@/components/BlockEditor/LightweightDualEditor'
+import DualBlockEditor from '@/components/BlockEditor/DualBlockEditor'
 import { AIProvider } from '@/contexts/AIContext'
 import * as Y from 'yjs'
 
@@ -31,15 +31,13 @@ export default function DualSurfaceDemoPage() {
   return (
     <AIProvider>
       <div className="h-screen flex flex-col">
-        <LightweightDualEditor 
+        <DualBlockEditor 
           manuscriptYdoc={manuscriptYdoc}
           frameworkYdoc={frameworkYdoc}
           manuscriptProvider={null}
           frameworkProvider={null}
           user={null}
           enableFrameworkEditor={true}
-          showSurfaceSwitcher={true}
-          surfaceSwitcherVariant="floating"
         />
       </div>
     </AIProvider>

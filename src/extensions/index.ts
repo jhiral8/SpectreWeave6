@@ -39,4 +39,13 @@ export { CharacterProfileBlock } from './CharacterProfileBlock'
 export { FeedbackBlock } from './FeedbackBlock'
 export { ResearchBlock } from './ResearchBlock'
 export { AISuggestionBlock } from './AISuggestionBlock'
+export { ContextualPeek } from './ContextualPeek'
 export { SlashCommands, createSlashCommandsSuggestion } from './SlashCommands'
+
+// AI Writing Extensions
+export { GhostTextExtension, ghostTextPluginKey, getGhostTextState, useGhostTextTrigger } from './GhostText'
+export type { GhostTextOptions } from './GhostText'
+export { AISlashCommands, SlashCommandList, DEFAULT_SLASH_COMMANDS, aiSlashCommandsPluginKey } from './AISlashCommands'
+export type { AISlashCommand, AISlashCommandsOptions, SlashCommandContext } from './AISlashCommands'
+export { WritingAnalysis, writingAnalysisPluginKey } from './WritingAnalysis'
+export type { WritingIssue, WritingAnalysisOptions } from './WritingAnalysis'

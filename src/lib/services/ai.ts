@@ -8,6 +8,7 @@ import { GeminiService } from './gemini'
 import { DatabricksService } from './databricks'
 import { StabilityService } from './stability'
 import { AIFoundryService } from './aifoundry'
+import { OpenRouterService } from './openrouter'
 import { 
   AIProvider, 
   ImageProvider, 
@@ -26,12 +27,16 @@ import {
 } from '../ai/types'
 
 // Cost estimates per 1k tokens (approximate)
-const COST_PER_1K_TOKENS = {
+const COST_PER_1K_TOKENS: Record<string, any> = {
   azure: { input: 0.0015, output: 0.002 },
   gemini: { input: 0.00125, output: 0.005 },
   databricks: { input: 0.0005, output: 0.0015 },
-  aifoundry: { input: 0.00005, output: 0.00015 }, // ChatGPT 5-nano is extremely cheap
-  stability: { perImage: 0.02 } // Per image generation
+  aifoundry: { input: 0.00005, output: 0.00015 },
+  openrouter: { input: 0, output: 0 },
+  openai: { input: 0.0015, output: 0.002 },
+  anthropic: { input: 0.008, output: 0.024 },
+  local: { input: 0, output: 0 },
+  stability: { perImage: 0.02 }
 }
 
 export class AIService {
@@ -40,6 +45,7 @@ export class AIService {
   private databricks: DatabricksService | null = null
   private stability: StabilityService | null = null
   private aifoundry: AIFoundryService | null = null
+  private openrouter: OpenRouterService | null = null
   private usage: UsageTracking
 
   constructor() {
@@ -73,6 +79,12 @@ export class AIService {
     } catch (error) {
       console.warn('AI Foundry service not available:', error instanceof Error ? error.message : 'Unknown error')
     }
+
+    try {
+      this.openrouter = new OpenRouterService()
+    } catch (error) {
+      console.warn('OpenRouter service not available:', error instanceof Error ? error.message : 'Unknown error')
+    }
     
     this.usage = this.initializeUsageTracking()
   }
@@ -87,13 +99,26 @@ export class AIService {
         gemini: { requests: 0, tokens: 0, cost: 0 },
         databricks: { requests: 0, tokens: 0, cost: 0 },
         aifoundry: { requests: 0, tokens: 0, cost: 0 },
-        stability: { requests: 0, tokens: 0, cost: 0 }
-      }
+        openrouter: { requests: 0, tokens: 0, cost: 0 },
+        stability: { requests: 0, tokens: 0, cost: 0 },
+        openai: { requests: 0, tokens: 0, cost: 0 },
+        anthropic: { requests: 0, tokens: 0, cost: 0 },
+        local: { requests: 0, tokens: 0, cost: 0 }
+      } as any
     }
   }
 
   private getService(provider: AIProvider) {
     switch (provider) {
+      case 'openrouter':
+        if (!this.openrouter) {
+          throw new AIServiceError({
+            code: 'OPENROUTER_NOT_AVAILABLE',
+            message: 'OpenRouter service is not configured or available',
+            provider: 'openrouter'
+          })
+        }
+        return this.openrouter
       case 'azure':
         if (!this.azure) {
           throw new AIServiceError({
@@ -187,82 +212,113 @@ export class AIService {
   }
 
   async generateText(request: AIRequest): Promise<AIResponse<string>> {
-    // Define fallback order: try primary provider first, then fallbacks with aifoundry prioritized
-    const primaryProvider = request.provider || 'aifoundry'
-    const fallbackProviders: AIProvider[] = ['aifoundry', 'gemini', 'azure', 'databricks'].filter(p => p !== primaryProvider)
-    const providers = [primaryProvider, ...fallbackProviders]
-
-    let lastError: AIServiceError | null = null
-
-    for (const provider of providers) {
-      try {
-        const service = this.getService(provider)
-        const result = await service.generateText({ ...request, provider })
-        
-        // Update usage tracking
-        if (result.usage) {
-          const cost = this.estimateCost(result.provider, result.usage.promptTokens, result.usage.completionTokens)
-          this.updateUsage(result.provider, result.usage.totalTokens, cost.estimatedCost)
-          result.usage.estimatedCost = cost.estimatedCost
-        }
-        
-        return result
-      } catch (error: any) {
-        lastError = error
-        console.warn(`Provider ${provider} failed for text generation:`, error.message)
-        continue
+    const primaryProvider = request.options?.provider || 'openrouter'
+    const service = this.getService(primaryProvider as AIProvider)
+    
+    try {
+      const result = await service.generateText(request)
+      
+      // Track usage
+      if (result.usage) {
+        const cost = this.estimateCost(primaryProvider as SupportedProvider, result.usage.promptTokens, result.usage.completionTokens)
+        result.usage.cost = cost.estimatedCost
+        this.updateUsage(primaryProvider as SupportedProvider, result.usage.totalTokens, cost.estimatedCost)
       }
-    }
+      
+      return result
+    } catch (error) {
+      console.error(`Primary provider ${primaryProvider} failed:`, error)
+      
+      // Fallback logic
+      const fallbackProviders: AIProvider[] = (['openrouter', 'aifoundry', 'gemini', 'azure', 'databricks'] as AIProvider[]).filter(p => p !== primaryProvider)
+      let lastError: AIServiceError | null = null
 
-    // If all providers failed, throw the last error
-    throw lastError || new AIServiceError({
-      code: 'ALL_PROVIDERS_FAILED',
-      message: 'All AI providers failed for text generation',
-      provider: primaryProvider,
-      retryable: false
-    })
+      for (const provider of fallbackProviders) {
+        try {
+          const service = this.getService(provider)
+          const result = await service.generateText({ ...request, options: { ...request.options, provider } })
+          
+          // Update usage tracking
+          if (result.usage) {
+            const cost = this.estimateCost(result.provider, result.usage.promptTokens, result.usage.completionTokens)
+            this.updateUsage(result.provider, result.usage.totalTokens, cost.estimatedCost)
+            result.usage.cost = cost.estimatedCost
+          }
+          
+          return result
+        } catch (error: any) {
+          lastError = error
+          console.warn(`Provider ${provider} failed for text generation:`, error.message)
+          continue
+        }
+      }
+
+      // If all providers failed, throw the last error
+      throw lastError || new AIServiceError({
+        code: 'ALL_PROVIDERS_FAILED',
+        message: 'All AI providers failed for text generation',
+        provider: primaryProvider as SupportedProvider,
+        retryable: false
+      })
+    }
   }
 
   async streamText(request: AIRequest): Promise<StreamResponse> {
-    const service = this.getService(request.provider || 'gemini')
+    const service = this.getService((request.options?.provider || 'openrouter') as AIProvider)
     return await service.streamText(request)
   }
 
   async getChatCompletion(request: ChatCompletionRequest): Promise<AIResponse<string>> {
-    // Define fallback order: try primary provider first, then fallbacks with aifoundry prioritized
-    const primaryProvider = request.provider || 'aifoundry'
-    const fallbackProviders: AIProvider[] = ['aifoundry', 'gemini', 'databricks', 'azure'].filter(p => p !== primaryProvider)
-    const providers = [primaryProvider, ...fallbackProviders]
-
-    let lastError: AIServiceError | null = null
-
-    for (const provider of providers) {
-      try {
-        const service = this.getService(provider)
-        const result = await service.getChatCompletion({ ...request, provider })
-        
-        // Update usage tracking
-        if (result.usage) {
-          const cost = this.estimateCost(result.provider, result.usage.promptTokens, result.usage.completionTokens)
-          this.updateUsage(result.provider, result.usage.totalTokens, cost.estimatedCost)
-          result.usage.estimatedCost = cost.estimatedCost
-        }
-        
-        return result
-      } catch (error: any) {
-        lastError = error
-        console.warn(`Provider ${provider} failed for chat completion:`, error.message)
-        continue
+    const primaryProvider = request.provider || 'openrouter'
+    const service = this.getService(primaryProvider as AIProvider)
+    
+    try {
+      // @ts-ignore - Some services might not have getChatCompletion yet
+      const result = await service.getChatCompletion(request)
+      
+      // Track usage
+      if (result.usage) {
+        const cost = this.estimateCost(primaryProvider as SupportedProvider, result.usage.promptTokens, result.usage.completionTokens)
+        result.usage.cost = cost.estimatedCost
+        this.updateUsage(primaryProvider as SupportedProvider, result.usage.totalTokens, cost.estimatedCost)
       }
-    }
+      
+      return result
+    } catch (error) {
+      console.error(`Primary provider ${primaryProvider} failed:`, error)
+      
+      // Fallback logic
+      const fallbackProviders: AIProvider[] = (['openrouter', 'aifoundry', 'gemini', 'databricks', 'azure'] as AIProvider[]).filter(p => p !== primaryProvider)
+      let lastError: AIServiceError | null = null
 
-    // If all providers failed, throw the last error
-    throw lastError || new AIServiceError({
-      code: 'ALL_PROVIDERS_FAILED',
-      message: 'All AI providers failed for chat completion',
-      provider: primaryProvider,
-      retryable: false
-    })
+      for (const provider of fallbackProviders) {
+        try {
+          const service = this.getService(provider)
+          const result = await service.getChatCompletion({ ...request, provider })
+          
+          // Update usage tracking
+          if (result.usage) {
+            const cost = this.estimateCost(result.provider, result.usage.promptTokens, result.usage.completionTokens)
+            this.updateUsage(result.provider, result.usage.totalTokens, cost.estimatedCost)
+            result.usage.cost = cost.estimatedCost
+          }
+          
+          return result
+        } catch (error: any) {
+          lastError = error
+          console.warn(`Provider ${provider} failed for chat completion:`, error.message)
+          continue
+        }
+      }
+
+      // If all providers failed, throw the last error
+      throw lastError || new AIServiceError({
+        code: 'ALL_PROVIDERS_FAILED',
+        message: 'All AI providers failed for chat completion',
+        provider: primaryProvider as SupportedProvider,
+        retryable: false
+      })
+    }
   }
 
   async generateImage(request: ImageRequest): Promise<AIResponse<string>> {
@@ -353,7 +409,7 @@ export class AIService {
   }
 
   async getProviderStatus(): Promise<ProviderStatus[]> {
-    const providers: SupportedProvider[] = ['azure', 'gemini', 'databricks', 'stability']
+    const providers: SupportedProvider[] = ['azure', 'gemini', 'databricks', 'stability', 'openrouter']
     const statuses: ProviderStatus[] = []
 
     for (const provider of providers) {
@@ -372,6 +428,9 @@ export class AIService {
             break
           case 'stability':
             available = this.stability ? this.stability.validateConfig() : false
+            break
+          case 'openrouter':
+            available = this.openrouter ? this.openrouter.validateConfig() : false
             break
         }
 

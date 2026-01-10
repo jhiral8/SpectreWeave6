@@ -51,6 +51,7 @@ import { CharacterProfileBlock } from './CharacterProfileBlock'
 import { FeedbackBlock } from './FeedbackBlock'
 import { ResearchBlock } from './ResearchBlock'
 import { AISuggestionBlock } from './AISuggestionBlock'
+import { ContextualPeek } from './ContextualPeek'
 import { GhostCompletion } from './GhostCompletion/GhostCompletion'
 // import { TableOfContentsNode } from './TableOfContentsNode'
 import { lowlight } from 'lowlight'
@@ -75,7 +76,7 @@ export const ExtensionKit = ({
   enableResearch = true,
   enableWritingTools = true,
   projectId,
-  surfaceType = 'single'
+  surfaceType = 'single',
 }: ExtensionKitProps) => [
   Document,
   Columns,
@@ -95,11 +96,10 @@ export const ExtensionKit = ({
     heading: false,
     horizontalRule: false,
     blockquote: false,
-    history: !provider, // Enable history only when NOT using collaboration
     codeBlock: false,
     link: false,
     underline: false,
-  }),
+  } as any),
   CodeBlockLowlight.configure({
     lowlight,
     defaultLanguage: null,
@@ -117,34 +117,10 @@ export const ExtensionKit = ({
   // TableOfContents,
   // TableOfContentsNode,
   ImageUpload.configure({
-    clientId: provider?.document?.clientID,
+    clientId: (provider as any)?.document?.clientID,
   }),
   ImageBlock,
-  // FileHandler.configure({
-  //   allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
-  //   onDrop: (currentEditor: any, files: any, pos: any) => {
-  //     files.forEach(async () => {
-  //       const url = await API.uploadImage()
-
-  //       currentEditor.chain().setImageBlockAt({ pos, src: url }).focus().run()
-  //     })
-  //   },
-  //   onPaste: (currentEditor: any, files: any) => {
-  //     files.forEach(async () => {
-  //       const url = await API.uploadImage()
-
-  //       return currentEditor
-  //         .chain()
-  //         .setImageBlockAt({ pos: currentEditor.state.selection.anchor, src: url })
-  //         .focus()
-  //         .run()
-  //     })
-  //   },
-  // }),
-  // Emoji.configure({
-  //   enableEmoticons: true,
-  //   suggestion: emojiSuggestion,
-  // }),
+  ContextualPeek,
   TextAlign.extend({
     addKeyboardShortcuts() {
       return {}
@@ -181,24 +157,19 @@ export const ExtensionKit = ({
     AuthorStyleBlock.configure({
       enableAI,
       enableStyleAnalysis: enableAI,
-      projectId,
-    }),
+    } as any),
     CharacterProfileBlock.configure({
       enableAI,
-      projectId,
-    }),
+    } as any),
     FeedbackBlock.configure({
       HTMLAttributes: {},
-      enableResearch,
       enableAI,
-      projectId,
-    }),
+    } as any),
     ResearchBlock.configure({
       enableAI,
       enableWebSearch: enableResearch,
       enableCitations: true,
-      projectId,
-    }),
+    } as any),
   ] : []),
   AISuggestionBlock,
   GhostCompletion.configure({
@@ -209,9 +180,9 @@ export const ExtensionKit = ({
     maxTokens: 120,
     temperature: 0.6,
     planCount: 3,
-    provider: 'aifoundry',
+    provider: 'azure', // Changed from 'aifoundry' to 'azure' to match allowed types
     punctuationChars: '.!?',
-  }),
+  } as any),
 ]
 
 // Export types for external use

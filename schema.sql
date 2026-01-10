@@ -37,3 +37,53 @@ CREATE POLICY "Users can delete their own projects"
 INSERT INTO projects (id, title, description, content, brief, user_id) VALUES 
 ('99689206-b94a-4f69-b066-a0cdc0217b60', 'Test Project', 'A test project for development', '<h1>Test Content</h1>', '<h2>Test Brief</h2>', '00000000-0000-0000-0000-000000000000')
 ON CONFLICT (id) DO NOTHING;
+
+-- Chapters table
+CREATE TABLE IF NOT EXISTS chapters (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  title TEXT NOT NULL,
+  description TEXT,
+  content TEXT DEFAULT '',
+  "order" INTEGER DEFAULT 0,
+  word_count INTEGER DEFAULT 0,
+  status TEXT DEFAULT 'draft',
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
+);
+
+-- Enable RLS
+ALTER TABLE chapters ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies for chapters
+CREATE POLICY "Users can view chapters for their projects"
+  ON chapters FOR SELECT
+  USING (EXISTS (
+    SELECT 1 FROM projects 
+    WHERE projects.id = chapters.project_id 
+    AND projects.user_id = auth.uid()
+  ));
+
+CREATE POLICY "Users can create chapters for their projects"
+  ON chapters FOR INSERT
+  WITH CHECK (EXISTS (
+    SELECT 1 FROM projects 
+    WHERE projects.id = chapters.project_id 
+    AND projects.user_id = auth.uid()
+  ));
+
+CREATE POLICY "Users can update chapters for their projects"
+  ON chapters FOR UPDATE
+  USING (EXISTS (
+    SELECT 1 FROM projects 
+    WHERE projects.id = chapters.project_id 
+    AND projects.user_id = auth.uid()
+  ));
+
+CREATE POLICY "Users can delete chapters for their projects"
+  ON chapters FOR DELETE
+  USING (EXISTS (
+    SELECT 1 FROM projects 
+    WHERE projects.id = chapters.project_id 
+    AND projects.user_id = auth.uid()
+  ));

@@ -2,18 +2,14 @@
 
 import React, { 
   Suspense, 
-  startTransition, 
   useDeferredValue, 
-  useTransition,
-  useMemo,
-  ErrorBoundary
+  useTransition
 } from 'react'
-import { useViewState, useEditors } from '../context/UnifiedEditorContext'
+import { useEditors } from '../context/UnifiedEditorContext'
 import { useDualEditor } from '../context/SplitEditorContext'
-import { DualSurfaceView, SingleManuscriptView, SingleFrameworkView } from './ContextAwareSurfaces'
+import { DualSurfaceView } from './ContextAwareSurfaces'
 import { OptimizedMenuManager } from './OptimizedMenuManager'
 import FloatingTopToolbar from './FloatingTopToolbar'
-import { DualModeSwitcher } from '@/components/ui/SurfaceSwitcher'
 
 // Error Boundary Component
 class EditorErrorBoundary extends React.Component<
@@ -102,47 +98,14 @@ const EditorLoadingSkeleton = () => (
 
 // Concurrent Surface Renderer with Transitions
 export const ConcurrentSurfaceRenderer = React.memo(() => {
-  const { viewMode, canShowDual, setViewMode } = useViewState()
-  const [isPending, startTransition] = useTransition()
-  
-  // Defer expensive view mode calculations
-  const deferredViewMode = useDeferredValue(viewMode)
-  const deferredCanShowDual = useDeferredValue(canShowDual)
-  
-  // Optimize view mode changes with transitions
-  const handleViewModeChange = React.useCallback((newMode: typeof viewMode) => {
-    startTransition(() => {
-      setViewMode(newMode)
-    })
-  }, [setViewMode])
-  
-  // Memoize surface components to prevent unnecessary re-renders
-  const surfaceComponents = useMemo(() => ({
-    dual: <DualSurfaceView />,
-    manuscript: <SingleManuscriptView />,
-    framework: <SingleFrameworkView />
-  }), [])
-  
   return (
-    <>
-      {/* Surface Switcher with transition pending indicator */}
-      <div className={`transition-opacity duration-200 ${isPending ? 'opacity-70' : 'opacity-100'}`}>
-        <DualModeSwitcher
-          activeMode={deferredViewMode}
-          onModeChange={handleViewModeChange}
-          canShowDual={deferredCanShowDual}
-        />
-      </div>
-
-      {/* Content area with concurrent rendering */}
-      <div className="flex-1 min-h-0 h-full relative">
-        <Suspense fallback={<EditorLoadingSkeleton />}>
-          <div className={`h-full transition-opacity duration-300 ${isPending ? 'opacity-80' : 'opacity-100'}`}>
-            {surfaceComponents[deferredViewMode] || surfaceComponents.manuscript}
-          </div>
-        </Suspense>
-      </div>
-    </>
+    <div className="flex-1 min-h-0 h-full relative">
+      <Suspense fallback={<EditorLoadingSkeleton />}>
+        <div className="h-full">
+          <DualSurfaceView />
+        </div>
+      </Suspense>
+    </div>
   )
 })
 

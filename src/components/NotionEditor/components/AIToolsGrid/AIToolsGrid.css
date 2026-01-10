@@ -1,0 +1,261 @@
+/* AI Tools Grid Styles */
+
+.ai-tools-grid {
+  /* Base styling following NotionEditor patterns */
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol";
+  width: 320px;
+  max-width: 90vw;
+  user-select: none;
+  z-index: 1000;
+}
+
+/* Grid animations */
+.ai-tools-grid.animate-in {
+  animation: ai-tools-fade-in 0.2s ease-out;
+}
+
+@keyframes ai-tools-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.ai-tools-grid.animate-out {
+  animation: ai-tools-fade-out 0.15s ease-in;
+}
+
+@keyframes ai-tools-fade-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95) translateY(-10px);
+  }
+}
+
+/* Tool button styles */
+.ai-tool-button {
+  min-height: 70px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  isolation: isolate;
+}
+
+.ai-tool-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.ai-tool-button:active {
+  transform: translateY(0);
+  transition: transform 0.1s;
+}
+
+/* Light mode specific styles */
+:root:not(.dark) .ai-tools-grid {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.1),
+    0 20px 48px rgba(0, 0, 0, 0.1),
+    0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+:root:not(.dark) .ai-tool-button {
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: hsl(0, 0%, 0%);
+}
+
+:root:not(.dark) .ai-tool-button:hover {
+  background: rgba(59, 130, 246, 0.05);
+  border-color: rgba(59, 130, 246, 0.2);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+:root:not(.dark) .ai-tool-button:hover .lucide {
+  color: rgb(59, 130, 246);
+}
+
+:root:not(.dark) .ai-tools-grid .text-muted-foreground {
+  color: hsl(0, 0%, 45%) !important;
+}
+
+:root:not(.dark) .ai-tools-grid .bg-muted\/50 {
+  background: rgba(248, 250, 252, 0.8) !important;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Dark mode specific styles */
+.dark .ai-tools-grid {
+  background: rgba(9, 9, 11, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.3),
+    0 20px 48px rgba(0, 0, 0, 0.3),
+    0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.dark .ai-tool-button {
+  background: rgba(24, 24, 27, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: hsl(0, 0%, 98%);
+}
+
+.dark .ai-tool-button:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+}
+
+.dark .ai-tool-button:hover .lucide {
+  color: rgb(96, 165, 250);
+}
+
+/* Loading states */
+.ai-tool-button.loading {
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.ai-tool-button .loading-overlay {
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+}
+
+.dark .ai-tool-button .loading-overlay {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .ai-tools-grid {
+    width: 280px;
+    padding: 2.5rem;
+  }
+
+  .ai-tool-button {
+    min-height: 60px;
+    padding: 0.5rem;
+  }
+
+  .ai-tool-button .lucide {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .ai-tool-button .text-xs {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-tools-grid {
+    width: calc(100vw - 2rem);
+    margin: 0 1rem;
+  }
+
+  .ai-tools-grid .grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ai-tool-button {
+    min-height: 55px;
+  }
+}
+
+/* Focus styles for accessibility */
+.ai-tool-button:focus-visible {
+  outline: 2px solid rgb(59, 130, 246);
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ai-tools-grid,
+  .ai-tool-button {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .ai-tool-button:hover {
+    transform: none;
+  }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+  .ai-tools-grid {
+    border-width: 2px;
+  }
+
+  .ai-tool-button {
+    border-width: 2px;
+  }
+
+  .ai-tool-button:hover {
+    border-width: 2px;
+    border-color: currentColor;
+  }
+}
+
+/* Print styles */
+@media print {
+  .ai-tools-grid {
+    display: none !important;
+  }
+}
+
+/* Backdrop blur fallback */
+@supports not (backdrop-filter: blur(10px)) {
+  .ai-tools-grid {
+    background: rgb(255, 255, 255);
+  }
+
+  .dark .ai-tools-grid {
+    background: rgb(9, 9, 11);
+  }
+}
+
+/* Text wrapping and overflow */
+.ai-tools-grid * {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.ai-tools-grid .line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Smooth scrolling for keyboard navigation */
+.ai-tools-grid:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar if content overflows */
+.ai-tools-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ai-tools-grid::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ai-tools-grid::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+.dark .ai-tools-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}

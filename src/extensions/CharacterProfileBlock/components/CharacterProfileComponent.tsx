@@ -53,21 +53,21 @@ export const CharacterProfileComponent: React.FC<CharacterProfileComponentProps>
   deleteNode,
 }) => {
   const { 
-    characterId, 
-    name, 
-    description, 
-    traits, 
-    backstory, 
-    goals, 
-    conflicts, 
-    relationships, 
-    development, 
-    notes, 
-    avatar, 
-    aiSuggestions, 
-    lastAIUpdate, 
-    collapsed 
-  } = node.attrs;
+    characterId = '', 
+    name = '', 
+    description = '', 
+    traits = [], 
+    backstory = '', 
+    goals = '', 
+    conflicts = '', 
+    relationships = '', 
+    development = '', 
+    notes = '', 
+    avatar = '', 
+    aiSuggestions = [], 
+    lastAIUpdate = '', 
+    collapsed = false 
+  } = node.attrs || {};
   
   const ai = useAIContext() as any;
   
@@ -78,7 +78,7 @@ export const CharacterProfileComponent: React.FC<CharacterProfileComponentProps>
   const [editValues, setEditValues] = useState({
     name,
     description,
-    traits: [...traits],
+    traits: Array.isArray(traits) ? [...traits] : [],
     backstory,
     goals,
     conflicts,

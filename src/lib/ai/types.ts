@@ -4,7 +4,7 @@
  */
 
 // Base AI Provider Types
-export type AIProvider = 'azure' | 'gemini' | 'databricks' | 'openai' | 'anthropic' | 'local' | 'aifoundry'
+export type AIProvider = 'azure' | 'gemini' | 'databricks' | 'openai' | 'anthropic' | 'local' | 'aifoundry' | 'openrouter'
 export type ImageProvider = 'stability'
 export type SupportedProvider = AIProvider | ImageProvider
 
@@ -88,6 +88,11 @@ export interface AIFoundryConfig extends BaseAIConfig {
   endpoint: string
   model: string
   apiVersion?: string
+}
+
+export interface OpenRouterConfig extends BaseAIConfig {
+  apiKey: string
+  model: string
 }
 
 // Request Interfaces

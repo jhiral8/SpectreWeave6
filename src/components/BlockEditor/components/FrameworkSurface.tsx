@@ -14,7 +14,7 @@ interface FrameworkSurfaceProps {
   showToolbar?: boolean
   onFrameworkSelect?: (framework: WritingFramework) => void
   onClearFramework?: () => void
-  activeFramework?: WritingFramework | null
+  activeFramework?: WritingFramework | string | null
   toolbarPosition?: 'external' | 'absolute'
 }
 
@@ -71,7 +71,7 @@ export const FrameworkSurface = React.memo(({
           <FrameworkToolbarVertical
             onFrameworkSelect={onFrameworkSelect}
             onClearFramework={onClearFramework}
-            activeFramework={activeFramework}
+            activeFramework={typeof activeFramework === 'string' ? activeFramework : activeFramework?.id}
             className="!relative !left-auto !top-auto"
           />
         </div>
@@ -86,7 +86,7 @@ export const FrameworkSurface = React.memo(({
       <FrameworkToolbarVertical
         onFrameworkSelect={onFrameworkSelect}
         onClearFramework={onClearFramework}
-        activeFramework={activeFramework}
+        activeFramework={typeof activeFramework === 'string' ? activeFramework : activeFramework?.id}
         className="absolute left-4 top-1/2 transform -translate-y-1/2 z-50"
       />
       {surfaceContent}

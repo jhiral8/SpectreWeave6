@@ -15,7 +15,7 @@ export const handler = createNetlifyHandler({
     const bearerToken = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : undefined
     
     // Try Bearer token first, then fallback to cookies
-    let supabase = bearerToken ? createClientWithAuth(bearerToken) : createClient()
+    let supabase = bearerToken ? await createClientWithAuth(bearerToken) : await createClient()
 
     // Verify user authentication
     const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -23,7 +23,7 @@ export const handler = createNetlifyHandler({
     if (authError || !user) {
       return jsonResponse(
         { error: 'Authentication required' },
-        { status: 401 }
+        401
       )
     }
 
@@ -404,7 +404,7 @@ export const handler = createNetlifyHandler({
       default:
         return jsonResponse(
           { error: `Unknown action: ${action}` },
-          { status: 400 }
+          400
         )
     }
 
@@ -414,7 +414,7 @@ export const handler = createNetlifyHandler({
     // Attempt to rollback transaction if it was started
     if (transactionStarted && transactionId) {
       try {
-        const supabase = createClient()
+        const supabase = await createClient()
         await supabase.rpc('rollback_transaction', { transaction_id: transactionId })
       } catch (rollbackError) {
         console.error('Failed to rollback transaction during error handling:', rollbackError)
@@ -427,7 +427,7 @@ export const handler = createNetlifyHandler({
         details: error instanceof Error ? error.message : 'Unknown error occurred',
         transactionRolledBack: transactionStarted
       },
-      { status: 500 }
+      500
     )
   }
 

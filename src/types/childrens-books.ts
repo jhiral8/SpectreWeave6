@@ -2,7 +2,7 @@
 // Integrates with existing project system while supporting specialized book features
 
 // Base project type extensions
-export type ProjectType = 'manuscript' | 'childrens-book' | 'poetry' | 'screenplay'
+export type ProjectType = 'manuscript' | 'childrens-book' | 'poetry' | 'screenplay' | 'research-notes'
 
 export type AgeGroup = '0-2' | '3-5' | '6-8' | '9-12' | 'teen'
 

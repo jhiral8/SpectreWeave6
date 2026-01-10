@@ -1,0 +1,534 @@
+/* ================================================================
+   SPECTRE WEAVE THEME TOKENS
+   Based on VS Code theming with writing-optimized colors
+   ================================================================ */
+
+:root {
+  /* ────────────────────────────────────────
+     Core Semantic Colors
+     ──────────────────────────────────────── */
+  --ide-error: #f44336;
+  --ide-warning: #ff9800;
+  --ide-info: #2196f3;
+  --ide-success: #4caf50;
+  
+  /* ────────────────────────────────────────
+     Focus/Accent
+     ──────────────────────────────────────── */
+  --ide-focus-border: #007acc;
+  --ide-accent: #0078d4;
+  --ide-accent-hover: #1e90ff;
+  
+  /* ────────────────────────────────────────
+     Typography
+     ──────────────────────────────────────── */
+  --ide-font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ide-font-family-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --ide-font-family-writing: 'Georgia', 'Crimson Text', serif;
+  
+  --ide-font-size-xs: 10px;
+  --ide-font-size-sm: 12px;
+  --ide-font-size-base: 14px;
+  --ide-font-size-lg: 16px;
+  --ide-font-size-xl: 18px;
+  
+  /* ────────────────────────────────────────
+     Spacing
+     ──────────────────────────────────────── */
+  --ide-spacing-1: 4px;
+  --ide-spacing-2: 8px;
+  --ide-spacing-3: 12px;
+  --ide-spacing-4: 16px;
+  --ide-spacing-5: 20px;
+  --ide-spacing-6: 24px;
+  
+  /* ────────────────────────────────────────
+     Border Radius
+     ──────────────────────────────────────── */
+  --ide-radius-sm: 2px;
+  --ide-radius-md: 4px;
+  --ide-radius-lg: 8px;
+  --ide-radius-xl: 12px;
+  
+  /* ────────────────────────────────────────
+     Shadows
+     ──────────────────────────────────────── */
+  --ide-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
+  --ide-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+  --ide-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --ide-shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.25);
+  
+  /* ────────────────────────────────────────
+     Transitions
+     ──────────────────────────────────────── */
+  --ide-transition-fast: 100ms ease-out;
+  --ide-transition-base: 200ms ease-out;
+  --ide-transition-slow: 300ms ease-out;
+  
+  /* ────────────────────────────────────────
+     Z-Index Scale
+     ──────────────────────────────────────── */
+  --ide-z-base: 1;
+  --ide-z-dropdown: 100;
+  --ide-z-modal: 200;
+  --ide-z-tooltip: 300;
+  --ide-z-notification: 400;
+  --ide-z-command-palette: 500;
+}
+
+/* ================================================================
+   THEME: SPECTRE DARK (Default)
+   Exact VS Code Dark+ colors for pixel-perfect match
+   ================================================================ */
+
+[data-theme="spectre-dark"],
+:root {
+  /* Background Colors - Exact VS Code */
+  --ide-background: #1e1e1e;
+  --ide-background-secondary: #252526;
+  --ide-background-tertiary: #2d2d2d;
+  
+  /* Foreground Colors */
+  --ide-foreground: #cccccc;
+  --ide-foreground-secondary: #858585;
+  --ide-foreground-muted: #6e6e6e;
+  
+  /* Border Colors */
+  --ide-border: #3c3c3c;
+  --ide-border-secondary: #2d2d2d;
+  
+  /* Panel Colors - Exact VS Code */
+  --ide-titlebar-bg: #323233;
+  --ide-titlebar-fg: #cccccc;
+  
+  --ide-activitybar-bg: #333333;
+  --ide-activitybar-fg: #ffffff;
+  --ide-activitybar-inactive: #858585;
+  --ide-activitybar-badge: #007acc;
+  
+  --ide-sidebar-bg: #252526;
+  --ide-sidebar-fg: #cccccc;
+  --ide-sidebar-header: #3c3c3c;
+  
+  --ide-editor-bg: #1e1e1e;
+  --ide-editor-fg: #d4d4d4;
+  --ide-editor-lineNumber: #858585;
+  --ide-editor-selection: rgba(38, 79, 120, 0.5);
+  --ide-editor-cursor: #aeafad;
+  
+  --ide-panel-bg: #1e1e1e;
+  --ide-panel-fg: #cccccc;
+  --ide-panel-border: #3c3c3c;
+  
+  --ide-statusbar-bg: #007acc;
+  --ide-statusbar-fg: #ffffff;
+  --ide-statusbar-item-hover: rgba(255, 255, 255, 0.12);
+  
+  /* Tab Colors - Exact VS Code */
+  --ide-tab-active-bg: #1e1e1e;
+  --ide-tab-inactive-bg: #2d2d2d;
+  --ide-tab-border: #252526;
+  --ide-tab-active-border: #1e1e1e;
+  
+  /* Interactive Elements */
+  --ide-input-bg: #3c3c3c;
+  --ide-input-fg: #cccccc;
+  --ide-input-border: #3c3c3c;
+  --ide-input-focus: #007fd4;
+  
+  --ide-button-primary-bg: #0e639c;
+  --ide-button-primary-fg: #ffffff;
+  --ide-button-secondary-bg: #3c3c3c;
+  --ide-button-secondary-fg: #cccccc;
+  
+  --ide-list-hover: rgba(90, 93, 94, 0.31);
+  --ide-list-active: rgba(90, 93, 94, 0.31);
+  --ide-list-selected: #094771;
+  
+  /* Scrollbar - Exact VS Code */
+  --ide-scrollbar-bg: transparent;
+  --ide-scrollbar-thumb: rgba(121, 121, 121, 0.4);
+  --ide-scrollbar-thumb-hover: rgba(100, 100, 100, 0.7);
+  
+  /* Writing Surface */
+  --ide-writing-bg: #1e1e1e;
+  --ide-writing-fg: #d4d4d4;
+  --ide-writing-heading: #569cd6;
+  --ide-writing-link: #3794ff;
+  --ide-writing-quote: #858585;
+  --ide-writing-dialogue: #ce9178;
+  
+  /* Syntax-style Highlights */
+  --ide-highlight-character: #dcdcaa;
+  --ide-highlight-location: #4ec9b0;
+  --ide-highlight-action: #c586c0;
+  --ide-highlight-emotion: #9cdcfe;
+  --ide-highlight-time: #b5cea8;
+  
+  /* AI/Special */
+  --ide-ai-accent: #c586c0;
+  --ide-ai-glow: rgba(197, 134, 192, 0.3);
+  --ide-ghost-text: #6e6e6e;
+  
+  /* Problems/Diagnostics - Exact VS Code */
+  --ide-problem-error: #f14c4c;
+  --ide-problem-warning: #cca700;
+  --ide-problem-info: #3794ff;
+  --ide-problem-hint: #89d185;
+}
+
+/* ================================================================
+   THEME: SPECTRE LIGHT
+   Clean, high-contrast light theme for day writing
+   ================================================================ */
+
+[data-theme="spectre-light"] {
+  /* Background Colors */
+  --ide-background: #ffffff;
+  --ide-background-secondary: #f6f8fa;
+  --ide-background-tertiary: #f0f2f4;
+  
+  /* Foreground Colors */
+  --ide-foreground: #24292f;
+  --ide-foreground-secondary: #57606a;
+  --ide-foreground-muted: #8c959f;
+  
+  /* Border Colors */
+  --ide-border: #d0d7de;
+  --ide-border-secondary: #e6e8eb;
+  
+  /* Panel Colors */
+  --ide-titlebar-bg: #f6f8fa;
+  --ide-titlebar-fg: #24292f;
+  
+  --ide-activitybar-bg: #f6f8fa;
+  --ide-activitybar-fg: #24292f;
+  --ide-activitybar-inactive: #8c959f;
+  --ide-activitybar-badge: #0969da;
+  
+  --ide-sidebar-bg: #f6f8fa;
+  --ide-sidebar-fg: #24292f;
+  --ide-sidebar-header: #eaeef2;
+  
+  --ide-editor-bg: #ffffff;
+  --ide-editor-fg: #24292f;
+  --ide-editor-lineNumber: #8c959f;
+  --ide-editor-selection: rgba(9, 105, 218, 0.2);
+  --ide-editor-cursor: #0969da;
+  
+  --ide-panel-bg: #f6f8fa;
+  --ide-panel-fg: #24292f;
+  --ide-panel-border: #d0d7de;
+  
+  --ide-statusbar-bg: #0969da;
+  --ide-statusbar-fg: #ffffff;
+  --ide-statusbar-item-hover: rgba(0, 0, 0, 0.15);
+  
+  /* Interactive Elements */
+  --ide-input-bg: #ffffff;
+  --ide-input-fg: #24292f;
+  --ide-input-border: #d0d7de;
+  --ide-input-focus: #0969da;
+  
+  --ide-button-primary-bg: #2da44e;
+  --ide-button-primary-fg: #ffffff;
+  --ide-button-secondary-bg: #f6f8fa;
+  --ide-button-secondary-fg: #24292f;
+  
+  --ide-list-hover: rgba(55, 65, 81, 0.08);
+  --ide-list-active: rgba(55, 65, 81, 0.12);
+  --ide-list-selected: #ddf4ff;
+  
+  /* Writing Surface */
+  --ide-writing-bg: #ffffff;
+  --ide-writing-fg: #1f2328;
+  --ide-writing-heading: #0969da;
+  --ide-writing-link: #0969da;
+  --ide-writing-quote: #57606a;
+  --ide-writing-dialogue: #0550ae;
+  
+  /* Syntax-style Highlights */
+  --ide-highlight-character: #953800;
+  --ide-highlight-location: #1a7f37;
+  --ide-highlight-action: #cf222e;
+  --ide-highlight-emotion: #8250df;
+  --ide-highlight-time: #0550ae;
+  
+  /* AI/Special */
+  --ide-ai-accent: #8250df;
+  --ide-ai-glow: rgba(130, 80, 223, 0.2);
+  --ide-ghost-text: #8c959f;
+  
+  /* Problems/Diagnostics */
+  --ide-problem-error: #d1242f;
+  --ide-problem-warning: #bf8700;
+  --ide-problem-info: #0969da;
+  --ide-problem-hint: #1a7f37;
+}
+
+/* ================================================================
+   THEME: MIDNIGHT WRITER
+   Deep blue, ultra-dark theme for late night sessions
+   ================================================================ */
+
+[data-theme="midnight-writer"] {
+  /* Background Colors */
+  --ide-background: #0a0e14;
+  --ide-background-secondary: #0d1117;
+  --ide-background-tertiary: #151b24;
+  
+  /* Foreground Colors */
+  --ide-foreground: #b3b1ad;
+  --ide-foreground-secondary: #73716c;
+  --ide-foreground-muted: #494b4f;
+  
+  /* Border Colors */
+  --ide-border: #1d242d;
+  --ide-border-secondary: #151b24;
+  
+  /* Panel Colors */
+  --ide-titlebar-bg: #050709;
+  --ide-titlebar-fg: #b3b1ad;
+  
+  --ide-activitybar-bg: #0a0e14;
+  --ide-activitybar-fg: #b3b1ad;
+  --ide-activitybar-inactive: #494b4f;
+  --ide-activitybar-badge: #ffb454;
+  
+  --ide-sidebar-bg: #0a0e14;
+  --ide-sidebar-fg: #b3b1ad;
+  --ide-sidebar-header: #151b24;
+  
+  --ide-editor-bg: #0a0e14;
+  --ide-editor-fg: #b3b1ad;
+  --ide-editor-lineNumber: #494b4f;
+  --ide-editor-selection: rgba(255, 180, 84, 0.2);
+  --ide-editor-cursor: #ffb454;
+  
+  --ide-panel-bg: #0a0e14;
+  --ide-panel-fg: #b3b1ad;
+  --ide-panel-border: #1d242d;
+  
+  --ide-statusbar-bg: #1d242d;
+  --ide-statusbar-fg: #b3b1ad;
+  --ide-statusbar-item-hover: rgba(255, 255, 255, 0.1);
+  
+  /* Interactive Elements */
+  --ide-input-bg: #151b24;
+  --ide-input-fg: #b3b1ad;
+  --ide-input-border: #1d242d;
+  --ide-input-focus: #ffb454;
+  
+  --ide-button-primary-bg: #ffb454;
+  --ide-button-primary-fg: #0a0e14;
+  --ide-button-secondary-bg: #151b24;
+  --ide-button-secondary-fg: #b3b1ad;
+  
+  --ide-list-hover: rgba(255, 255, 255, 0.08);
+  --ide-list-active: rgba(255, 255, 255, 0.12);
+  --ide-list-selected: #1d242d;
+  
+  /* Writing Surface - Extra comfy */
+  --ide-writing-bg: #0d1117;
+  --ide-writing-fg: #d4d4d4;
+  --ide-writing-heading: #ffb454;
+  --ide-writing-link: #59c2ff;
+  --ide-writing-quote: #73716c;
+  --ide-writing-dialogue: #aad94c;
+  
+  /* Warm accent colors */
+  --ide-highlight-character: #ffb454;
+  --ide-highlight-location: #95e6cb;
+  --ide-highlight-action: #f07178;
+  --ide-highlight-emotion: #d2a6ff;
+  --ide-highlight-time: #73d0ff;
+  
+  /* AI with warm glow */
+  --ide-ai-accent: #ffb454;
+  --ide-ai-glow: rgba(255, 180, 84, 0.2);
+  --ide-ghost-text: #494b4f;
+  
+  /* Problems/Diagnostics */
+  --ide-problem-error: #f07178;
+  --ide-problem-warning: #ffb454;
+  --ide-problem-info: #59c2ff;
+  --ide-problem-hint: #95e6cb;
+}
+
+/* ================================================================
+   THEME: PARCHMENT
+   Warm, sepia-toned theme like aged paper
+   ================================================================ */
+
+[data-theme="parchment"] {
+  /* Background Colors */
+  --ide-background: #f5f0e6;
+  --ide-background-secondary: #ebe5d7;
+  --ide-background-tertiary: #e1d9c9;
+  
+  /* Foreground Colors */
+  --ide-foreground: #3c3836;
+  --ide-foreground-secondary: #665c54;
+  --ide-foreground-muted: #928374;
+  
+  /* Border Colors */
+  --ide-border: #d5cec0;
+  --ide-border-secondary: #e1d9c9;
+  
+  /* Panel Colors */
+  --ide-titlebar-bg: #ebe5d7;
+  --ide-titlebar-fg: #3c3836;
+  
+  --ide-activitybar-bg: #ebe5d7;
+  --ide-activitybar-fg: #3c3836;
+  --ide-activitybar-inactive: #928374;
+  --ide-activitybar-badge: #9d0006;
+  
+  --ide-sidebar-bg: #ebe5d7;
+  --ide-sidebar-fg: #3c3836;
+  --ide-sidebar-header: #e1d9c9;
+  
+  --ide-editor-bg: #f5f0e6;
+  --ide-editor-fg: #3c3836;
+  --ide-editor-lineNumber: #928374;
+  --ide-editor-selection: rgba(157, 0, 6, 0.15);
+  --ide-editor-cursor: #9d0006;
+  
+  --ide-panel-bg: #ebe5d7;
+  --ide-panel-fg: #3c3836;
+  --ide-panel-border: #d5cec0;
+  
+  --ide-statusbar-bg: #665c54;
+  --ide-statusbar-fg: #f5f0e6;
+  --ide-statusbar-item-hover: rgba(0, 0, 0, 0.1);
+  
+  /* Interactive Elements */
+  --ide-input-bg: #f5f0e6;
+  --ide-input-fg: #3c3836;
+  --ide-input-border: #d5cec0;
+  --ide-input-focus: #9d0006;
+  
+  --ide-button-primary-bg: #9d0006;
+  --ide-button-primary-fg: #f5f0e6;
+  --ide-button-secondary-bg: #e1d9c9;
+  --ide-button-secondary-fg: #3c3836;
+  
+  --ide-list-hover: rgba(0, 0, 0, 0.05);
+  --ide-list-active: rgba(0, 0, 0, 0.08);
+  --ide-list-selected: #d5cec0;
+  
+  /* Writing Surface - Warm paper */
+  --ide-writing-bg: #f5f0e6;
+  --ide-writing-fg: #282828;
+  --ide-writing-heading: #9d0006;
+  --ide-writing-link: #076678;
+  --ide-writing-quote: #928374;
+  --ide-writing-dialogue: #427b58;
+  
+  /* Earthy highlights */
+  --ide-highlight-character: #af3a03;
+  --ide-highlight-location: #79740e;
+  --ide-highlight-action: #9d0006;
+  --ide-highlight-emotion: #8f3f71;
+  --ide-highlight-time: #076678;
+  
+  /* Subdued AI */
+  --ide-ai-accent: #8f3f71;
+  --ide-ai-glow: rgba(143, 63, 113, 0.15);
+  --ide-ghost-text: #a89984;
+  
+  /* Problems/Diagnostics */
+  --ide-problem-error: #9d0006;
+  --ide-problem-warning: #b57614;
+  --ide-problem-info: #076678;
+  --ide-problem-hint: #79740e;
+}
+
+/* ================================================================
+   THEME: FOCUS MODE
+   Minimal distractions, muted interface, bright editor
+   ================================================================ */
+
+[data-theme="focus-mode"] {
+  /* Ultra dark chrome */
+  --ide-background: #000000;
+  --ide-background-secondary: #0a0a0a;
+  --ide-background-tertiary: #141414;
+  
+  /* Muted chrome text */
+  --ide-foreground: #555555;
+  --ide-foreground-secondary: #444444;
+  --ide-foreground-muted: #333333;
+  
+  /* Minimal borders */
+  --ide-border: #1a1a1a;
+  --ide-border-secondary: #141414;
+  
+  /* Super minimal chrome */
+  --ide-titlebar-bg: #000000;
+  --ide-titlebar-fg: #555555;
+  
+  --ide-activitybar-bg: #000000;
+  --ide-activitybar-fg: #555555;
+  --ide-activitybar-inactive: #333333;
+  --ide-activitybar-badge: #4a4a4a;
+  
+  --ide-sidebar-bg: #000000;
+  --ide-sidebar-fg: #555555;
+  --ide-sidebar-header: #0a0a0a;
+  
+  --ide-editor-bg: #1a1a1a;
+  --ide-editor-fg: #e0e0e0;
+  --ide-editor-lineNumber: #444444;
+  --ide-editor-selection: rgba(255, 255, 255, 0.15);
+  --ide-editor-cursor: #ffffff;
+  
+  --ide-panel-bg: #000000;
+  --ide-panel-fg: #555555;
+  --ide-panel-border: #1a1a1a;
+  
+  --ide-statusbar-bg: #0a0a0a;
+  --ide-statusbar-fg: #555555;
+  --ide-statusbar-item-hover: rgba(255, 255, 255, 0.05);
+  
+  /* Interactive Elements */
+  --ide-input-bg: #141414;
+  --ide-input-fg: #e0e0e0;
+  --ide-input-border: #1a1a1a;
+  --ide-input-focus: #666666;
+  
+  --ide-button-primary-bg: #333333;
+  --ide-button-primary-fg: #ffffff;
+  --ide-button-secondary-bg: #1a1a1a;
+  --ide-button-secondary-fg: #cccccc;
+  
+  --ide-list-hover: rgba(255, 255, 255, 0.05);
+  --ide-list-active: rgba(255, 255, 255, 0.08);
+  --ide-list-selected: #1a1a1a;
+  
+  /* Writing Surface - High contrast for focus */
+  --ide-writing-bg: #1a1a1a;
+  --ide-writing-fg: #f0f0f0;
+  --ide-writing-heading: #ffffff;
+  --ide-writing-link: #808080;
+  --ide-writing-quote: #888888;
+  --ide-writing-dialogue: #cccccc;
+  
+  /* Monochrome highlights */
+  --ide-highlight-character: #ffffff;
+  --ide-highlight-location: #c0c0c0;
+  --ide-highlight-action: #e0e0e0;
+  --ide-highlight-emotion: #d0d0d0;
+  --ide-highlight-time: #b0b0b0;
+  
+  /* Subtle AI */
+  --ide-ai-accent: #666666;
+  --ide-ai-glow: rgba(255, 255, 255, 0.05);
+  --ide-ghost-text: #404040;
+  
+  /* Problems/Diagnostics */
+  --ide-problem-error: #888888;
+  --ide-problem-warning: #777777;
+  --ide-problem-info: #666666;
+  --ide-problem-hint: #999999;
+}

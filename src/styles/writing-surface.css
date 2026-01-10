@@ -1,0 +1,225 @@
+/* ================================================================
+   WRITING SURFACE STYLES
+   Typography and styling optimized for fiction writing
+   ================================================================ */
+
+.writing-surface {
+  font-family: var(--ide-font-family-writing);
+  font-size: var(--ide-font-size-lg);
+  line-height: 1.8;
+  color: var(--ide-writing-fg);
+  background: var(--ide-writing-bg);
+  padding: var(--ide-spacing-6);
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ────────────────────────────────────────
+   Paragraphs
+   ──────────────────────────────────────── */
+.writing-surface p {
+  margin-bottom: 1.5em;
+  text-indent: 1.5em;
+}
+
+.writing-surface p:first-of-type,
+.writing-surface h1 + p,
+.writing-surface h2 + p,
+.writing-surface h3 + p {
+  text-indent: 0;
+}
+
+/* Scene break indicator */
+.writing-surface p.scene-break {
+  text-indent: 0;
+  text-align: center;
+  margin: 2em 0;
+  color: var(--ide-foreground-muted);
+}
+
+.writing-surface p.scene-break::before {
+  content: '* * *';
+  letter-spacing: 0.5em;
+}
+
+/* ────────────────────────────────────────
+   Headings (Chapters, Scenes)
+   ──────────────────────────────────────── */
+.writing-surface h1 {
+  font-size: 2em;
+  font-weight: 700;
+  color: var(--ide-writing-heading);
+  margin: 2em 0 1em;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.writing-surface h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  color: var(--ide-writing-heading);
+  margin: 1.5em 0 0.75em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid var(--ide-border);
+}
+
+.writing-surface h3 {
+  font-size: 1.25em;
+  font-weight: 500;
+  color: var(--ide-foreground);
+  margin: 1.25em 0 0.5em;
+  font-style: italic;
+}
+
+/* ────────────────────────────────────────
+   Dialogue
+   ──────────────────────────────────────── */
+.writing-surface .dialogue {
+  color: var(--ide-writing-dialogue);
+}
+
+/* Speaker attribution */
+.writing-surface .dialogue-tag {
+  font-style: italic;
+  color: var(--ide-foreground-secondary);
+}
+
+/* ────────────────────────────────────────
+   Emphasis and Style
+   ──────────────────────────────────────── */
+.writing-surface em {
+  font-style: italic;
+}
+
+.writing-surface strong {
+  font-weight: 600;
+}
+
+.writing-surface u {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* ────────────────────────────────────────
+   Blockquotes (Internal thoughts, letters)
+   ──────────────────────────────────────── */
+.writing-surface blockquote {
+  margin: 1.5em 2em;
+  padding-left: 1em;
+  border-left: 3px solid var(--ide-border);
+  color: var(--ide-writing-quote);
+  font-style: italic;
+}
+
+/* ────────────────────────────────────────
+   Ghost/AI Suggestions
+   ──────────────────────────────────────── */
+.writing-surface .ghost-text {
+  color: var(--ide-ghost-text);
+  opacity: 0.7;
+  position: relative;
+}
+
+.writing-surface .ghost-text::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--ide-ai-accent) 0%,
+    transparent 100%
+  );
+  opacity: 0.5;
+}
+
+.writing-surface .ai-suggestion {
+  background: var(--ide-ai-glow);
+  border-radius: var(--ide-radius-sm);
+  padding: 0 2px;
+  box-shadow: 0 0 8px var(--ide-ai-glow);
+}
+
+/* ────────────────────────────────────────
+   Entity Highlights
+   ──────────────────────────────────────── */
+.writing-surface .entity-character {
+  color: var(--ide-highlight-character);
+  border-bottom: 1px dotted var(--ide-highlight-character);
+}
+
+.writing-surface .entity-location {
+  color: var(--ide-highlight-location);
+  border-bottom: 1px dotted var(--ide-highlight-location);
+}
+
+.writing-surface .entity-time {
+  color: var(--ide-highlight-time);
+  border-bottom: 1px dotted var(--ide-highlight-time);
+}
+
+/* ────────────────────────────────────────
+   Selection
+   ──────────────────────────────────────── */
+.writing-surface ::selection {
+  background: var(--ide-editor-selection);
+}
+
+/* ────────────────────────────────────────
+   Cursor Styling
+   ──────────────────────────────────────── */
+.writing-surface .ProseMirror-cursor {
+  border-color: var(--ide-editor-cursor);
+  border-width: 2px;
+}
+
+/* ────────────────────────────────────────
+   Links
+   ──────────────────────────────────────── */
+.writing-surface a {
+  color: var(--ide-writing-link);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--ide-transition-fast);
+}
+
+.writing-surface a:hover {
+  border-bottom-color: var(--ide-writing-link);
+}
+
+/* ────────────────────────────────────────
+   Print-friendly adjustments
+   ──────────────────────────────────────── */
+@media print {
+  .writing-surface {
+    color: #000;
+    background: #fff;
+    max-width: none;
+  }
+  
+  .writing-surface .ghost-text,
+  .writing-surface .ai-suggestion {
+    display: none;
+  }
+}
+
+/* ────────────────────────────────────────
+   Responsive Typography
+   ──────────────────────────────────────── */
+@media (max-width: 768px) {
+  .writing-surface {
+    font-size: var(--ide-font-size-base);
+    padding: var(--ide-spacing-4);
+    line-height: 1.7;
+  }
+  
+  .writing-surface h1 {
+    font-size: 1.5em;
+  }
+  
+  .writing-surface h2 {
+    font-size: 1.25em;
+  }
+}

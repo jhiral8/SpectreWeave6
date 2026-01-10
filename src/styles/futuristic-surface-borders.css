@@ -12,7 +12,7 @@
   --framework-accent: 253 186 116; /* even lighter */
   
   /* Dynamic Properties for Professional Feel */
-  --border-intensity: 0.4; /* Reduced for non-intrusive design */
+  --border-intensity: 0; /* DISABLED: Remove all border highlighting */
   --border-animation-speed: 1;
   --border-glow-size: 16px; /* Optimized for focus enhancement */
   --surface-transition-duration: 400ms; /* Smooth morphing */
@@ -29,102 +29,44 @@
   overflow: hidden;
 }
 
-/* Manuscript Surface Border - "Creative Flow" Design */
+/* Manuscript Surface Border - DISABLED */
 .futuristic-manuscript-border {
-  /* Organic, flowing energy border for creative writing */
-  border: 1px solid rgba(var(--manuscript-primary), calc(var(--border-intensity) * 0.5));
-  box-shadow: 
-    0 0 0 1px rgba(var(--manuscript-primary), calc(var(--border-intensity) * 0.3)),
-    0 0 var(--border-glow-size) rgba(var(--manuscript-primary), calc(var(--border-intensity) * 0.2)),
-    inset 0 0 calc(var(--border-glow-size) * 0.8) rgba(var(--manuscript-accent), calc(var(--border-intensity) * 0.1));
+  /* DISABLED: Remove organic, flowing energy border for creative writing */
+  border: none;
+  box-shadow: none;
   transition: all var(--surface-transition-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Creative Flow Energy Waves */
+/* Creative Flow Energy Waves - DISABLED */
 .futuristic-manuscript-border::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: 
-    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(var(--manuscript-accent), 0.3) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 70% at 80% 50%, rgba(var(--manuscript-secondary), 0.4) 0%, transparent 50%),
-    radial-gradient(ellipse 100% 60% at 0% 100%, rgba(var(--manuscript-accent), 0.2) 0%, transparent 50%);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  z-index: -1;
-  pointer-events: none;
-  animation: creative-flow-waves 6s ease-in-out infinite;
-  opacity: var(--border-intensity);
+  /* DISABLED: Remove manuscript border effects */
+  display: none;
 }
 
-/* Floating particles effect for creativity */
+/* Floating particles effect for creativity - DISABLED */
 .futuristic-manuscript-border::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: 
-    radial-gradient(circle 2px at 25% 30%, rgba(var(--manuscript-accent), 0.6) 0%, transparent 4px),
-    radial-gradient(circle 1px at 75% 20%, rgba(var(--manuscript-primary), 0.5) 0%, transparent 2px),
-    radial-gradient(circle 1.5px at 60% 80%, rgba(var(--manuscript-secondary), 0.4) 0%, transparent 3px),
-    radial-gradient(circle 1px at 30% 70%, rgba(var(--manuscript-accent), 0.3) 0%, transparent 2px);
-  animation: floating-particles 8s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 1;
-  opacity: calc(var(--border-intensity) * 0.7);
+  /* DISABLED: Remove floating particles effect */
+  display: none;
 }
 
-/* Framework Surface Border - "Structural Grid" Design */
+/* Framework Surface Border - DISABLED */
 .futuristic-framework-border {
-  /* Geometric, structured border for planning and organization */
-  border: 1px solid rgba(var(--framework-primary), calc(var(--border-intensity) * 0.5));
-  box-shadow: 
-    0 0 0 1px rgba(var(--framework-primary), calc(var(--border-intensity) * 0.3)),
-    0 0 var(--border-glow-size) rgba(var(--framework-primary), calc(var(--border-intensity) * 0.2)),
-    inset 0 0 calc(var(--border-glow-size) * 0.8) rgba(var(--framework-accent), calc(var(--border-intensity) * 0.1));
+  /* DISABLED: Remove geometric, structured border for planning and organization */
+  border: none;
+  box-shadow: none;
   transition: all var(--surface-transition-duration) cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Geometric Grid Pattern */
+/* Geometric Grid Pattern - DISABLED */
 .futuristic-framework-border::before {
-  content: '';
-  position: absolute;
-  inset: -2px;
-  border-radius: inherit;
-  background: 
-    linear-gradient(45deg, rgba(var(--framework-primary), 0.3) 0%, transparent 30%),
-    linear-gradient(-45deg, rgba(var(--framework-secondary), 0.2) 0%, transparent 30%),
-    conic-gradient(from 0deg at 50% 50%, 
-      rgba(var(--framework-primary), 0.4) 0deg,
-      transparent 90deg,
-      rgba(var(--framework-accent), 0.3) 180deg,
-      transparent 270deg,
-      rgba(var(--framework-primary), 0.4) 360deg
-    );
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  z-index: -1;
-  pointer-events: none;
-  animation: structural-grid-pulse 5s ease-in-out infinite;
-  opacity: var(--border-intensity);
+  /* DISABLED: Remove geometric grid pattern */
+  display: none;
 }
 
-/* Circuit-like data flow patterns */
+/* Circuit-like data flow patterns - DISABLED */
 .futuristic-framework-border::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: 
-    linear-gradient(0deg, transparent 48%, rgba(var(--framework-primary), 0.4) 49%, rgba(var(--framework-primary), 0.4) 51%, transparent 52%),
-    linear-gradient(90deg, transparent 48%, rgba(var(--framework-secondary), 0.3) 49%, rgba(var(--framework-secondary), 0.3) 51%, transparent 52%);
-  animation: circuit-flow 4s linear infinite;
-  pointer-events: none;
-  z-index: 1;
-  opacity: calc(var(--border-intensity) * 0.6);
+  /* DISABLED: Remove circuit-like data flow patterns */
+  display: none;
 }
 
 /* Scanning Line Effect for Active Surface */
@@ -334,27 +276,37 @@
   100% { transform: translateX(100%); opacity: 0; }
 }
 
-/* Hover Effects */
+/* Hover Effects - DISABLED: Remove highlight border on hover */
 .futuristic-surface-border:hover {
-  --border-intensity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 
-    0 0 0 1px rgba(var(--surface-manuscript), 0.3),
-    0 4px 20px rgba(var(--surface-manuscript), calc(var(--border-intensity) * 0.2)),
-    inset 0 0 var(--border-glow-size) rgba(var(--surface-manuscript), calc(var(--border-intensity) * 0.08));
+  --border-intensity: 0;
+  transform: none;
+  box-shadow: none;
 }
 
 .futuristic-framework-border:hover {
-  box-shadow: 
-    0 0 0 1px rgba(var(--surface-framework), 0.3),
-    0 4px 20px rgba(var(--surface-framework), calc(var(--border-intensity) * 0.2)),
-    inset 0 0 var(--border-glow-size) rgba(var(--surface-framework), calc(var(--border-intensity) * 0.08));
+  box-shadow: none;
 }
 
-/* Focus State */
+/* Focus State - DISABLED: Remove highlight border when typing */
 .futuristic-surface-border:focus-within {
-  --border-intensity: 1;
+  --border-intensity: 0;
   outline: none;
+}
+
+/* ADDITIONAL: Remove browser default focus styling on contenteditable elements */
+[contenteditable="true"]:focus,
+[contenteditable]:focus,
+.ProseMirror[contenteditable="true"]:focus,
+.tiptap[contenteditable="true"]:focus {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Remove focus styling from any div that might receive focus */
+div:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 /* Responsive Design */

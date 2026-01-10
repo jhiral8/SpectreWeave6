@@ -34,8 +34,8 @@ export const AIProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     console.log('AI generateText request:', request);
     
     try {
-      // Determine provider - default to gemini if not specified
-      const provider = request.options?.provider || 'gemini';
+      // Determine provider - default to openrouter if not specified
+      const provider = request.options?.provider || 'openrouter';
       
       // Check if we're in demo mode (demo-room or no auth)
       // Use safer approach that works during SSR

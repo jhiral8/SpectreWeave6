@@ -2,8 +2,8 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
-export function createClient() {
-  const cookieStore = cookies()
+export async function createClient() {
+  const cookieStore = await cookies()
 
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -30,10 +30,10 @@ export function createClient() {
 }
 
 // Helper function to create authenticated client from Bearer token
-export function createClientWithAuth(bearerToken?: string) {
+export async function createClientWithAuth(bearerToken?: string) {
   if (!bearerToken) {
     // Fall back to regular cookie-based client
-    return createClient()
+    return await createClient()
   }
 
   // Create a Supabase client that forwards the Bearer token via Authorization header

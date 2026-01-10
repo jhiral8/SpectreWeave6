@@ -25,6 +25,10 @@ interface ViewStateContextType {
   switchToSurface: (surface: any) => void
   toggleSurface: () => void
   syncContentBetweenSurfaces: () => void
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (open: boolean) => void
+  isDrawerPinned: boolean
+  setIsDrawerPinned: (pinned: boolean) => void
 }
 
 interface UIStateContextType {
@@ -61,7 +65,7 @@ interface ProjectContextType {
 
 interface FrameworkContextType {
   frameworkManager: {
-    activeFramework: WritingFramework | null
+    activeFramework: string | undefined
     pendingFramework: any
     applyFramework: (framework: WritingFramework) => void
     clearFramework: () => void
@@ -178,7 +182,11 @@ export const ViewStateProvider: React.FC<{ children: React.ReactNode; value: Vie
     value.activeSurface,
     value.switchToSurface,
     value.toggleSurface,
-    value.syncContentBetweenSurfaces
+    value.syncContentBetweenSurfaces,
+    value.isDrawerOpen,
+    value.setIsDrawerOpen,
+    value.isDrawerPinned,
+    value.setIsDrawerPinned
   ])
   
   return (

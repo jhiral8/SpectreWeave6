@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
-import { aiService } from '@/lib/services/ai'
+import { OpenRouterService } from '@/lib/services/openrouter'
 
 export async function POST(request: NextRequest) {
   try {
     // Check authentication
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data: { user }, error: authError } = await supabase.auth.getUser()
 
     if (authError || !user) {
@@ -13,20 +13,30 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
-    const { prompt, provider = 'gemini', maxTokens, temperature } = body
+    const { prompt, provider = 'openrouter', maxTokens, temperature, model } = body
 
     if (!prompt) {
       return NextResponse.json({ error: 'Prompt is required' }, { status: 400 })
     }
 
-    const result = await aiService.generateText({
+    // Use OpenRouter service directly for reliability
+    // Pass model if specified, otherwise use default
+    const openrouter = new OpenRouterService(model ? { model } : undefined)
+    const result = await openrouter.generateText({
+      id: Math.random().toString(36).substring(7),
+      type: 'generation',
       prompt,
-      provider,
-      maxTokens,
-      temperature,
+      timestamp: new Date(),
+      options: { maxTokens, temperature }
     })
 
-    return NextResponse.json({ result })
+    return NextResponse.json({ 
+      data: result.content,
+      content: result.content,
+      model: result.model,
+      usage: result.usage,
+      success: true
+    })
   } catch (error: any) {
     console.error('AI generation error:', error)
     return NextResponse.json(

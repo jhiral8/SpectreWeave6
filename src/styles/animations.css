@@ -1,0 +1,241 @@
+/* ================================================================
+   IDE ANIMATIONS
+   Smooth, professional transitions for VS Code feel
+   ================================================================ */
+
+/* ────────────────────────────────────────
+   Panel Transitions
+   ──────────────────────────────────────── */
+@keyframes panel-slide-in-left {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes panel-slide-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes panel-slide-in-bottom {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.panel-enter-left {
+  animation: panel-slide-in-left var(--ide-transition-base);
+}
+
+.panel-enter-right {
+  animation: panel-slide-in-right var(--ide-transition-base);
+}
+
+.panel-enter-bottom {
+  animation: panel-slide-in-bottom var(--ide-transition-base);
+}
+
+/* ────────────────────────────────────────
+   Command Palette Animations
+   ──────────────────────────────────────── */
+@keyframes slide-down {
+  from {
+    transform: translate(-50%, -20px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-down {
+  animation: slide-down 0.15s ease-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out;
+}
+
+/* ────────────────────────────────────────
+   Fade Effects
+   ──────────────────────────────────────── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+.fade-in {
+  animation: fade-in var(--ide-transition-fast);
+}
+
+.fade-out {
+  animation: fade-out var(--ide-transition-fast);
+}
+
+/* ────────────────────────────────────────
+   AI Glow Effects
+   ──────────────────────────────────────── */
+@keyframes ai-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 var(--ide-ai-glow);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px var(--ide-ai-glow);
+  }
+}
+
+@keyframes ai-thinking {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.ai-active {
+  animation: ai-pulse 2s ease-in-out infinite;
+}
+
+.ai-thinking {
+  animation: ai-thinking 1.5s ease-in-out infinite;
+}
+
+/* ────────────────────────────────────────
+   Ghost Text Appear
+   ──────────────────────────────────────── */
+@keyframes ghost-appear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 0.7;
+    transform: translateY(0);
+  }
+}
+
+.ghost-text-appear {
+  animation: ghost-appear 0.3s ease-out;
+}
+
+/* ────────────────────────────────────────
+   Command Palette
+   ──────────────────────────────────────── */
+@keyframes command-palette-open {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.command-palette-enter {
+  animation: command-palette-open 0.15s ease-out;
+}
+
+/* ────────────────────────────────────────
+   List Item Highlight
+   ──────────────────────────────────────── */
+@keyframes item-highlight {
+  0% {
+    background-color: var(--ide-list-selected);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.item-flash {
+  animation: item-highlight 1s ease-out;
+}
+
+/* ────────────────────────────────────────
+   Loading Skeleton
+   ──────────────────────────────────────── */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--ide-background-secondary) 0%,
+    var(--ide-background-tertiary) 50%,
+    var(--ide-background-secondary) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--ide-radius-sm);
+}
+
+/* ────────────────────────────────────────
+   Status Bar Activity
+   ──────────────────────────────────────── */
+@keyframes status-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.status-active {
+  animation: status-pulse 1s ease-in-out infinite;
+}
+
+/* ────────────────────────────────────────
+   Resize Handle
+   ──────────────────────────────────────── */
+.resize-handle {
+  transition: background-color var(--ide-transition-fast);
+}
+
+.resize-handle:hover,
+.resize-handle:active {
+  background-color: var(--ide-accent);
+}
+
+/* ────────────────────────────────────────
+   Reduce Motion
+   ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

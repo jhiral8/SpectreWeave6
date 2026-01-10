@@ -3,7 +3,7 @@
   @apply caret-black dark:caret-white outline-0 px-1 py-8 z-0 sm:px-1 sm:py-12 lg:px-2 lg:py-16;
 
   & > * {
-    @apply mx-auto max-w-2xl;
+    @apply mx-auto max-w-6xl;
   }
 
   .selection {
@@ -24,10 +24,10 @@
   }
 
   .ProseMirror-gapcursor {
-    @apply relative w-full max-w-2xl mx-auto;
+    @apply relative w-full max-w-6xl mx-auto;
 
     &:after {
-      @apply border-t-black/40 dark:border-t-white/40 w-full -top-[1.5em] max-w-2xl mx-auto left-0 right-0;
+      @apply border-t-black/40 dark:border-t-white/40 w-full -top-[1.5em] max-w-6xl mx-auto left-0 right-0;
     }
   }
 }

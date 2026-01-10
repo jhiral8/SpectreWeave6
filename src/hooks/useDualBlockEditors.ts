@@ -58,6 +58,12 @@ interface DualEditorReturn {
   isFrameworkLoading: boolean
   isLoading: boolean
   
+  // Drawer state
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (open: boolean) => void
+  isDrawerPinned: boolean
+  setIsDrawerPinned: (pinned: boolean) => void
+  
   // Actions
   syncContentBetweenSurfaces: () => void
   resetSurface: (surface: WritingSurface) => void
@@ -125,6 +131,9 @@ const useDualBlockEditors = ({
   const [frameworkCollabState, setFrameworkCollabState] = useState<WebSocketStatus>(WebSocketStatus.Connecting)
   const [isManuscriptLoading, setIsManuscriptLoading] = useState(true)
   const [isFrameworkLoading, setIsFrameworkLoading] = useState(enableFrameworkEditor)
+  
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const [isDrawerPinned, setIsDrawerPinned] = useState(true)
 
   // Manuscript Editor
   const manuscriptEditor = useEditor(
@@ -147,7 +156,10 @@ const useDualBlockEditors = ({
         }
       },
       extensions: [
-        ...ExtensionKit({ provider: manuscriptProvider as any, surfaceType: 'manuscript' }),
+        ...ExtensionKit({ 
+          provider: manuscriptProvider as any, 
+          surfaceType: 'manuscript',
+        }),
         ...(manuscriptProvider && manuscriptYdoc ? [
           Collaboration.configure({
             document: manuscriptYdoc,
@@ -169,7 +181,7 @@ const useDualBlockEditors = ({
 
   // Framework Editor (conditionally created)
   const frameworkEditor = useEditor(
-    enableFrameworkEditor ? {
+    {
       immediatelyRender: false,
       autofocus: dualSurface.activeSurface === 'framework',
       onCreate: ({ editor }) => {
@@ -204,13 +216,13 @@ const useDualBlockEditors = ({
           'data-surface': 'framework',
         },
       },
-    } : null,
-    enableFrameworkEditor ? [frameworkYdoc, frameworkProvider] : []
+    },
+    [frameworkYdoc, frameworkProvider]
   )
 
   // Active editor based on current surface
   const activeEditor = useMemo(() => {
-    return dualSurface.activeSurface === 'manuscript' ? manuscriptEditor : frameworkEditor
+    return dualSurface.activeSurface === 'manuscript' ? manuscriptEditor : (frameworkEditor || null)
   }, [dualSurface.activeSurface, manuscriptEditor, frameworkEditor])
 
   // Users (simplified for now, could be enhanced for dual collaboration)
@@ -232,7 +244,7 @@ const useDualBlockEditors = ({
   }, [dualSurface.activeSurface, manuscriptCollabState, frameworkCollabState])
 
   // Chapter navigation from manuscript editor
-  const chapterNavigation = useChapterNavigation(manuscriptEditor)
+  const chapterNavigation = useChapterNavigation(manuscriptEditor ?? undefined)
 
   // Setup collaboration listeners
   useEffect(() => {
@@ -261,6 +273,14 @@ const useDualBlockEditors = ({
     }, 120)
     return () => clearTimeout(id)
   }, [dualSurface.activeSurface, manuscriptEditor, frameworkEditor])
+
+  // Update ContextualPeek target when framework editor is ready
+  useEffect(() => {
+    const manuscriptStorage = manuscriptEditor?.storage as any
+    if (manuscriptEditor && frameworkEditor && manuscriptStorage?.contextualPeek) {
+      manuscriptStorage.contextualPeek.targetEditor = frameworkEditor
+    }
+  }, [manuscriptEditor, frameworkEditor])
 
   // Sync content between surfaces
   const syncContentBetweenSurfaces = useCallback(() => {
@@ -314,12 +334,18 @@ const useDualBlockEditors = ({
     // UI state
     leftSidebar,
     aiChatSidebar: rightSidebar,
-    chapterNavigation,
+    chapterNavigation: chapterNavigation || undefined,
     
     // Loading states
     isManuscriptLoading,
     isFrameworkLoading,
     isLoading: isManuscriptLoading || (enableFrameworkEditor && isFrameworkLoading),
+    
+    // Drawer state
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isDrawerPinned,
+    setIsDrawerPinned,
     
     // Actions
     syncContentBetweenSurfaces,

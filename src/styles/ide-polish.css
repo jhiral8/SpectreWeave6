@@ -1,0 +1,851 @@
+/* ================================================================
+   IDE POLISH - VSCode Dark Theme Exact Match
+   Pixel-perfect recreation of VS Code's design language
+   ================================================================ */
+
+/* ────────────────────────────────────────
+   EXACT VSCODE DARK THEME COLORS
+   ──────────────────────────────────────── */
+:root {
+  /* Core backgrounds */
+  --vsc-editor-bg: #1e1e1e;
+  --vsc-sidebar-bg: #252526;
+  --vsc-activitybar-bg: #333333;
+  --vsc-titlebar-bg: #323233;
+  --vsc-panel-bg: #1e1e1e;
+  --vsc-statusbar-bg: #007acc;
+  --vsc-input-bg: #3c3c3c;
+  
+  /* Borders */
+  --vsc-border: #3c3c3c;
+  --vsc-border-subtle: #2d2d2d;
+  
+  /* Text colors */
+  --vsc-foreground: #cccccc;
+  --vsc-foreground-dim: #858585;
+  --vsc-foreground-muted: #6e6e6e;
+  
+  /* List/tree colors */
+  --vsc-list-hover: rgba(90, 93, 94, 0.31);
+  --vsc-list-active: #094771;
+  --vsc-list-selected: #04395e;
+  
+  /* Tab colors */
+  --vsc-tab-active-bg: #1e1e1e;
+  --vsc-tab-inactive-bg: #2d2d2d;
+  --vsc-tab-border: #252526;
+  
+  /* Accent colors */
+  --vsc-accent: #007acc;
+  --vsc-accent-hover: #1c97ea;
+  --vsc-error: #f14c4c;
+  --vsc-warning: #cca700;
+  --vsc-info: #3794ff;
+  
+  /* Scrollbar */
+  --vsc-scrollbar-bg: rgba(121, 121, 121, 0.4);
+  --vsc-scrollbar-hover: rgba(100, 100, 100, 0.7);
+}
+
+/* ────────────────────────────────────────
+   HEIGHT CONSTANTS (exact VSCode values)
+   ──────────────────────────────────────── */
+:root {
+  --ide-titlebar-height: 30px;
+  --ide-tab-height: 35px;
+  --ide-statusbar-height: 22px;
+  --ide-activitybar-width: 48px;
+  --ide-panel-header-height: 35px;
+  --ide-breadcrumb-height: 22px;
+}
+
+/* ────────────────────────────────────────
+   ACTIVITY BAR (leftmost icons)
+   ──────────────────────────────────────── */
+.activity-bar {
+  width: var(--ide-activitybar-width) !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.activity-bar-item {
+  width: var(--ide-activitybar-width);
+  height: var(--ide-activitybar-width);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  color: var(--ide-activitybar-inactive);
+  transition: color 150ms ease;
+}
+
+.activity-bar-item:hover {
+  color: var(--ide-activitybar-fg);
+}
+
+.activity-bar-item.active {
+  color: var(--ide-activitybar-fg);
+}
+
+.activity-bar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 24px;
+  background: var(--ide-activitybar-badge);
+  border-radius: 0 1px 1px 0;
+}
+
+.activity-bar-item svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Badge on activity bar items */
+.activity-bar-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 16px;
+  text-align: center;
+  background: var(--ide-activitybar-badge);
+  color: white;
+  border-radius: 8px;
+}
+
+/* ────────────────────────────────────────
+   SIDEBAR (left panel)
+   ──────────────────────────────────────── */
+.sidebar-header {
+  height: var(--ide-panel-header-height);
+  padding: 0 20px 0 12px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ide-foreground-secondary);
+  border-bottom: 1px solid var(--ide-border);
+  flex-shrink: 0;
+}
+
+.sidebar-section-header {
+  height: 22px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--ide-foreground-secondary);
+  background: var(--ide-sidebar-bg);
+  cursor: pointer;
+  user-select: none;
+}
+
+.sidebar-section-header:hover {
+  background: var(--ide-list-hover);
+}
+
+/* Tree item styling */
+.tree-item {
+  height: 22px;
+  padding: 0 8px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--ide-foreground);
+}
+
+.tree-item:hover {
+  background: var(--ide-list-hover);
+}
+
+.tree-item.selected {
+  background: var(--ide-list-active);
+}
+
+.tree-item.focused {
+  background: var(--ide-list-selected);
+  color: white;
+}
+
+.tree-item-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.tree-item-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-item-chevron {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--ide-foreground-secondary);
+  transition: transform 150ms ease;
+}
+
+.tree-item-chevron.expanded {
+  transform: rotate(90deg);
+}
+
+/* ────────────────────────────────────────
+   EDITOR TABS
+   ──────────────────────────────────────── */
+.editor-tabs {
+  height: var(--ide-tab-height) !important;
+  background: var(--ide-background);
+  border-bottom: 1px solid var(--ide-border);
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.editor-tabs-scroll {
+  display: flex;
+  align-items: stretch;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.editor-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.editor-tab {
+  height: var(--ide-tab-height);
+  min-width: 120px;
+  max-width: 240px;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  user-select: none;
+  border-right: 1px solid var(--ide-border);
+  background: var(--ide-background);
+  color: var(--ide-foreground-secondary);
+  position: relative;
+  transition: background 100ms ease;
+}
+
+.editor-tab:hover {
+  background: var(--ide-list-hover);
+}
+
+.editor-tab.active {
+  background: var(--ide-editor-bg);
+  color: var(--ide-foreground);
+}
+
+.editor-tab.active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--ide-activitybar-badge);
+}
+
+.editor-tab.preview {
+  font-style: italic;
+}
+
+.editor-tab-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.editor-tab-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-tab-close {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 100ms ease, background 100ms ease;
+}
+
+.editor-tab:hover .editor-tab-close,
+.editor-tab.active .editor-tab-close {
+  opacity: 1;
+}
+
+.editor-tab-close:hover {
+  background: var(--ide-list-hover);
+}
+
+.editor-tab-dirty {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ide-activitybar-badge);
+}
+
+/* ────────────────────────────────────────
+   STATUS BAR
+   ──────────────────────────────────────── */
+.status-bar {
+  height: var(--ide-statusbar-height) !important;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  background: var(--ide-statusbar-bg);
+  color: var(--ide-statusbar-fg);
+  border-top: none;
+}
+
+.status-bar-item {
+  height: 100%;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: background 100ms ease;
+}
+
+.status-bar-item:hover {
+  background: var(--ide-statusbar-item-hover);
+}
+
+.status-bar-item svg {
+  width: 14px;
+  height: 14px;
+}
+
+.status-bar-left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.status-bar-right {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+/* ────────────────────────────────────────
+   BOTTOM PANEL
+   ──────────────────────────────────────── */
+.bottom-panel-header {
+  height: var(--ide-panel-header-height);
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--ide-border);
+  background: var(--ide-background);
+  flex-shrink: 0;
+}
+
+.bottom-panel-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+}
+
+.bottom-panel-tab {
+  height: 100%;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  color: var(--ide-foreground-secondary);
+  border-bottom: 2px solid transparent;
+  transition: color 100ms ease;
+}
+
+.bottom-panel-tab:hover {
+  color: var(--ide-foreground);
+}
+
+.bottom-panel-tab.active {
+  color: var(--ide-foreground);
+  border-bottom-color: var(--ide-activitybar-badge);
+}
+
+.bottom-panel-tab-badge {
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 18px;
+  text-align: center;
+  background: var(--ide-background-tertiary);
+  color: var(--ide-foreground-secondary);
+  border-radius: 9px;
+}
+
+.bottom-panel-tab.active .bottom-panel-tab-badge {
+  background: var(--ide-activitybar-badge);
+  color: white;
+}
+
+/* ────────────────────────────────────────
+   RIGHT PANEL (AI Chat)
+   ──────────────────────────────────────── */
+.right-panel-header {
+  height: var(--ide-panel-header-height);
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ide-foreground-secondary);
+  border-bottom: 1px solid var(--ide-border);
+  flex-shrink: 0;
+}
+
+/* ────────────────────────────────────────
+   RESIZE HANDLES
+   ──────────────────────────────────────── */
+.resize-handle {
+  position: relative;
+  background: transparent;
+  transition: background 150ms ease;
+  z-index: 10;
+}
+
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  background: var(--ide-activitybar-badge);
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.resize-handle:hover::after,
+.resize-handle.active::after {
+  opacity: 1;
+}
+
+.resize-handle-horizontal {
+  width: 4px;
+  cursor: col-resize;
+}
+
+.resize-handle-horizontal::after {
+  top: 0;
+  bottom: 0;
+  left: 1px;
+  width: 2px;
+}
+
+.resize-handle-vertical {
+  height: 4px;
+  cursor: row-resize;
+}
+
+.resize-handle-vertical::after {
+  left: 0;
+  right: 0;
+  top: 1px;
+  height: 2px;
+}
+
+/* ────────────────────────────────────────
+   SCROLLBARS (VSCode style)
+   ──────────────────────────────────────── */
+.ide-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.ide-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ide-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--ide-foreground-muted);
+  border-radius: 5px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  opacity: 0.4;
+}
+
+.ide-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--ide-foreground-secondary);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.ide-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Thin scrollbars for smaller areas */
+.ide-scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* ────────────────────────────────────────
+   INPUT FIELDS
+   ──────────────────────────────────────── */
+.ide-input {
+  height: 26px;
+  padding: 0 8px;
+  font-size: 13px;
+  background: var(--ide-input-bg);
+  color: var(--ide-input-fg);
+  border: 1px solid var(--ide-input-border);
+  border-radius: 2px;
+  outline: none;
+  transition: border-color 100ms ease, box-shadow 100ms ease;
+}
+
+.ide-input:focus {
+  border-color: var(--ide-input-focus);
+  box-shadow: 0 0 0 1px var(--ide-input-focus);
+}
+
+.ide-input::placeholder {
+  color: var(--ide-foreground-muted);
+}
+
+/* ────────────────────────────────────────
+   BUTTONS
+   ──────────────────────────────────────── */
+.ide-button {
+  height: 26px;
+  padding: 0 14px;
+  font-size: 13px;
+  font-weight: 400;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 100ms ease, opacity 100ms ease;
+}
+
+.ide-button-primary {
+  background: var(--ide-button-primary-bg);
+  color: var(--ide-button-primary-fg);
+  border: none;
+}
+
+.ide-button-primary:hover {
+  opacity: 0.9;
+}
+
+.ide-button-secondary {
+  background: var(--ide-button-secondary-bg);
+  color: var(--ide-button-secondary-fg);
+  border: 1px solid var(--ide-border);
+}
+
+.ide-button-secondary:hover {
+  background: var(--ide-list-hover);
+}
+
+/* Icon-only buttons */
+.ide-icon-button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--ide-foreground-secondary);
+  transition: background 100ms ease, color 100ms ease;
+}
+
+.ide-icon-button:hover {
+  background: var(--ide-list-hover);
+  color: var(--ide-foreground);
+}
+
+/* ────────────────────────────────────────
+   TOOLTIPS
+   ──────────────────────────────────────── */
+.ide-tooltip {
+  position: absolute;
+  padding: 4px 8px;
+  font-size: 12px;
+  background: var(--ide-background-tertiary);
+  color: var(--ide-foreground);
+  border: 1px solid var(--ide-border);
+  border-radius: 4px;
+  box-shadow: var(--ide-shadow-md);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: var(--ide-z-tooltip);
+  animation: tooltip-appear 100ms ease;
+}
+
+@keyframes tooltip-appear {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ide-tooltip-shortcut {
+  margin-left: 8px;
+  padding: 1px 4px;
+  font-size: 10px;
+  background: var(--ide-background);
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+/* ────────────────────────────────────────
+   DROPDOWNS
+   ──────────────────────────────────────── */
+.ide-dropdown {
+  position: absolute;
+  min-width: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  background: var(--ide-background-secondary);
+  border: 1px solid var(--ide-border);
+  border-radius: 4px;
+  box-shadow: var(--ide-shadow-lg);
+  z-index: var(--ide-z-dropdown);
+  animation: dropdown-appear 150ms ease;
+}
+
+@keyframes dropdown-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.ide-dropdown-item {
+  height: 28px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--ide-foreground);
+}
+
+.ide-dropdown-item:hover {
+  background: var(--ide-list-hover);
+}
+
+.ide-dropdown-item.selected {
+  background: var(--ide-list-selected);
+  color: white;
+}
+
+.ide-dropdown-separator {
+  height: 1px;
+  margin: 4px 0;
+  background: var(--ide-border);
+}
+
+/* ────────────────────────────────────────
+   BADGES
+   ──────────────────────────────────────── */
+.ide-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: 9px;
+  background: var(--ide-background-tertiary);
+  color: var(--ide-foreground-secondary);
+}
+
+.ide-badge-primary {
+  background: var(--ide-activitybar-badge);
+  color: white;
+}
+
+.ide-badge-error {
+  background: var(--ide-error);
+  color: white;
+}
+
+.ide-badge-warning {
+  background: var(--ide-warning);
+  color: white;
+}
+
+/* ────────────────────────────────────────
+   FOCUS STATES
+   ──────────────────────────────────────── */
+.ide-focusable:focus {
+  outline: none;
+}
+
+.ide-focusable:focus-visible {
+  outline: 1px solid var(--ide-focus-border);
+  outline-offset: -1px;
+}
+
+/* ────────────────────────────────────────
+   WRITING SURFACE IMPROVEMENTS
+   ──────────────────────────────────────── */
+.ai-writing-surface {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-writing-surface .ProseMirror {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 48px;
+  font-family: var(--ide-font-family-writing);
+  font-size: 18px;
+  line-height: 1.75;
+  color: var(--ide-writing-fg);
+}
+
+.ai-writing-surface .ProseMirror:focus {
+  outline: none;
+}
+
+.ai-writing-surface .ProseMirror h1 {
+  font-size: 2em;
+  font-weight: 700;
+  margin-bottom: 1em;
+  color: var(--ide-writing-heading);
+}
+
+.ai-writing-surface .ProseMirror h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+}
+
+.ai-writing-surface .ProseMirror p {
+  margin-bottom: 1em;
+  text-indent: 1.5em;
+}
+
+.ai-writing-surface .ProseMirror p:first-of-type,
+.ai-writing-surface .ProseMirror h1 + p,
+.ai-writing-surface .ProseMirror h2 + p {
+  text-indent: 0;
+}
+
+/* Ghost text placeholder */
+.ai-writing-surface .ghost-text-decoration {
+  color: var(--ide-ghost-text);
+  opacity: 0.6;
+}
+
+/* ────────────────────────────────────────
+   COMMAND PALETTE POLISH
+   ──────────────────────────────────────── */
+.command-palette {
+  width: 600px;
+  max-width: 90vw;
+  max-height: 70vh;
+  background: var(--ide-background-secondary);
+  border: 1px solid var(--ide-border);
+  border-radius: 6px;
+  box-shadow: var(--ide-shadow-xl);
+  overflow: hidden;
+}
+
+.command-palette-input {
+  height: 40px;
+  padding: 0 12px;
+  font-size: 14px;
+  background: var(--ide-input-bg);
+  color: var(--ide-input-fg);
+  border: none;
+  border-bottom: 1px solid var(--ide-border);
+  outline: none;
+  width: 100%;
+}
+
+.command-palette-item {
+  height: 32px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  color: var(--ide-foreground);
+}
+
+.command-palette-item:hover,
+.command-palette-item.selected {
+  background: var(--ide-list-hover);
+}
+
+.command-palette-item.selected {
+  background: var(--ide-list-selected);
+  color: white;
+}
+
+.command-palette-shortcut {
+  margin-left: auto;
+  font-size: 11px;
+  opacity: 0.7;
+}

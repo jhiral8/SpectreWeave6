@@ -1,0 +1,272 @@
+/**
+ * IDE Mobile Responsive Styles
+ * 
+ * CSS variables and utility classes for mobile-responsive IDE layout.
+ * Uses modern CSS features like container queries and dynamic viewport units.
+ */
+
+/* 
+ * Mobile Breakpoints for IDE
+ * - Mobile: < 640px (sm)
+ * - Tablet: 640px - 1024px (md-lg)
+ * - Desktop: > 1024px (xl+)
+ */
+
+/* IDE Container Queries */
+@container ide-shell (max-width: 768px) {
+  .ide-panel-left,
+  .ide-panel-right {
+    position: absolute;
+    z-index: 50;
+    height: 100%;
+    max-width: 85vw;
+    transform: translateX(-100%);
+    transition: transform 0.2s ease-out;
+  }
+  
+  .ide-panel-left.panel-open {
+    transform: translateX(0);
+  }
+  
+  .ide-panel-right {
+    right: 0;
+    left: auto;
+    transform: translateX(100%);
+  }
+  
+  .ide-panel-right.panel-open {
+    transform: translateX(0);
+  }
+  
+  .ide-main-content {
+    width: 100%;
+  }
+  
+  .ide-bottom-panel {
+    max-height: 50vh;
+  }
+}
+
+/* Mobile-first base styles */
+@layer components {
+  /* Touch-friendly tap targets */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mobile panel overlay */
+  .mobile-panel-overlay {
+    @apply fixed inset-0 bg-black/50 z-40;
+    @apply opacity-0 pointer-events-none;
+    @apply transition-opacity duration-200;
+  }
+  
+  .mobile-panel-overlay.visible {
+    @apply opacity-100 pointer-events-auto;
+  }
+  
+  /* Mobile header */
+  .mobile-header {
+    @apply flex items-center justify-between;
+    @apply h-12 px-4;
+    @apply border-b border-ide-border;
+    @apply bg-ide-bg;
+  }
+  
+  /* Mobile navigation toggle */
+  .mobile-nav-toggle {
+    @apply p-2 -ml-2 rounded-md;
+    @apply hover:bg-ide-hover active:bg-ide-active;
+    @apply touch-target;
+  }
+  
+  /* Swipe gesture indicator */
+  .swipe-indicator {
+    @apply absolute top-1/2 -translate-y-1/2;
+    @apply w-1 h-20 rounded-full;
+    @apply bg-ide-border opacity-50;
+    @apply transition-opacity duration-150;
+  }
+  
+  .swipe-indicator:hover {
+    @apply opacity-100;
+  }
+  
+  .swipe-indicator-left {
+    @apply left-0;
+  }
+  
+  .swipe-indicator-right {
+    @apply right-0;
+  }
+  
+  /* Mobile bottom sheet */
+  .mobile-bottom-sheet {
+    @apply fixed bottom-0 left-0 right-0;
+    @apply bg-ide-sidebar rounded-t-2xl;
+    @apply border-t border-ide-border;
+    @apply z-50;
+    @apply transform transition-transform duration-300;
+    max-height: 80vh;
+    max-height: 80dvh;
+  }
+  
+  .mobile-bottom-sheet.collapsed {
+    @apply translate-y-[calc(100%-3rem)];
+  }
+  
+  .mobile-bottom-sheet.expanded {
+    @apply translate-y-0;
+  }
+  
+  /* Bottom sheet handle */
+  .bottom-sheet-handle {
+    @apply flex justify-center py-2;
+  }
+  
+  .bottom-sheet-handle::after {
+    content: '';
+    @apply w-10 h-1 rounded-full bg-ide-border;
+  }
+  
+  /* Mobile-optimized editor */
+  .mobile-editor {
+    @apply px-4 py-6;
+    font-size: 16px; /* Prevent iOS zoom on focus */
+  }
+  
+  /* Mobile floating toolbar */
+  .mobile-floating-toolbar {
+    @apply fixed bottom-16 left-1/2 -translate-x-1/2;
+    @apply flex items-center gap-1 p-1;
+    @apply bg-ide-sidebar border border-ide-border rounded-full;
+    @apply shadow-lg z-30;
+  }
+  
+  .mobile-floating-toolbar button {
+    @apply p-2.5 rounded-full;
+    @apply hover:bg-ide-hover active:bg-ide-active;
+  }
+  
+  /* Mobile command palette */
+  .mobile-command-palette {
+    @apply fixed inset-x-4 top-4;
+    @apply max-h-[70vh] max-h-[70dvh];
+    @apply bg-ide-sidebar rounded-xl;
+    @apply border border-ide-border;
+    @apply shadow-2xl z-[100];
+    @apply overflow-hidden;
+  }
+  
+  .mobile-command-palette input {
+    @apply h-12 px-4 text-base;
+    @apply bg-transparent border-b border-ide-border;
+    @apply w-full outline-none;
+  }
+  
+  /* Mobile AI panel */
+  .mobile-ai-panel {
+    @apply fixed inset-x-0 bottom-0;
+    @apply h-[60vh] max-h-[60dvh];
+    @apply bg-ide-sidebar rounded-t-xl;
+    @apply border-t border-ide-border;
+    @apply z-50;
+  }
+  
+  /* Hide scrollbars on mobile for cleaner look */
+  .hide-scrollbar-mobile {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .hide-scrollbar-mobile::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Responsive visibility utilities */
+@layer utilities {
+  .mobile-only {
+    @apply block sm:hidden;
+  }
+  
+  .tablet-up {
+    @apply hidden sm:block;
+  }
+  
+  .desktop-only {
+    @apply hidden lg:block;
+  }
+  
+  .mobile-stack {
+    @apply flex flex-col sm:flex-row;
+  }
+  
+  .mobile-full {
+    @apply w-full sm:w-auto;
+  }
+}
+
+/* Safe area insets for mobile devices */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .mobile-bottom-sheet {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .mobile-floating-toolbar {
+    bottom: calc(4rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .mobile-bottom-sheet,
+  .ide-panel-left,
+  .ide-panel-right,
+  .mobile-panel-overlay {
+    transition: none !important;
+  }
+}
+
+/* Landscape mode adjustments */
+@media screen and (orientation: landscape) and (max-height: 500px) {
+  .mobile-bottom-sheet {
+    max-height: 60vh;
+  }
+  
+  .mobile-header {
+    height: 2.5rem;
+  }
+  
+  .mobile-floating-toolbar {
+    bottom: 0.5rem;
+  }
+}
+
+/* Print styles - hide IDE chrome */
+@media print {
+  .ide-panel-left,
+  .ide-panel-right,
+  .ide-bottom-panel,
+  .ide-status-bar,
+  .ide-activity-bar,
+  .mobile-floating-toolbar,
+  .mobile-header {
+    display: none !important;
+  }
+  
+  .ide-main-content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+}

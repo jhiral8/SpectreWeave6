@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 @import '../styles/theme.css';
+@import '../styles/theme-tokens.css';
+@import '../styles/writing-surface.css';
+@import '../styles/animations.css';
+@import '../styles/ide-polish.css';
 
 @import './editor.css';
 @import '../styles/bubble-menu-fixes.css';
@@ -11,6 +15,54 @@
 @import '../styles/futuristic-surface-override.css';
 @import '../styles/floating-action-buttons.css';
 @import '../styles/dashboard-dark-theme.css';
+
+/* Contextual Peek Highlight */
+.peek-highlight {
+  animation: peek-pulse 2s ease-in-out;
+  border-radius: 0.5rem;
+}
+
+@keyframes peek-pulse {
+  0% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(147, 51, 234, 0);
+  }
+  20% {
+    background-color: rgba(147, 51, 234, 0.1);
+    box-shadow: 0 0 0 4px rgba(147, 51, 234, 0.2);
+  }
+  80% {
+    background-color: rgba(147, 51, 234, 0.1);
+    box-shadow: 0 0 0 4px rgba(147, 51, 234, 0.2);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(147, 51, 234, 0);
+  }
+}
+
+.dark .peek-highlight {
+  animation: peek-pulse-dark 2s ease-in-out;
+}
+
+@keyframes peek-pulse-dark {
+  0% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+  }
+  20% {
+    background-color: rgba(168, 85, 247, 0.15);
+    box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.3);
+  }
+  80% {
+    background-color: rgba(168, 85, 247, 0.15);
+    box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.3);
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(168, 85, 247, 0);
+  }
+}
 
 /* Custom Fonts - Inter and Surgena */
 @font-face {
@@ -47,6 +99,24 @@
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     -webkit-overflow-scrolling: touch;
+  }
+
+  /* REMOVE ALL FOCUS BORDERS FROM EDITOR ELEMENTS */
+  [contenteditable="true"]:focus,
+  [contenteditable]:focus,
+  .ProseMirror:focus,
+  .tiptap:focus,
+  .ProseMirror[contenteditable="true"]:focus,
+  .tiptap[contenteditable="true"]:focus {
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Remove focus styling from any div that might receive focus */
+  div:focus {
+    outline: none !important;
+    box-shadow: none !important;
   }
 
   /* Ensure minimum touch target sizes on mobile */

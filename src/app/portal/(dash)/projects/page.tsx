@@ -421,7 +421,22 @@ export default function PortalProjectsPage() {
                   </div>
                 </div>
               ) : (
-                <Link className="underline" href={`/portal/writer/${p.default_doc_id || p.id}`}>Open doc</Link>
+                <div className="flex gap-2">
+                  <Link 
+                    className="inline-flex items-center gap-1 px-3 py-1.5 text-xs bg-[--brand] text-[--brand-foreground] rounded-md hover:opacity-90"
+                    href={`/portal/writer/${p.default_doc_id || p.id}`}
+                  >
+                    <Feather className="w-3 h-3" />
+                    Open in Writer
+                  </Link>
+                  <Link 
+                    className="inline-flex items-center gap-1 px-3 py-1.5 text-xs border border-[--border] rounded-md hover:bg-[--muted]/30"
+                    href={`/portal/writer/${p.default_doc_id || p.id}`}
+                  >
+                    <FileText className="w-3 h-3" />
+                    Project Details
+                  </Link>
+                </div>
               )}
             </div>
             <div className="mt-3 flex gap-2">

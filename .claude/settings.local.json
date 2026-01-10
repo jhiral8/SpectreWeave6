@@ -22,7 +22,9 @@
       "Bash(git rm:*)",
       "Bash(grep:*)",
       "Bash(mv:*)",
-      "Bash(xargs sed:*)"
+      "Bash(xargs sed:*)",
+      "WebSearch",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "defaultMode": "acceptEdits"

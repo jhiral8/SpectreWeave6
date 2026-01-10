@@ -21,11 +21,9 @@ import { FrameworkSurface } from './components/FrameworkSurface'
 import { SplitEditorProvider } from './context/SplitEditorContext'
 import { UnifiedEditorProvider } from './context/UnifiedEditorContext'
 import { ContextAwareEditorHeader } from './components/ContextAwareEditorHeader'
-import { DualSurfaceView, SingleManuscriptView, SingleFrameworkView } from './components/ContextAwareSurfaces'
+import { DualSurfaceView } from './components/ContextAwareSurfaces'
 import { OptimizedMenuManager } from './components/OptimizedMenuManager'
 import { ConcurrentDualEditor } from './components/ConcurrentDualEditor'
-import { SurfaceSwitcher } from '@/components/ui/SurfaceSwitcher'
-import { DualModeSwitcher, ViewMode } from '@/components/ui/SurfaceSwitcher'
 import LogoLoader from '@/components/ui/LogoLoader'
 import FrameworkToolbarVertical from '@/components/ui/FrameworkToolbarVertical'
 import FrameworkConfirmModal from '@/components/ui/FrameworkConfirmModal'
@@ -42,8 +40,6 @@ interface DualBlockEditorProps {
   frameworkProvider?: TiptapCollabProvider | null | undefined
   user?: User | null
   enableFrameworkEditor?: boolean
-  showSurfaceSwitcher?: boolean
-  surfaceSwitcherVariant?: 'default' | 'floating' | 'compact' | 'pills'
   project?: any // Project information for title and version
   showInternalLeftNavigation?: boolean
 }
@@ -55,8 +51,6 @@ const DualBlockEditor = React.memo(({
   frameworkProvider,
   user,
   enableFrameworkEditor = true,
-  showSurfaceSwitcher = true,
-  surfaceSwitcherVariant = 'floating',
   project,
   showInternalLeftNavigation = false
 }: DualBlockEditorProps) => {
@@ -69,8 +63,6 @@ const DualBlockEditor = React.memo(({
 
   const menuContainerRef = useRef(null)
   const editorRef = useRef<PureEditorContent | null>(null)
-  const [viewMode, setViewMode] = React.useState<ViewMode>('dual')
-  const [canShowDual, setCanShowDual] = React.useState(true)
   
   // AI Border Effects
   const manuscriptBorder = useManuscriptBorderEffects({ 
@@ -79,52 +71,9 @@ const DualBlockEditor = React.memo(({
   })
   const frameworkBorder = useFrameworkBorderEffects({ 
     confidence: 0.8,
-    isDataFlowing: viewMode === 'dual' 
+    isDataFlowing: true 
   })
   
-  // Check if screen is wide enough for dual mode with debounced resize
-  React.useEffect(() => {
-    // Only run on client side
-    if (typeof window === 'undefined') return
-    
-    let resizeTimer: NodeJS.Timeout | null = null
-    
-    const checkScreenSize = () => {
-      const isWideEnough = window.innerWidth >= 1024 // lg breakpoint
-      setCanShowDual(isWideEnough)
-      // Enforce single-editor on small screens
-      if (!isWideEnough && viewMode === 'dual') setViewMode('manuscript')
-    }
-    
-    const debouncedCheckScreenSize = () => {
-      if (resizeTimer) clearTimeout(resizeTimer)
-      resizeTimer = setTimeout(checkScreenSize, 150)
-    }
-    
-    checkScreenSize() // Initial check
-    window.addEventListener('resize', debouncedCheckScreenSize)
-    
-    // Track memory usage
-    if (manuscriptMemory.addTimer && resizeTimer) {
-      manuscriptMemory.addTimer(resizeTimer)
-    }
-    if (manuscriptMemory.addListener) {
-      manuscriptMemory.addListener('resize', debouncedCheckScreenSize)
-    }
-    
-    return () => {
-      window.removeEventListener('resize', debouncedCheckScreenSize)
-      if (resizeTimer) clearTimeout(resizeTimer)
-    }
-  }, [viewMode])
-
-  // Update data flow effect based on view mode - memoized to prevent unnecessary updates
-  const frameworkBorderDataFlowing = React.useMemo(() => viewMode === 'dual', [viewMode])
-  
-  React.useEffect(() => {
-    frameworkBorder.setDataFlowing(frameworkBorderDataFlowing)
-  }, [frameworkBorderDataFlowing, frameworkBorder])
-
   const {
     manuscriptEditor,
     frameworkEditor,
@@ -140,6 +89,10 @@ const DualBlockEditor = React.memo(({
     chapterNavigation,
     isLoading,
     syncContentBetweenSurfaces,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isDrawerPinned,
+    setIsDrawerPinned,
   } = useDualBlockEditors({
     manuscriptYdoc,
     frameworkYdoc,
@@ -165,15 +118,7 @@ const DualBlockEditor = React.memo(({
   const manuscriptMemory = useEditorMemoryTracking(manuscriptEditor, 'manuscript')
   const frameworkMemory = useEditorMemoryTracking(frameworkEditor, 'framework')
   
-  // Memoize view mode dependent values
-  const shouldShowDualMode = useMemo(() => 
-    canShowDual && viewMode === 'dual', [canShowDual, viewMode])
-  
-  const currentActiveEditor = useMemo(() => {
-    if (viewMode === 'manuscript') return manuscriptEditor
-    if (viewMode === 'framework') return frameworkEditor
-    return activeEditor
-  }, [viewMode, manuscriptEditor, frameworkEditor, activeEditor])
+  const currentActiveEditor = activeEditor
 
   // Split context values for optimal performance
   const editorState = useMemo(() => ({
@@ -186,14 +131,18 @@ const DualBlockEditor = React.memo(({
   }), [manuscriptEditor, frameworkEditor, activeEditor, currentActiveEditor, isLoading, isClient])
 
   const viewState = useMemo(() => ({
-    viewMode,
-    canShowDual,
-    setViewMode,
+    viewMode: 'dual' as const,
+    canShowDual: true,
+    setViewMode: () => {},
     activeSurface,
     switchToSurface,
     toggleSurface,
-    syncContentBetweenSurfaces
-  }), [viewMode, canShowDual, setViewMode, activeSurface, switchToSurface, toggleSurface, syncContentBetweenSurfaces])
+    syncContentBetweenSurfaces,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isDrawerPinned,
+    setIsDrawerPinned
+  }), [activeSurface, switchToSurface, toggleSurface, syncContentBetweenSurfaces, isDrawerOpen, setIsDrawerOpen, isDrawerPinned, setIsDrawerPinned])
 
   const uiState = useMemo(() => ({
     leftSidebar,
@@ -252,13 +201,17 @@ const DualBlockEditor = React.memo(({
           manuscriptEditor,
           frameworkEditor,
           activeEditor,
-          viewMode,
-          canShowDual,
-          setViewMode,
+          viewMode: 'dual',
+          canShowDual: true,
+          setViewMode: () => {},
           activeSurface,
           switchToSurface,
           toggleSurface,
           syncContentBetweenSurfaces,
+          isDrawerOpen,
+          setIsDrawerOpen,
+          isDrawerPinned,
+          setIsDrawerPinned,
           leftSidebar,
           aiChatSidebar,
           leftNavigation,
@@ -294,7 +247,7 @@ const DualBlockEditor = React.memo(({
                   <Sidebar
                     isOpen={leftSidebar.isOpen}
                     onClose={leftSidebar.close}
-                    editor={activeEditor}
+                    editor={activeEditor!}
                   />
                   
                   {/* Main Content Area with Concurrent Features */}
@@ -302,7 +255,7 @@ const DualBlockEditor = React.memo(({
                   
                   {/* Right Sidebar - AI Chat */}
                   <AIChatSidebar
-                    editor={activeEditor}
+                    editor={activeEditor!}
                     isOpen={aiChatSidebar.isOpen}
                     onClose={aiChatSidebar.close}
                     chatState={aiChatSidebar}

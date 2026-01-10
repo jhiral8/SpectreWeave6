@@ -9,7 +9,7 @@ import { SurfaceSwitcher, Surface } from '@/components/ui/SurfaceSwitcher'
 import FrameworkToolbarVertical from '@/components/ui/FrameworkToolbarVertical'
 import FrameworkToolbarBottom from '@/components/ui/FrameworkToolbarBottom'
 import { markdownToHtml } from '@/lib/utils/markdownToHtml'
-import { useDualEditors } from '@/hooks/useDualEditors'
+import useDualBlockEditors from '@/hooks/useDualBlockEditors'
 import { TextMenu } from '@/components/menus/TextMenu'
 // import { CustomAIToolbar } from '@/components/editor/AIToolbar/CustomAIToolbar'
 import { ColumnsMenu } from '@/extensions/MultiColumn/menus'
@@ -30,9 +30,9 @@ export const DualWritingSurface = ({ className }: DualWritingSurfaceProps) => {
     manuscriptEditor, 
     frameworkEditor, 
     activeSurface, 
-    switchSurface,
+    switchToSurface,
     activeEditor 
-  } = useDualEditors()
+  } = useDualBlockEditors({})
 
   // Framework handlers
   const handleFrameworkSelect = (framework: WritingFramework) => {
@@ -89,7 +89,7 @@ export const DualWritingSurface = ({ className }: DualWritingSurfaceProps) => {
             </h1>
             <SurfaceSwitcher 
               activeSurface={activeSurface}
-              onSurfaceChange={switchSurface}
+              onSurfaceChange={switchToSurface}
               variant="floating"
             />
           </div>

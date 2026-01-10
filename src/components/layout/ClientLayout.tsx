@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AIProvider } from '@/contexts/AIContext'
 // import { AdvancedAIProvider } from '@/lib/ai/advancedAIContext' // Temporarily disabled
 import ThemeProvider from '@/components/providers/ThemeProvider'
+import { ThemeProvider as IDEThemeProvider } from '@/components/IDE/Theme/ThemeProvider'
 import { useState } from 'react'
 
 interface ClientLayoutProps {
@@ -23,12 +24,14 @@ export default function ClientLayout({ children }: ClientLayoutProps) {
   )
 
   return (
-    <ThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <AIProvider>
-          {children}
-        </AIProvider>
-      </QueryClientProvider>
-    </ThemeProvider>
+    <IDEThemeProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <AIProvider>
+            {children}
+          </AIProvider>
+        </QueryClientProvider>
+      </ThemeProvider>
+    </IDEThemeProvider>
   )
 }

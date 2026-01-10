@@ -5,7 +5,7 @@ import { Editor } from '@tiptap/react'
 import { User } from '@supabase/supabase-js'
 import { WritingFramework } from '@/types/story-frameworks'
 
-export type ViewMode = 'manuscript' | 'framework' | 'dual'
+export type ViewMode = 'dual'
 
 /**
  * Unified Editor Context - Replaces 6 over-engineered contexts with 1
@@ -26,11 +26,17 @@ interface UnifiedEditorContextType {
   toggleSurface: () => void
   syncContentBetweenSurfaces: () => void
   
+  // Drawer state
+  isDrawerOpen: boolean
+  setIsDrawerOpen: (open: boolean) => void
+  isDrawerPinned: boolean
+  setIsDrawerPinned: (pinned: boolean) => void
+  
   // UI state
   leftSidebar: {
     isOpen: boolean
     toggle: () => void
-    close: () => void
+    close: () => void 
   }
   aiChatSidebar: {
     isOpen: boolean
@@ -57,7 +63,7 @@ interface UnifiedEditorContextType {
   
   // Framework
   frameworkManager: {
-    activeFramework: WritingFramework | null
+    activeFramework: string | undefined
     pendingFramework: any
     applyFramework: (framework: WritingFramework) => void
     clearFramework: () => void
@@ -97,7 +103,11 @@ export const useViewState = () => {
     activeSurface, 
     switchToSurface, 
     toggleSurface,
-    syncContentBetweenSurfaces 
+    syncContentBetweenSurfaces,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isDrawerPinned,
+    setIsDrawerPinned
   } = useEditorContext()
   return { 
     viewMode, 
@@ -106,7 +116,11 @@ export const useViewState = () => {
     activeSurface, 
     switchToSurface, 
     toggleSurface,
-    syncContentBetweenSurfaces 
+    syncContentBetweenSurfaces,
+    isDrawerOpen,
+    setIsDrawerOpen,
+    isDrawerPinned,
+    setIsDrawerPinned
   }
 }
 
@@ -135,6 +149,8 @@ export const UnifiedEditorProvider: React.FC<UnifiedEditorProviderProps> = ({
     // View state
     value.viewMode,
     value.canShowDual,
+    value.isDrawerOpen,
+    value.isDrawerPinned,
     
     // UI state changes
     value.leftSidebar?.isOpen,

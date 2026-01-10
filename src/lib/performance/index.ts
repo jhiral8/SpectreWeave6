@@ -249,3 +249,26 @@ export const initializePerformanceOptimizations = () => {
     }
   }
 }
+
+// Re-export new performance utilities
+export { 
+  lazyExtensionManager, 
+  createLazyExtension,
+  LAZY_EXTENSIONS,
+} from './LazyExtensionLoader';
+export type { ExtensionLoader } from './LazyExtensionLoader';
+
+export {
+  useDebounce as useDebounceHook,
+  useDebouncedValue,
+  useThrottle as useThrottleHook,
+  useStableCallback,
+  usePrevious,
+  shallowEqual,
+  useMemoCompare,
+  useStableObject,
+  useUpdateEffect,
+  useBatchedUpdates,
+  useRenderCount,
+  withDisplayName,
+} from './ReactPerformance';

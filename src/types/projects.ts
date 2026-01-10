@@ -16,6 +16,12 @@ export interface CreateProjectData {
   description?: string
   genre?: string
   brief?: string
+  project_type?: string
+  target_age?: string
+  theme?: string
+  style?: string
+  author_style?: string
+  total_pages?: number
 }
 
 export interface ProjectCardProps {

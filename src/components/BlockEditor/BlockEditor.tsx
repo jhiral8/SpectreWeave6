@@ -26,7 +26,7 @@ import { CustomAIToolbar } from '../editor/AIToolbar/CustomAIToolbar'
 import dynamic from 'next/dynamic'
 
 import LogoLoader from '@/components/ui/LogoLoader'
-const LightweightDualEditor = dynamic(() => import('./LightweightDualEditor'), {
+const DualBlockEditor = dynamic(() => import('./DualBlockEditor'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full grid place-items-center">
@@ -41,8 +41,6 @@ interface BlockEditorProps extends TiptapProps {
   frameworkYdoc?: any
   frameworkProvider?: any
   enableFrameworkEditor?: boolean
-  showSurfaceSwitcher?: boolean
-  surfaceSwitcherVariant?: 'default' | 'floating' | 'compact' | 'pills'
 }
 
 export const BlockEditor = React.memo(({ 
@@ -53,21 +51,17 @@ export const BlockEditor = React.memo(({
   frameworkYdoc,
   frameworkProvider,
   enableFrameworkEditor = true,
-  showSurfaceSwitcher = true,
-  surfaceSwitcherVariant = 'floating'
 }: BlockEditorProps) => {
   // If dual mode is requested, use DualBlockEditor (with all legacy editor chrome disabled)
   if (mode === 'dual') {
     return (
-      <LightweightDualEditor
+      <DualBlockEditor
         manuscriptYdoc={ydoc}
         frameworkYdoc={frameworkYdoc}
         manuscriptProvider={provider}
         frameworkProvider={frameworkProvider}
         user={user}
         enableFrameworkEditor={enableFrameworkEditor}
-        showSurfaceSwitcher={showSurfaceSwitcher}
-        surfaceSwitcherVariant={surfaceSwitcherVariant}
         showInternalLeftNavigation={false}
       />
     )
