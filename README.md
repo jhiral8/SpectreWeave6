@@ -40,6 +40,8 @@ SpectreWeave6 is a sophisticated, collaborative writing platform built with Next
 - **GraphRAG integration** for story element relationships
 - **Reference management** and visual libraries
 
+> Character consistency, GraphRAG character routes and the children's-book generator are not currently wired in. The code is kept in [`salvage/`](salvage/README.md).
+
 ### 🔍 Knowledge & Research
 - **Neo4j-powered knowledge graphs** for story elements
 - **Vector embeddings** for semantic search
